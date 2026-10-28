@@ -110,6 +110,12 @@ def test_card_rules(public_dir, change, expected):
     assert any(expected in error for error in errors), errors
 
 
+def test_missing_public_dir_skips_only_file_check(tmp_path):
+    data = copy.deepcopy(BASE)
+    _, errors = validate_tour(data, tmp_path / "no-public")
+    assert errors == []
+
+
 def test_duplicate_codes(public_dir):
     def change(d):
         d["cards"].append(copy.deepcopy(d["cards"][0]))

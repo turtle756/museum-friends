@@ -147,7 +147,9 @@ def _card(errors, index, card, public_dir: Path, seen: set[str], confirmed: bool
             errors.append(f"{where}: 'image'는 public 폴더 안의 경로로 써 주세요. 예: img/101.webp")
         elif path.suffix.lower() not in IMAGE_EXT:
             errors.append(f"{where}: 'image'는 svg, png, jpg, webp 파일만 쓸 수 있어요")
-        elif not path.is_file():
+        elif public_dir.is_dir() and not path.is_file():
+            # public 폴더가 없는 실행 환경(CDN이 그림을 따로 내보내는 배포)에서는 이 검사를 건너뛴다.
+            # 그림이 빠진 콘텐츠는 PR 단계의 자동 검사가 막는다.
             errors.append(f"{where}: 'image' 파일이 없어요: public/{image}")
     out["image"] = image
 
