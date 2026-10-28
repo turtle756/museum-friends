@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>유물 친구 찾기</title>
+  <meta name="description" content="아이와 함께 박물관 유물을 찾고, 자세히 보고, 친구로 모으는 웹앱">
+  <meta name="theme-color" content="#9c3d1f">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="module" src="/js/main.js"></script>
+</head>
+<body>
+  <main id="app">
+    <section id="screen-start" class="screen" aria-labelledby="start-title">
+      <p class="badge" id="start-badge" hidden>예시 콘텐츠 · 실제 전시와 다를 수 있어요</p>
+      <h1 id="start-title" tabindex="-1">유물 친구 찾기</h1>
+      <p class="lead">아이와 함께 유물을 찾고, 자세히 보고, 친구로 만들어요.</p>
+      <p class="meta" id="start-meta"></p>
+      <p class="status" id="start-status" role="status"></p>
+      <div class="actions">
+        <button class="btn" id="btn-start" type="button" hidden>시작하기</button>
+        <button class="btn" id="btn-resume" type="button" hidden>이어 하기</button>
+        <button class="btn btn--ghost" id="btn-book-from-start" type="button" hidden>도감 보기</button>
+        <button class="btn btn--ghost" id="btn-restart-from-start" type="button" hidden>처음부터</button>
+        <button class="btn" id="btn-retry" type="button" hidden>다시 시도</button>
+      </div>
+      <p class="note">아이의 대답은 이 휴대폰에만 저장돼요. 어떤 유물을 찾았는지만 이름 없이 셉니다.</p>
+    </section>
+
+    <section id="screen-card" class="screen" aria-labelledby="card-title" hidden>
+      <p class="step" id="card-step"></p>
+      <p class="who">부모님이 읽어 주세요</p>
+      <h2 id="card-title" class="question" tabindex="-1"></h2>
+      <details class="hint" id="card-hint-box"><summary>힌트 보기</summary><p id="card-hint"></p></details>
+      <div class="actions">
+        <button class="btn" id="btn-found" type="button">찾았어요</button>
+        <button class="btn btn--ghost" id="btn-book-from-card" type="button">도감</button>
+      </div>
+    </section>
+
+    <section id="screen-find" class="screen" aria-labelledby="find-title" hidden>
+      <h2 id="find-title" tabindex="-1">유물 옆 QR을 비춰 주세요</h2>
+      <div class="camera" id="camera" hidden>
+        <video id="video" muted playsinline aria-label="카메라 화면"></video>
+        <div class="camera__frame" aria-hidden="true"></div>
+      </div>
+      <button class="btn" id="btn-camera" type="button">카메라 켜기</button>
+      <p class="note" id="camera-note" hidden></p>
+      <form id="code-form" class="code-form" novalidate>
+        <label for="code-input">또는 유물 옆 번호 세 자리</label>
+        <div class="code-form__row">
+          <input id="code-input" name="code" inputmode="numeric" autocomplete="off" maxlength="3">
+          <button class="btn" type="submit">확인</button>
+        </div>
+      </form>
+      <p class="feedback" id="find-feedback" role="status" aria-live="polite"></p>
+      <button class="btn btn--ghost" id="btn-back-to-card" type="button">질문 다시 보기</button>
+    </section>
+
+    <section id="screen-observe" class="screen" aria-labelledby="observe-title" hidden>
+      <p class="who">아이가 직접 보고 골라요</p>
+      <h2 id="observe-title" class="question" tabindex="-1"></h2>
+      <div class="choices" id="choices"></div>
+      <p class="feedback" id="observe-feedback" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="screen-friend" class="screen" aria-labelledby="friend-title" hidden>
+      <h2 id="friend-title" tabindex="-1"></h2>
+      <div class="friend-stage" id="friend-stage"></div>
+      <p class="story" id="friend-story"></p>
+      <p class="credit" id="friend-credit"></p>
+      <form id="imagine-form" class="imagine">
+        <label for="imagine-input" id="imagine-question"></label>
+        <input id="imagine-input" name="answer" maxlength="20" autocomplete="off" placeholder="아이의 대답">
+        <p class="note">키보드의 마이크 버튼으로 말해도 돼요.</p>
+        <div class="actions">
+          <button class="btn" type="submit">친구에게 알려 주기</button>
+          <button class="btn btn--ghost" id="btn-skip" type="button">건너뛰기</button>
+        </div>
+      </form>
+      <div class="result" id="friend-result" hidden>
+        <p class="bubble" id="friend-line" tabindex="-1"></p>
+        <button class="btn" id="btn-next" type="button"></button>
+      </div>
+    </section>
+
+    <section id="screen-book" class="screen" aria-labelledby="book-title" hidden>
+      <h2 id="book-title" tabindex="-1">유물 친구 도감</h2>
+      <p class="meta" id="book-count"></p>
+      <p class="done" id="book-done" hidden>친구를 모두 만났어요!</p>
+      <ul class="book" id="book-list"></ul>
+      <div class="actions">
+        <button class="btn" id="btn-continue" type="button" hidden>계속 찾기</button>
+        <button class="btn" id="btn-save" type="button">이미지로 저장</button>
+        <button class="btn btn--ghost" id="btn-restart" type="button">처음부터 다시</button>
+        <button class="btn btn--ghost btn--danger" id="btn-clear" type="button">기록 지우기</button>
+      </div>
+      <p class="feedback" id="book-feedback" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <footer class="footer">가톨릭대학교 웹프로그래밍 팀 프로젝트 시제품 · 박물관 공식 서비스가 아닙니다</footer>
+  <noscript><p class="noscript">이 페이지는 자바스크립트가 켜져 있어야 동작해요.</p></noscript>
+</body>
+</html>

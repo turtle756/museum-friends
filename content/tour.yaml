@@ -1,0 +1,75 @@
+# 유물 친구 찾기 콘텐츠
+# 고치는 방법은 docs/content-guide.md 를 보세요.
+# 지금 카드는 흐름을 시험하려는 예시입니다. 그림과 관찰 질문의 정답은 public/img 의 예시 그림 기준이고,
+# 현장 방문 뒤 실제 유물 사진과 질문으로 바꿉니다.
+
+id: hwal-sample
+title: 활박물관 유물 친구 찾기
+museum: 부천활박물관
+status: 예시
+age: 6~9세
+minutes: 15
+
+cards:
+  - code: "101"
+    name: 신기전기화차
+    find: 화살을 아주 많이 꽂을 수 있는 큰 수레를 찾아볼까?
+    hint: 입구에서 가장 먼저 보이는 유물이에요.
+    observe:
+      question: 화살 구멍은 몇 줄이야?
+      choices: [3줄, 5줄, 7줄]
+      answer: 5줄
+    story: 화약을 단 화살을 100발까지 한꺼번에 쏠 수 있었어요.
+    imagine:
+      question: 너라면 화살 대신 무엇을 날려 보낼래?
+      line: "나는 {답}{을/를} 날려 보내고 싶은 화차야!"
+      skip_line: 나는 화살 100발을 한꺼번에 쏘는 화차야!
+    image: img/sample-101.svg
+    image_alt: 화살 구멍이 여러 줄 뚫린 나무 수레 그림
+    face: {x: 50, y: 45, size: 40}
+    source: 경기도뉴스포털, 전통 활 문화를 만나다! 부천활박물관 (2024-12-09)
+    image_credit: 팀이 그린 예시 그림
+    checked_by: ""
+    note: 관찰 질문과 정답은 실제 화차를 보고 다시 정한다.
+
+  - code: "102"
+    name: 각궁
+    find: 뿔로 만든 활을 찾아볼까?
+    hint: 설명판에 '각궁'이라고 적혀 있어요.
+    observe:
+      question: 활 가운데 손잡이는 무슨 색이야?
+      choices: [빨간색, 파란색, 초록색]
+      answer: 빨간색
+    story: 뿔로 만든 활이라서 '뿔 활'이라고도 불러요.
+    imagine:
+      question: 이 활로 무엇을 맞혀 보고 싶어?
+      line: "나는 {답}{을/를} 맞혀 보고 싶은 활이야!"
+      skip_line: 나는 뿔로 만든 튼튼한 활이야!
+    image: img/sample-102.svg
+    image_alt: 가운데에 빨간 손잡이가 있는 활 그림
+    face: {x: 57, y: 50, size: 30}
+    source: 기호일보, 부천 활 박물관 각궁 전시Ⅴ '뿔 활' 개최
+    image_credit: 팀이 그린 예시 그림
+    checked_by: ""
+    note: 실제 전시 위치와 설명판 문구를 확인한다.
+
+  - code: "103"
+    name: 옛날 화살촉
+    find: 모양이 서로 다른 화살촉이 모여 있는 곳을 찾아볼까?
+    hint: 옛날 나라별 화살이 나란히 놓여 있어요.
+    observe:
+      question: 세모 모양 화살촉은 몇 개야?
+      choices: [1개, 2개, 3개]
+      answer: 2개
+    story: 고구려, 백제, 신라, 통일신라의 화살은 나라마다 화살촉 모양이 달라요.
+    imagine:
+      question: 너라면 화살촉을 어떤 모양으로 만들래?
+      line: "나는 {답}처럼 생긴 화살촉이 되고 싶어!"
+      skip_line: 나는 나라마다 모양이 다른 화살촉이야!
+    image: img/sample-103.svg
+    image_alt: 세모, 나뭇잎, 세모, 납작한 모양의 화살촉 네 개 그림
+    face: {x: 50, y: 42, size: 34}
+    source: 경기도뉴스포털, 전통 활 문화를 만나다! 부천활박물관 (2024-12-09)
+    image_credit: 팀이 그린 예시 그림
+    checked_by: ""
+    note: 실제 전시된 화살촉 개수와 모양을 확인한다.

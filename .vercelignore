@@ -1,0 +1,9 @@
+.venv
+.github
+instance
+qr
+tests
+tools
+docs
+README.md
+requirements-dev.txt

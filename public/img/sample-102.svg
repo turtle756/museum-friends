@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect x="4" y="4" width="392" height="292" rx="24" fill="#efe4d0"/>
+  <line x1="138" y1="44" x2="138" y2="256" stroke="#d9c7a8" stroke-width="3"/>
+  <path d="M150 40 C 255 60, 262 120, 238 150 C 262 180, 255 240, 150 260" fill="none" stroke="#6b3f22" stroke-width="16" stroke-linecap="round"/>
+  <path d="M150 40 q -16 -10 -26 4 M150 260 q -16 10 -26 -4" fill="none" stroke="#6b3f22" stroke-width="10" stroke-linecap="round"/>
+  <rect x="226" y="126" width="26" height="48" rx="8" fill="#c0392b" stroke="#7a1f14" stroke-width="3"/>
+  <text x="20" y="288" font-family="sans-serif" font-size="14" fill="#8a7461">예시 그림</text>
+</svg>

@@ -1,0 +1,25 @@
+name: 검사
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 패키지 설치
+        run: pip install -r requirements-dev.txt
+      - name: 서버·콘텐츠 검사 (pytest)
+        run: pytest -q
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: 화면 로직 검사 (node --test)
+        run: node --test "tests/js/*.test.mjs"
