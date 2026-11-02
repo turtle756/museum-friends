@@ -3,7 +3,7 @@
 아이와 함께 온 가족이 박물관 유물을 찾고, 자세히 보고, "유물 친구"로 모으는 모바일 웹앱입니다.
 부천시 박물관과 함께하는 가톨릭대학교 웹프로그래밍 팀 프로젝트(IA-PBL) 시제품입니다.
 
-- 운영 주소: 배포 후 적기
+- 운영 주소: https://museum-friends.vercel.app
 - 설계 문서: [docs/plans/2026-10-28-유물친구-설계.md](docs/plans/2026-10-28-유물친구-설계.md)
 - 콘텐츠 고치는 법: [docs/content-guide.md](docs/content-guide.md)
 
@@ -48,9 +48,10 @@ node --test "tests/js/*.test.mjs"
 GitHub에 push하거나 PR을 올리면 같은 검사가 자동으로 돕니다(`.github/workflows/ci.yml`).
 
 ## 배포 (Vercel + Neon)
-1. Vercel에서 이 GitHub 저장소로 프로젝트를 만듭니다. 설정은 고칠 것이 없습니다. Vercel이 Flask를 알아봅니다.
-2. Vercel 프로젝트의 Storage에서 Neon Postgres를 연결합니다. `DATABASE_URL` 이 자동으로 들어갑니다.
-   Neon 콘솔에서 직접 만들었다면 pooled 연결 주소를 Vercel 환경변수 `DATABASE_URL` 에 넣습니다.
+1. Vercel 프로젝트 `museum-friends`(함수 리전 icn1 서울)가 있습니다. 지금은 GitHub 자동 배포가 연결되지 않아 서버 담당이 명령줄로 배포합니다.
+   `npx vercel@latest deploy --prod` (환경변수 `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` 필요)
+   자동 배포를 원하면 Vercel 계정에 GitHub 로그인을 연결한 뒤 프로젝트 Settings, Git에서 이 저장소를 연결합니다.
+2. Neon 프로젝트 `museum-friends`(싱가포르 리전)의 pooled 연결 주소가 Vercel 환경변수 `DATABASE_URL` 에 들어 있습니다.
 3. 다시 배포한 뒤 `https://주소/health` 가 `{"db": "ok", "status": "ok"}` 인지 확인합니다. 표는 첫 요청 때 자동으로 만들어집니다.
 4. 휴대폰 새 시크릿 창에서 처음부터 도감까지 한 번 진행합니다(스모크 테스트).
 
