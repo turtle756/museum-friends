@@ -1,0 +1,80 @@
+/* 활동지 A4 인쇄 스타일. 흑백 인쇄 기준: 굵은 검은 선, 색은 보조 */
+@page { size: A4; margin: 0; }
+.sheet-body { background: #A39C94; margin: 0; padding: 20px 0; font-family: system-ui, "Malgun Gothic", "Apple SD Gothic Neo", sans-serif; color: #24160F; word-break: keep-all; }
+.sheet-body.embed { padding: 0; background: #fff; }
+.sheet { width: 210mm; height: 297mm; margin: 0 auto 20px; background: #fff; padding: 12mm; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; gap: 5mm; page-break-after: always; break-after: page; }
+.sheet--landscape { width: 297mm; height: 210mm; }
+.embed .sheet { margin: 0; }
+.sheet img.px { image-rendering: pixelated; }
+.sh-head { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2mm solid #24160F; padding-bottom: 3mm; }
+.sh-title { font-size: 26pt; font-weight: 900; line-height: 1.1; }
+.sh-sub { font-size: 11pt; margin-top: 1mm; }
+.sh-name { font-size: 11pt; font-weight: 700; display: flex; gap: 2mm; align-items: flex-end; }
+.sh-name span { display: inline-block; width: 40mm; border-bottom: 0.6mm solid #24160F; height: 7mm; }
+.sh-foot { margin-top: auto; border-top: 0.8mm dashed #24160F; padding-top: 3mm; font-size: 11pt; font-weight: 700; }
+.sh-choices { display: flex; flex-wrap: wrap; gap: 2mm 5mm; margin-top: 1.5mm; font-size: 10.5pt; }
+.sh-choices i { display: inline-block; width: 4mm; height: 4mm; border: 0.6mm solid #24160F; border-radius: 50%; margin-right: 1mm; vertical-align: -0.6mm; }
+.sh-stamp { width: 16mm; height: 16mm; border: 0.8mm dashed #B8322A; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font-size: 8pt; color: #B8322A; }
+.sh-stamp--big { width: 30mm; height: 30mm; }
+.sh-art { width: 18mm; height: 18mm; object-fit: contain; flex: none; }
+.sh-art--icon { display: flex; align-items: center; justify-content: center; }
+.sh-qn { width: 9mm; height: 9mm; border: 0.8mm solid #24160F; background: #F3D17E; font-weight: 900; display: flex; align-items: center; justify-content: center; flex: none; font-size: 12pt; }
+/* S1 */
+.sh-qgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+.sh-q { border: 0.8mm solid #24160F; padding: 3mm; display: flex; gap: 2.5mm; align-items: flex-start; min-height: 46mm; font-size: 11pt; }
+.sh-qbody { flex: 1; }
+/* S2 */
+.sh-map svg { width: 100%; height: auto; }
+.sh-maplist { margin: 0; padding-left: 7mm; display: grid; gap: 2mm; font-size: 10.5pt; }
+.sh-maplist li { display: flex; align-items: center; justify-content: space-between; gap: 3mm; border-bottom: 0.3mm solid #A39C94; padding-bottom: 1mm; }
+.sh-maplist .sh-stamp { width: 11mm; height: 11mm; }
+/* S3 */
+.sh-board { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4mm; }
+.sh-cell { border: 0.8mm solid #24160F; padding: 3mm; display: grid; grid-template-columns: auto 1fr auto; gap: 3mm; align-items: center; font-size: 11pt; min-height: 30mm; }
+.sh-big { margin-top: auto; border: 1.2mm solid #24160F; background: #F3D17E; padding: 5mm; display: flex; gap: 5mm; align-items: center; font-size: 15pt; }
+.sh-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+.sh-step { border: 0.8mm solid #24160F; aspect-ratio: 1; position: relative; }
+.sh-step span { position: absolute; top: 2mm; left: 2mm; width: 7mm; height: 7mm; background: #24160F; color: #fff; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+.sh-ph { height: 100%; display: flex; align-items: center; justify-content: center; color: #A39C94; font-size: 10pt; }
+.sh-photo { margin-top: auto; border: 1.2mm dashed #24160F; padding: 5mm; display: flex; gap: 5mm; align-items: center; font-size: 13pt; }
+/* S4 */
+.sh-fold { display: grid; grid-template-columns: 1fr 55mm; flex: 1; }
+.sh-fold__q { display: grid; gap: 3mm; padding-right: 4mm; font-size: 11pt; }
+.sh-fq { display: flex; gap: 3mm; border-bottom: 0.4mm solid #A39C94; padding-bottom: 2mm; }
+.sh-fold__a { border-left: 1mm dashed #24160F; padding-left: 4mm; display: flex; flex-direction: column; gap: 3mm; font-size: 11pt; background: repeating-linear-gradient(45deg, #fff 0 4mm, #F1E4CA 4mm 5mm); }
+.sh-fold__tip { font-weight: 900; display: flex; gap: 2mm; align-items: center; font-size: 10pt; }
+.sh-fa { background: #fff; border: 0.5mm solid #24160F; padding: 1.5mm 2mm; font-weight: 700; }
+.sh-fold__stamp { margin-top: auto; border: 1mm solid #B8322A; color: #B8322A; font-weight: 900; font-size: 16pt; text-align: center; padding: 4mm 0; transform: rotate(-8deg); background: #fff; }
+/* S5 */
+.sh-exam { display: flex; flex-direction: column; gap: 3mm; height: 100%; border: 2mm double #5E3621; padding: 5mm; box-sizing: border-box; }
+.sh-eq { display: grid; grid-template-columns: 18mm 1fr; gap: 3mm; border-bottom: 0.4mm solid #A39C94; padding-bottom: 2mm; font-size: 11pt; }
+.sh-eqn { font-family: "Song Myung", serif; font-size: 14pt; color: #7E1C17; }
+.sh-hong { flex: 1; background: #7E1C17; padding: 8mm; display: flex; }
+.sh-hong__in { flex: 1; border: 1.5mm solid #F3D17E; background: #B8322A; color: #FFFAF0; padding: 12mm; text-align: center; display: flex; flex-direction: column; gap: 8mm; justify-content: center; font-size: 15pt; line-height: 1.9; }
+.sh-hong__t { font-family: "Song Myung", serif; font-size: 22pt; letter-spacing: 4mm; }
+.sh-hong__big { font-family: "Song Myung", serif; font-size: 64pt; letter-spacing: 8mm; color: #F3D17E; }
+.sh-line { display: inline-block; width: 40mm; border-bottom: 0.6mm solid #FFFAF0; }
+.sh-hong__sign { font-size: 13pt; }
+/* S6 */
+.sh-mats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; }
+.sh-mat { border: 0.8mm solid #24160F; padding: 2mm; display: flex; flex-direction: column; gap: 1mm; font-size: 10.5pt; }
+.sh-box { height: 22mm; border: 0.4mm dashed #A39C94; }
+.sh-order ol { columns: 2; margin: 2mm 0 0; font-size: 11pt; }
+.sh-drawbig { flex: 1; border: 1mm solid #24160F; padding: 3mm; font-size: 12pt; }
+/* S7 */
+.sh-draws { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; flex: 1; }
+.sh-draw { border: 0.8mm solid #24160F; padding: 3mm; display: flex; flex-direction: column; gap: 1.5mm; font-size: 11pt; }
+.sh-drawbox { flex: 1; border: 0.4mm dashed #A39C94; min-height: 40mm; }
+/* S8 미니북 */
+.mb { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr 1fr; flex: 1; border: 0.5mm dashed #24160F; }
+.mb-p { border: 0.3mm dashed #A39C94; padding: 3mm; overflow: hidden; }
+.mb-rot .mb-in { transform: rotate(180deg); }
+.mb-in { height: 100%; display: flex; flex-direction: column; gap: 1.5mm; align-items: flex-start; font-size: 9.5pt; }
+.mb-no { width: 7mm; height: 7mm; background: #24160F; color: #fff; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+.mb-cover { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3mm; text-align: center; font-size: 14pt; }
+.mb-guide { font-size: 9pt; }
+.note { border-left: 2mm solid #E3A238; padding: 2mm 3mm; font-size: 9.5pt; background: #FFFAF0; }
+.small { font-size: 9pt; }
+/* 휴대폰 화면에서는 A4 한 장이 화면 폭에 들어오게 줄여 보여 준다(인쇄에는 영향 없음) */
+@media screen and (max-width: 820px) { .sheet-body:not(.embed) .sheet { zoom: .46; } .sheet-body:not(.embed) .sheet--landscape { zoom: .33; } }
+@media print { .sheet-body { background: #fff; padding: 0; } .sheet { margin: 0; } .noprint { display: none !important; } }

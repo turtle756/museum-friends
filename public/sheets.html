@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>아이 활동지 시안 · 유물 친구 시안 갤러리</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/assets/css/g.css">
+<style>
+.sheetprev { width: 302px; height: 427px; overflow: hidden; border: 4px solid var(--ink); box-shadow: var(--shadow); background: #fff; position: relative; }
+.sheetprev--land { width: 427px; height: 302px; }
+.sheetprev iframe { width: 794px; height: 1123px; border: 0; transform: scale(.38); transform-origin: 0 0; pointer-events: none; }
+.sheetprev--land iframe { width: 1123px; height: 794px; }
+@media (max-width: 480px) { .sheetprev--land { width: 302px; height: 214px; } .sheetprev--land iframe { transform: scale(.269); } }
+</style>
+</head>
+<body>
+<main class="gmain">
+  <h1>아이 활동지 시안 8종</h1>
+  <p class="lead">아이 손에 들려줄 종이입니다. 모두 A4로 바로 인쇄할 수 있습니다. 미리보기를 누르면 인쇄용 화면이 열립니다.</p>
+  <div class="note warn"><b>먼저 확인할 것:</b> 박물관은 이미 어린이 종이 활동지 「부천활탐험대」를 운영 중입니다. 따로 만들지, 그것과 이을지는 <a href="/strategies.html">큰 전략</a>에서 함께 정합니다.</div>
+  <div class="note">흑백 인쇄 기준으로 만들었습니다. 색이 없어도 굵은 선과 모양으로 구분됩니다. 내용은 모두 설명판 원문 기준이고, 확인이 필요한 부분은 시안 안에 적어 두었습니다.</div>
+  <div id="grid" class="grid grid--3"></div>
+</main>
+<script type="module">
+import { chrome, esc } from "/assets/js/core.js";
+import { SHEETS } from "/assets/js/sheets.js";
+chrome();
+document.getElementById("grid").innerHTML = SHEETS.map((S) => `<section class="shot">
+  <div class="shot__cap"><span class="chip chip--red">${S.id}</span> ${esc(S.name)}</div>
+  <a class="sheetprev${S.orientation === "landscape" ? " sheetprev--land" : ""}" href="/sheet.html?v=${S.id}" title="${esc(S.name)} 인쇄용 열기"><iframe src="/sheet.html?v=${S.id}&embed=1" loading="lazy" scrolling="no" tabindex="-1" title="${esc(S.name)} 미리보기"></iframe></a>
+  <div class="shot__sub">${esc(S.idea)}</div>
+  <ul class="pc pros small">${S.pros.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>
+  <ul class="pc cons small">${S.cons.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>
+  <a class="btn btn--paper" href="/sheet.html?v=${S.id}">인쇄용 열기</a></section>`).join("");
+</script>
+</body>
+</html>

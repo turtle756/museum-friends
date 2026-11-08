@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>부모 카드 시안 · 유물 친구 시안 갤러리</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/g.css">
+</head>
+<body>
+<main class="gmain">
+  <h1>부모 카드 시안 8종</h1>
+  <p class="lead">부모가 유물 앞에서 휴대폰을 잠깐 보고 아이에게 설명하는 카드입니다. 같은 내용을 8가지 모양으로 만들었습니다. 버튼은 실제로 눌러 볼 수 있습니다.</p>
+  <div class="toolbar">
+    <label>정류장 <select id="stop"></select></label>
+    <label>그림 스타일 <select id="theme"><option value="pixel">사진 기반 픽셀</option><option value="trad">전통 느낌(실제 사진)</option><option value="mix">혼합</option></select></label>
+  </div>
+  <div class="note">비교할 때 볼 것: 부모가 <b>3초 안에</b> 첫마디를 꺼낼 수 있는가, 휴대폰을 <b>오래 보지 않아도</b> 되는가, 아이가 화면을 <b>뺏고 싶어지지 않는가</b>.</div>
+  <div id="grid" class="grid grid--phones"></div>
+</main>
+<script type="module">
+import { chrome, loadStops, esc } from "/assets/js/core.js";
+import { CARD_LAYOUTS, renderCard, wireCards } from "/assets/js/cards.js";
+chrome();
+const data = await loadStops();
+const stops = data.stops;
+const sel = document.getElementById("stop"), th = document.getElementById("theme"), grid = document.getElementById("grid");
+sel.innerHTML = stops.map((s) => `<option value="${s.id}">${s.no}. ${esc(s.name)}</option>`).join("");
+const params = new URLSearchParams(location.search);
+sel.value = params.get("stop") || "singijeon";
+function draw() {
+  const s = stops.find((x) => x.id === sel.value);
+  grid.innerHTML = CARD_LAYOUTS.map((L) => `<section class="shot" id="${L.id}">
+    <div class="shot__cap"><span class="chip chip--red">${L.id}</span> ${esc(L.name)}</div>
+    <div class="shot__sub">${esc(L.idea)}</div>
+    <div class="phone"><div class="phone__bar"><span>부모 휴대폰</span><span>${esc(s.name)}</span></div>
+      <div class="phone__screen">${renderCard(L.id, s, { total: stops.length, theme: th.value, stops })}</div></div>
+    <ul class="pc pros small">${L.pros.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>
+    <ul class="pc cons small">${L.cons.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>
+    <a class="btn btn--paper" href="/proto.html?c=${L.id}&s=C">이 카드로 전체 흐름 눌러 보기</a>
+  </section>`).join("");
+}
+sel.onchange = th.onchange = draw;
+wireCards(grid);
+draw();
+if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
+</script>
+</body>
+</html>

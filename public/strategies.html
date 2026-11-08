@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>큰 전략 · 유물 친구 시안 갤러리</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/assets/css/g.css">
+</head>
+<body>
+<main class="gmain">
+  <h1>큰 전략 6안</h1>
+  <p class="lead">누가 무엇을 들고 다니는지, 박물관이 이미 운영하는 「부천활탐험대」와 어떤 관계인지에 따라 나눴습니다. 전략마다 어울리는 카드·활동지·도장·이야기 틀·동선을 묶어 두었고, 각 칸을 누르면 해당 시안으로 갑니다.</p>
+  <div class="note">모든 전략의 공통점: 아이 손에는 휴대폰이 없고, 부모가 카드를 보고 이야기해 줍니다. 다른 점은 <b>아이 손에 무엇을 쥐여 주는가</b>입니다.</div>
+  <div id="list" class="grid" style="gap:28px"></div>
+</main>
+<script type="module">
+import { chrome, esc, icon } from "/assets/js/core.js";
+import { STRATEGIES, STAMPS, THEMES, ROUTES } from "/assets/js/options.js";
+import { CARD_LAYOUTS } from "/assets/js/cards.js";
+import { SHEETS } from "/assets/js/sheets.js";
+chrome();
+const nm = (arr, id) => (arr.find((x) => x.id === id) || {}).name || "";
+const li = (a, cls) => `<ul class="pc ${cls}">${a.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+document.getElementById("list").innerHTML = STRATEGIES.map((S) => {
+  const c = S.combo;
+  const links = [
+    [`/cards.html#${c.card}`, `카드 ${c.card} ${nm(CARD_LAYOUTS, c.card)}`],
+    c.sheet ? [`/sheet.html?v=${c.sheet}`, `활동지 ${c.sheet} ${nm(SHEETS, c.sheet)}`] : [`/sheets.html`, "활동지: 박물관 기존 것"],
+    [`/stamps.html#${c.stamp}`, `도장 ${c.stamp} ${nm(STAMPS, c.stamp)}`],
+    [`/themes.html#${c.theme}`, `이야기 ${c.theme} ${nm(THEMES, c.theme)}`],
+    [`/routes.html#${c.route}`, `동선 ${c.route} ${nm(ROUTES, c.route)}`],
+  ];
+  return `<article class="box strat" id="${S.id}">
+    <div class="strat__key">${S.id}</div>
+    <div>
+      <h2 style="margin-top:0">${esc(S.name)}</h2>
+      <p class="strat__one">${esc(S.one)}</p>
+      <div class="who">
+        <div>${icon("fold", 36)}<span><b>아이 손</b>${esc(S.kid)}</span></div>
+        <div>${icon("talk", 36)}<span><b>부모 휴대폰</b>${esc(S.parent)}</span></div>
+        <div>${icon("stamp", 36)}<span><b>박물관이 할 일</b>${esc(S.museum)}<br><span class="small muted">인쇄: ${esc(S.print)}</span></span></div>
+      </div>
+      <b>하루 흐름</b>
+      <ol class="journey">${S.journey.map((j) => `<li>${esc(j)}</li>`).join("")}</ol>
+      <div class="split"><div><b>좋은 점</b>${li(S.pros, "pros")}</div><div><b>걱정되는 점</b>${li(S.cons, "cons")}</div></div>
+      <div class="risk">가장 큰 위험: ${esc(S.risk)}</div>
+      <div class="combo">${links.map(([h, t]) => `<a href="${h}">${esc(t)}</a>`).join("")}</div>
+      <p style="margin:14px 0 0"><a class="btn" href="/proto.html?s=${S.id}">이 전략으로 처음부터 끝까지 눌러 보기</a></p>
+    </div></article>`;
+}).join("");
+if (location.hash) document.querySelector(location.hash)?.scrollIntoView();
+</script>
+</body>
+</html>

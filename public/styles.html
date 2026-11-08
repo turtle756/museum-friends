@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>그림 스타일 · 유물 친구 시안 갤러리</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Song+Myung&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/g.css">
+</head>
+<body>
+<main class="gmain">
+  <h1>그림 스타일 3안</h1>
+  <p class="lead">같은 카드를 세 가지 느낌으로 만들었습니다. 셋 다 같은 16색 팔레트를 쓰고, 유물 그림은 모두 실제 사진에서 출발합니다.</p>
+  <div class="toolbar"><label>정류장 <select id="stop"></select></label><label>카드 모양 <select id="card"></select></label></div>
+  <div id="three" class="grid grid--phones"></div>
+
+  <h2>픽셀 그림은 이렇게 만듭니다</h2>
+  <p>유물을 상상으로 그리지 않습니다. 현장 사진에서 유물만 오려 내고, 16색으로 줄이고, 겹친 점을 정리한 뒤 굵은 먹색 테두리를 두릅니다. 그래서 모양은 실물 그대로입니다.</p>
+  <div class="grid grid--2" id="pipes"></div>
+  <div class="note warn"><b>아직 안 되는 것:</b> 줄을 건 활(안쪽 빈 공간이 채워짐), 작은 화살촉(설명 카드가 같이 잡힘), 총통(어두운 쇠가 막대처럼 뭉개짐), 신전 화살대(깃과 깃발이 엉킴)는 자동 변환 결과가 실물과 달라 시안에서 뺐습니다. 이런 유물은 사진을 그대로 쓰거나 손으로 다듬어야 합니다.</div>
+</main>
+<script type="module">
+import { chrome, esc, loadStops } from "/assets/js/core.js";
+import { CARD_LAYOUTS, renderCard, wireCards } from "/assets/js/cards.js";
+chrome();
+const { stops } = await loadStops();
+const sel = document.getElementById("stop"), card = document.getElementById("card"), three = document.getElementById("three");
+sel.innerHTML = stops.map((s) => `<option value="${s.id}">${s.no}. ${esc(s.name)}</option>`).join("");
+card.innerHTML = CARD_LAYOUTS.map((L) => `<option value="${L.id}">${L.id} ${esc(L.name)}</option>`).join("");
+sel.value = "singijeon"; card.value = "C1";
+const V = [
+  ["V1", "사진 기반 픽셀", "pixel", "게임 같은 친근함. 아이가 \"이거 뭐야?\" 하고 들여다본다.", ["다른 박물관 앱과 확실히 다르다", "흑백 인쇄해도 모양이 또렷하다"], ["유물마다 손이 간다", "변환이 안 되는 유물이 있다"]],
+  ["V2", "전통 느낌", "trad", "한지 바탕, 붓글씨 제목, 실제 사진. 박물관 분위기 그대로.", ["박물관이 가장 편하게 받아들인다", "사진만 있으면 바로 만든다"], ["흔한 박물관 앱처럼 보일 수 있다"]],
+  ["V3", "혼합", "mix", "픽셀 그림에 붓글씨 제목. 친근함과 박물관다움을 반씩.", ["두 느낌의 장점을 섞는다"], ["어중간해 보일 수 있다"]],
+];
+const li = (a, cls) => `<ul class="pc ${cls} small">${a.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+function draw() {
+  const s = stops.find((x) => x.id === sel.value);
+  three.innerHTML = V.map(([id, name, theme, idea, pros, cons]) => `<section class="shot" id="${id}">
+    <div class="shot__cap"><span class="chip chip--red">${id}</span> ${name}</div>
+    <div class="shot__sub">${idea}</div>
+    <div class="phone"><div class="phone__bar"><span>부모 휴대폰</span><span>${esc(s.name)}</span></div>
+      <div class="phone__screen theme-${theme}">${renderCard(card.value, s, { total: stops.length, theme, stops })}</div></div>
+    ${li(pros, "pros")}${li(cons, "cons")}</section>`).join("");
+}
+sel.onchange = card.onchange = draw;
+wireCards(three);
+draw();
+document.getElementById("pipes").innerHTML = stops.filter((s) => s.pixel).map((s) => `<div class="box box--flat"><b>${s.no}. ${esc(s.name)}</b>
+  <div class="pipe"><figure><img src="/assets/img/photo/${s.pixelSrc || s.photo}.jpg" alt="${esc(s.name)} 바탕 사진" loading="lazy"><figcaption>바탕이 된 현장 사진</figcaption></figure>
+  <div class="pipe__arrow" aria-hidden="true"></div>
+  <figure><img class="px" src="/assets/img/pixel/${s.pixel}.png" alt="${esc(s.name)} 픽셀 그림" loading="lazy"><figcaption>16색 픽셀 그림</figcaption></figure></div></div>`).join("");
+</script>
+</body>
+</html>

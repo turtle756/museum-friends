@@ -1,25 +1,30 @@
-# 유물 친구 찾기
+# 유물 친구 시안 갤러리
 
-아이와 함께 온 가족이 박물관 유물을 찾고, 자세히 보고, "유물 친구"로 모으는 모바일 웹앱입니다.
-부천시 박물관과 함께하는 가톨릭대학교 웹프로그래밍 팀 프로젝트(IA-PBL) 시제품입니다.
+부천활박물관에 온 가족을 위한 "부모 큐레이터" 시안 모음입니다. 부모는 휴대폰 카드를 잠깐 보고 아이에게 이야기해 주고, 아이는 휴대폰 대신 종이 활동지를 들고 퀴즈와 도장을 모읍니다.
+가톨릭대학교 웹프로그래밍 팀 프로젝트(IA-PBL) 회의용 시안이며, 사진 사용 허락 전이라 검색 노출을 막아 두었습니다(noindex, robots.txt).
 
 - 운영 주소: https://museum-friends.vercel.app
-- 설계 문서: [docs/plans/2026-10-28-유물친구-설계.md](docs/plans/2026-10-28-유물친구-설계.md)
-- 콘텐츠 고치는 법: [docs/content-guide.md](docs/content-guide.md)
+- 이전 시험용 앱(유물 친구 찾기)은 git 태그 `v0-prototype` 에 보존되어 있습니다.
 
-## 어떻게 쓰나
-1. 입구 QR을 찍으면 질문 카드가 뜹니다. 부모가 아이에게 읽어 줍니다.
-2. 아이가 유물을 찾으면 유물 옆 QR을 찍거나 번호 세 자리를 입력합니다.
-3. 아이가 실물을 보고 관찰 질문에 답합니다. 맞히면 유물 친구가 나타납니다.
-4. 아이의 상상 대답이 친구의 첫 대사가 됩니다. 조사는 자동으로 맞춥니다.
-5. 다 모으면 도감이 완성되고 이미지로 저장할 수 있습니다.
+## 갤러리 구성
+| 페이지 | 내용 |
+|---|---|
+| `/` | 컨셉, 회의 진행 순서, 현장 조사 결과, 팔레트 |
+| `/strategies.html` | 큰 전략 A~F (누가 무엇을 들고 다니는가) |
+| `/cards.html` | 부모 카드 C1~C8 (휴대폰 틀 안에서 눌러 보기) |
+| `/sheets.html`, `/sheet.html?v=S1` | 아이 활동지 S1~S8 (A4 인쇄, `&r=R2` 로 동선에 맞춘 판) |
+| `/stamps.html`, `/themes.html`, `/styles.html`, `/routes.html` | 도장 방식, 이야기 틀, 그림 스타일, 동선 |
+| `/compare.html` | 전략 비교표 |
+| `/proto.html?s=C&c=C8` | 처음부터 끝까지 흐름 체험 (새로고침해도 이어짐) |
+
+내용은 모두 `public/assets/data/stops.json` 한 곳에서 나옵니다. 사실은 현장 사진 속 설명판 원문만 쓰고, 다시 확인할 것은 `verify` 칸에 적습니다.
 
 ## 구조
 ```
-public/            화면(HTML·CSS·JS·그림). Vercel CDN이 바로 내보낸다
-content/tour.yaml  질문·이야기·정답. 팀원이 GitHub에서 고친다
+public/            시안 갤러리(HTML·CSS·JS 모듈·그림). Vercel CDN이 바로 내보낸다
+content/tour.yaml  이전 앱의 콘텐츠(서버 API가 아직 읽는다)
 museum_friends/    Flask: API, 콘텐츠 검사, DB
-tests/             pytest(서버·콘텐츠), node --test(화면 로직)
+tests/             pytest(서버·콘텐츠·페이지), node --test(시안 데이터·렌더링)
 tools/make_qr.py   QR 인쇄 페이지 만들기
 app.py             Vercel과 flask 명령이 찾는 진입점
 ```
@@ -37,8 +42,7 @@ uv venv --python 3.12 .venv
 uv pip install --python .venv/Scripts/python.exe -r requirements-dev.txt
 .venv/Scripts/python -m flask --app app run --port 5055
 ```
-브라우저에서 `http://127.0.0.1:5055` 를 엽니다. 로컬에서는 이용 기록이 `instance/local.db` 에 쌓입니다.
-휴대폰 카메라는 https에서만 켜지므로 카메라 시험은 배포 주소에서 합니다. 로컬에서는 번호 입력으로 시험합니다.
+브라우저에서 `http://127.0.0.1:5055` 를 엽니다.
 
 ## 테스트
 ```bash
@@ -53,7 +57,7 @@ GitHub에 push하거나 PR을 올리면 같은 검사가 자동으로 돕니다(
    자동 배포를 원하면 Vercel 계정에 GitHub 로그인을 연결한 뒤 프로젝트 Settings, Git에서 이 저장소를 연결합니다.
 2. Neon 프로젝트 `museum-friends`(싱가포르 리전)의 pooled 연결 주소가 Vercel 환경변수 `DATABASE_URL` 에 들어 있습니다.
 3. 다시 배포한 뒤 `https://주소/health` 가 `{"db": "ok", "status": "ok"}` 인지 확인합니다. 표는 첫 요청 때 자동으로 만들어집니다.
-4. 휴대폰 새 시크릿 창에서 처음부터 도감까지 한 번 진행합니다(스모크 테스트).
+4. 휴대폰 새 시크릿 창에서 갤러리 홈과 흐름 체험을 한 번 눌러 봅니다(스모크 테스트).
 
 - **배포 권한**: Vercel 무료 요금제는 계정 주인만 배포할 수 있습니다. 팀원은 PR을 올리고, 서버 담당이 main에 합칩니다.
 - **되돌리기**: Vercel 대시보드 Deployments에서 이전 정상 배포를 골라 Promote to Production 합니다.

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>비교표 · 유물 친구 시안 갤러리</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/assets/css/g.css">
+</head>
+<body>
+<main class="gmain">
+  <h1>비교표</h1>
+  <p class="lead">큰 전략 6안을 한 표에 놓았습니다. 점수는 매기지 않았습니다. 무엇이 필요하고 무엇을 아직 모르는지만 적었습니다.</p>
+  <div class="tablewrap"><table class="cmp" id="t1"></table></div>
+
+  <h2>전략별 추천 조합</h2>
+  <div class="tablewrap"><table class="cmp" id="t2"></table></div>
+
+  <h2>고르기 전에 확인할 것</h2>
+  <div class="grid grid--3">
+    <div class="box"><h3>1. 탐험대 활동지 실물</h3><p class="small" style="margin:0">「부천활탐험대」 내용을 봐야 B(짝꿍)가 되는지, C~F처럼 따로 만들어야 하는지 정할 수 있습니다.</p></div>
+    <div class="box"><h3>2. 박물관이 해 줄 수 있는 일</h3><p class="small" style="margin:0">A4 인쇄를 해 줄 수 있는지, 도장을 둘 수 있는지, QR을 어디에 붙일 수 있는지 물어봐야 합니다.</p></div>
+    <div class="box"><h3>3. 아이 걸음으로 걸린 시간</h3><p class="small" style="margin:0">8곳을 다 돌 수 있는지에 따라 동선(R1/R2)과 활동지 분량이 달라집니다.</p></div>
+  </div>
+</main>
+<script type="module">
+import { chrome, esc } from "/assets/js/core.js";
+import { STRATEGIES, STAMPS, THEMES, ROUTES } from "/assets/js/options.js";
+import { CARD_LAYOUTS } from "/assets/js/cards.js";
+import { SHEETS } from "/assets/js/sheets.js";
+chrome();
+const S = STRATEGIES;
+const EXTRA = {
+  A: { tamheom: "같이 쓴다(서로 따로 논다)", make: "부모 카드 {n}장", unknown: "기존 활동지만으로 아이가 끝까지 가는지" },
+  B: { tamheom: "짝꿍으로 붙는다", make: "탐험대 미션별 부모 카드", unknown: "탐험대 활동지 내용" },
+  C: { tamheom: "겹친다(종이 두 장)", make: "부모 카드 {n}장 + 퀴즈 책자", unknown: "박물관이 인쇄해 줄지" },
+  D: { tamheom: "따로 만든다", make: "부모 카드 {n}장 + 도장판 + 활 접기 도안", unknown: "아이가 활을 혼자 접을 수 있는지" },
+  E: { tamheom: "따로 만든다", make: "부모 카드 {n}장 + 미니북", unknown: "입구에서 접는 설명을 어떻게 할지" },
+  F: { tamheom: "따로 만든다", make: "부모 카드 {n}장 + 시험지 + 홍패", unknown: "홍패 고증" },
+};
+const rows = [
+  ["한 줄", (x) => x.one],
+  ["아이 손", (x) => x.kid],
+  ["부모 휴대폰", (x) => x.parent],
+  ["박물관이 할 일", (x) => x.museum],
+  ["인쇄", (x) => x.print],
+  ["기존 탐험대와", (x) => EXTRA[x.id].tamheom],
+  ["우리가 만들 것", (x) => EXTRA[x.id].make.replace("{n}", ROUTES.find((r) => r.id === x.combo.route).stops.length)],
+  ["아직 모르는 것", (x) => EXTRA[x.id].unknown],
+  ["가장 큰 위험", (x) => x.risk],
+];
+const head = `<thead><tr><th></th>${S.map((x) => `<th><a href="/strategies.html#${x.id}" style="color:inherit">${x.id}. ${esc(x.name)}</a></th>`).join("")}</tr></thead>`;
+document.getElementById("t1").innerHTML = head + `<tbody>${rows.map(([label, f]) => `<tr><th>${label}</th>${S.map((x) => `<td>${esc(f(x))}</td>`).join("")}</tr>`).join("")}</tbody>`;
+const nm = (arr, id) => (id ? `${id} ${(arr.find((a) => a.id === id) || {}).name || ""}` : "박물관 기존 것");
+const rows2 = [
+  ["부모 카드", (c) => nm(CARD_LAYOUTS, c.card), (c) => `/cards.html#${c.card}`],
+  ["아이 활동지", (c) => nm(SHEETS, c.sheet), (c) => (c.sheet ? `/sheet.html?v=${c.sheet}` : "/sheets.html")],
+  ["도장 방식", (c) => nm(STAMPS, c.stamp), (c) => `/stamps.html#${c.stamp}`],
+  ["이야기 틀", (c) => nm(THEMES, c.theme), (c) => `/themes.html#${c.theme}`],
+  ["동선", (c) => nm(ROUTES, c.route), (c) => `/routes.html#${c.route}`],
+  ["흐름 체험", () => "처음부터 끝까지 눌러 보기", (c, x) => `/proto.html?s=${x.id}`],
+];
+document.getElementById("t2").innerHTML = head + `<tbody>${rows2.map(([label, f, h]) => `<tr><th>${label}</th>${S.map((x) => `<td><a href="${h(x.combo, x)}">${esc(f(x.combo))}</a></td>`).join("")}</tr>`).join("")}</tbody>`;
+</script>
+</body>
+</html>
