@@ -6,18 +6,18 @@ export const COLORS = {
 };
 
 const NAV = [
-  ["index.html", "처음"], ["strategies.html", "큰 전략"], ["themes.html", "이야기 틀"], ["cards.html", "부모 카드"],
+  ["gallery.html", "처음"], ["strategies.html", "큰 전략"], ["themes.html", "이야기 틀"], ["cards.html", "부모 카드"],
   ["sheets.html", "아이 활동지"], ["stamps.html", "도장 방식"], ["styles.html", "그림 스타일"], ["designs.html", "디자인 참고"], ["routes.html", "동선"],
   ["compare.html", "비교표"],
 ];
 
 export function chrome() {
-  const here = location.pathname.split("/").pop() || "index.html";
+  const here = location.pathname.split("/").pop() || "gallery.html";
   const bar = document.createElement("header");
   bar.className = "gbar noprint";
-  bar.innerHTML = `<div class="gbar__in"><a class="gbar__home" href="/">유물 친구 시안 갤러리</a><nav>${NAV.map(
+  bar.innerHTML = `<div class="gbar__in"><a class="gbar__home" href="/gallery.html">이전 시안 갤러리 (11/8)</a><nav>${NAV.map(
     ([href, label]) => `<a href="/${href}"${href === here ? ' aria-current="page"' : ""}>${label}</a>`,
-  ).join("")}</nav><span class="gtag">시안 · 학예사 검수 전</span></div>`;
+  ).join("")}</nav><a class="gtag" href="/" style="text-decoration:none">새 앱 시안으로</a></div>`;
   document.body.prepend(bar);
   const foot = document.createElement("footer");
   foot.className = "gfoot noprint";

@@ -86,4 +86,4 @@ export const STRATEGIES = [
 ];
 
 // 팀 회의에서 정한 것 (2026-11-09). 페이지들이 이 값으로 '회의 결정' 표시를 붙인다.
-export const DECIDED = { date: "11/9", strategy: "B", cards: ["C1", "C3", "C8"] };
+export const DECIDED = { date: "11/9", strategy: "B", cards: ["C1", "C3", "C8"], cardsFirst: ["C1", "C8"], quizRef: "듀오링고", design: "Smartify" };

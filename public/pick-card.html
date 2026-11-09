@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>카드 모양 고르기 · 부모 카드 시안</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/decide.css">
+</head>
+<body>
+<main class="dmain">
+  <h1>카드 모양</h1>
+  <p class="lead">11/9 추가 논의로 <b>C1(한마디형)과 C8(정답지형)</b>이 앞섰고, 퀴즈는 <b>듀오링고</b>를 참고하기로 했습니다. 그래서 C1 아래에 퀴즈 버튼을 붙이고, C8은 퀴즈를 먼저 하는 모양으로 바꿨습니다. C3는 비교용으로 남겨 둡니다. 휴대폰 틀 안의 퀴즈 버튼을 눌러 보세요.</p>
+  <div class="dnote"><b>퀴즈에서 듀오링고를 따른 것:</b> 위쪽 진행 막대, 크게 눌리는 보기 버튼, 고른 뒤 누르는 "확인", 아래에서 올라오는 정답·오답 결과, 옆으로 밀려 들어오는 다음 문제. <b>뺀 것:</b> 하트, 연속 기록, 점수 순위, 소리. 부모가 아이에게 문제를 읽어 주고, 아이가 말한 답을 부모가 누르는 방식입니다.<br><b>정할 것:</b> 정답 화면을 아이에게 잠깐 보여 주는 상으로 쓸지, 부모만 볼지. 아이 손에 휴대폰을 쥐여 주지 않는다는 원칙과 부딪칠 수 있습니다. 큰 전략이 B라서 문제는 탐험대 활동지 문구를 받으면 그것으로 바꿉니다.</div>
+  <div class="dtool"><label>유물 <select id="stop"></select></label></div>
+  <div class="dgrid" id="grid"></div>
+</main>
+<script type="module">
+import { loadStops, esc } from "/assets/js/core.js";
+import { detail, wire, wireQuiz, LAYOUTS } from "/assets/js/app.js";
+import { shell, phone } from "/assets/js/shell.js";
+shell();
+const { stops } = await loadStops();
+const sel = document.getElementById("stop"), grid = document.getElementById("grid");
+sel.innerHTML = stops.map((s) => `<option value="${s.id}">${esc(s.name)}</option>`).join("");
+sel.value = "singijeon";
+const INFO = {
+  C1: ["큰 제목 한 줄로 첫마디, 아래로 볼 곳 → 이야기 → 질문, 맨 아래 퀴즈 버튼. 상자 없이 글자 크기로만 순서를 줌.", ["한 번 보고 바로 말할 수 있다", "퀴즈는 원할 때만"], ["글이 세 덩어리라 길어 보일 수 있다"]],
+  C3: ["부모가 그대로 읽어도 되는 말풍선. 마지막 질문만 흰 풍선으로 강조.", ["설명이 어려운 부모도 바로 따라 한다"], ["읽는 동안 휴대폰을 오래 본다", "말투가 어색하면 오히려 방해"]],
+  C8: ["문제부터. 퀴즈를 풀고 나면 이야기를 들려준다. 힌트는 퀴즈 안에서.", ["교수님이 말한 긴장감과 성취감", "탐험대 활동지와 짝이 맞는다(전략 B)"], ["탐험대 문제 문구가 있어야 완성된다"]],
+};
+const li = (a, c) => `<ul class="${c}">${a.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+function draw() {
+  const s = stops.find((x) => x.id === sel.value);
+  grid.innerHTML = Object.entries(LAYOUTS).map(([id, name]) => `<section class="ditem">
+    <div class="ditem__name"><span>${id}</span>${esc(name)}</div><div class="ditem__idea">${esc(INFO[id][0])}</div>
+    ${phone(id, detail(s, { layout: id, noBack: true }))}
+    ${li(INFO[id][1], "plus")}${li(INFO[id][2], "minus")}</section>`).join("");
+}
+sel.onchange = draw;
+wire(grid);
+wireQuiz(grid, (id) => stops.find((x) => x.id === id));
+draw();
+</script>
+</body>
+</html>

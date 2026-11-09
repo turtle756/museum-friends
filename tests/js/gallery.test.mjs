@@ -75,3 +75,26 @@ test("디자인 참고 페이지의 캡처 이미지가 모두 있다", () => {
   assert.ok(ids.length >= 16, `캡처 ${ids.length}개`);
   for (const id of ids) assert.ok(existsSync(new URL(`../../public/assets/img/ref/${id}.jpg`, import.meta.url)), id);
 });
+
+test("앱 시안: 격자와 카드가 모든 유물·모든 방식에서 그려진다", async () => {
+  const { home, detail, tile, quizzes, LAYOUTS } = await import("../../public/assets/js/app.js");
+  const h = home(stops);
+  assert.equal((h.match(/class="tile[ "]/g) || []).length, stops.length);
+  for (const s of stops) {
+    for (const img of ["photo", "bw", "cut", "text"]) for (const name of ["over", "none", "below"]) {
+      assert.doesNotMatch(tile(s, { img, name }), /undefined/, `${s.id} ${img} ${name}`);
+    }
+    for (const layout of Object.keys(LAYOUTS)) for (const hero of ["photo", "card", "cut", "bw"]) {
+      const html = detail(s, { layout, hero });
+      assert.match(html, /class="detail"/);
+      assert.doesNotMatch(html, /undefined/, `${s.id} ${layout} ${hero}`);
+    }
+    for (const q of quizzes(s)) assert.ok(q.choices.includes(q.answer), `${s.id} 퀴즈`);
+  }
+});
+
+test("앱 시안에는 공유·저장·로그인 같은 기능이 없다", async () => {
+  const { home, detail } = await import("../../public/assets/js/app.js");
+  const html = home(stops) + stops.map((s) => detail(s, { layout: "C1" })).join("");
+  assert.doesNotMatch(html, /공유|저장하기|로그인|좋아요/);
+});

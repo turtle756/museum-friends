@@ -108,15 +108,17 @@ def test_pages_and_static_files_are_served(client):
     page = client.get("/")
     assert page.status_code == 200
     home = page.get_data(as_text=True)
-    assert '<main class="gmain">' in home
+    assert 'id="app"' in home
     assert 'name="robots" content="noindex, nofollow"' in home
-    pages = ["strategies", "themes", "cards", "sheets", "sheet", "stamps", "styles", "designs", "routes", "compare", "proto"]
+    pages = ["gallery", "pick-card", "pick-image", "pick-look", "structure", "content", "designs",
+             "strategies", "themes", "cards", "sheets", "sheet", "stamps", "styles", "routes", "compare", "proto"]
     for name in pages:
         html = client.get(f"/{name}.html").get_data(as_text=True)
         assert 'content="noindex, nofollow"' in html, name
         assert 'rel="icon"' in html, name
     assets = ["/assets/css/g.css", "/assets/css/sheet.css", "/assets/data/stops.json", "/assets/js/core.js",
-              "/assets/js/cards.js", "/assets/js/sheets.js", "/assets/js/options.js", "/assets/img/ref/met.jpg", "/robots.txt",
+              "/assets/js/cards.js", "/assets/js/sheets.js", "/assets/js/options.js", "/assets/img/ref/met.jpg", "/assets/css/app.css", "/assets/css/decide.css",
+              "/assets/js/app.js", "/assets/js/shell.js", "/assets/img/brand/bucheon-bow-museum.png", "/assets/img/cut/rest.png", "/robots.txt",
               "/img/sample-101.svg", "/vendor/jsqr/jsQR.js"]
     for path in assets:
         assert client.get(path).status_code == 200, path

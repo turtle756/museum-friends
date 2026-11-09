@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>그림 처리 고르기 · 부모 카드 시안</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/assets/css/app.css"><link rel="stylesheet" href="/assets/css/decide.css">
+</head>
+<body>
+<main class="dmain">
+  <h1>그림 처리</h1>
+  <p class="lead">같은 사진을 어떻게 보여 줄지입니다. 유물을 지어내지 않도록 모두 우리가 찍은 실제 사진에서 출발합니다. 픽셀 그림은 품질 문제로 뺐습니다.</p>
+  <div class="dnote"><b>배경 지운 사진</b>은 활·물소뿔·신기전 3점만 자동으로 오려 본 시험판입니다(손질 전이라 신기전 앞 빨간 줄이 남아 있음). 나머지 유물은 원래 사진으로 나옵니다.</div>
+  <h2>목록(격자) 화면</h2>
+  <div class="dgrid" id="grid1"></div>
+  <h2>유물 카드 맨 위 사진</h2>
+  <div class="dtool"><label>유물 <select id="stop"></select></label></div>
+  <div class="dgrid" id="grid2"></div>
+  <h2>어떤 처리를 고르든 필요한 것</h2>
+  <div class="dnote"><b>사진을 같은 기준으로 다시 찍기.</b> 지금 사진은 설명판 벽 전체(화살의 종류, 각궁 제작과정)나 방 전체(무과 시험 그림)가 찍힌 것이 섞여 있습니다. 격자는 사진이 전부라서, 유물 하나를 정면에서 같은 거리로 찍은 사진이 가장 큰 차이를 만듭니다. 3D는 사진이 핵심이 아니므로 신기전 하나만 휴대폰 스캔으로 시험해 보는 정도를 권합니다.</div>
+</main>
+<script type="module">
+import { loadStops, esc } from "/assets/js/core.js";
+import { home, detail, wire, wireQuiz } from "/assets/js/app.js";
+import { shell, phone } from "/assets/js/shell.js";
+shell();
+const { stops } = await loadStops();
+const li = (a, c) => `<ul class="${c}">${a.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+const G = [
+  ["G1", "사진 + 이름 얹기", { img: "photo", name: "over" }, "사진 아래쪽을 어둡게 하고 흰 이름을 얹음. 틈 없는 피드를 유지.", ["찾기 쉽다", "Smartify 카드와 같은 방식"], ["밝은 사진은 이름이 사진을 가린다"], true],
+  ["G2", "사진만 (인스타 그대로)", { img: "photo", name: "none" }, "글자 없이 사진만. 가장 깔끔하다.", ["가장 깨끗하고 사진이 돋보인다"], ["부모가 이름 없이 유물을 못 찾을 수 있다", "사진 품질이 전부"]],
+  ["G3", "흑백 사진 + 이름", { img: "bw", name: "over" }, "모든 사진을 흑백으로 맞춤. 박물관 도록 느낌.", ["찍은 날·조명이 달라도 통일돼 보인다"], ["유물의 색(활의 색, 붉은 칠)이 사라진다"]],
+  ["G4", "배경 지운 유물", { img: "cut", name: "over" }, "유물만 오려 어두운 바탕에. 3점만 시험.", ["유물 모양이 또렷하다", "사진 배경이 제각각이어도 통일된다"], ["유물마다 오려 내는 손질이 든다"]],
+  ["G5", "글자 타일", { img: "text" }, "사진 없이 이름만 크게. 좋은 사진이 없는 유물의 임시 대안.", ["사진이 없어도 쓸 수 있다"], ["무엇인지 한눈에 안 보인다"]],
+  ["G6", "이름은 사진 아래", { img: "photo", name: "below" }, "에어비앤비처럼 이름을 사진 아래에. 틈이 생겨 피드 느낌은 약해짐(비교용).", ["사진을 가리지 않는다"], ["틈 없는 피드가 깨진다"]],
+];
+document.getElementById("grid1").innerHTML = G.map(([id, name, o, idea, plus, minus, now]) => `<section class="ditem">
+  <div class="ditem__name"><span>${id}</span>${esc(name)} ${now ? '<b class="now">지금</b>' : ""}</div><div class="ditem__idea">${esc(idea)}</div>
+  ${phone(id, home(stops, o))}${li(plus, "plus")}${li(minus, "minus")}</section>`).join("");
+document.getElementById("grid1").addEventListener("click", (e) => { if (e.target.closest(".tile")) e.preventDefault(); });
+const sel = document.getElementById("stop");
+sel.innerHTML = stops.map((s) => `<option value="${s.id}">${esc(s.name)}</option>`).join("");
+sel.value = "rest";
+const H = [
+  ["H1", "화면 가득 사진", { hero: "photo" }, "맨 위를 사진으로 꽉 채움.", ["유물이 크게 보인다"], ["사진 배경이 지저분하면 그대로 보인다"], true],
+  ["H2", "둥근 카드 안 사진", { hero: "card" }, "Smartify 카드처럼 크게 둥근 모서리 안에.", ["Smartify 느낌이 가장 강하다"], ["사진이 조금 작아진다"]],
+  ["H3", "배경 지운 유물", { hero: "cut" }, "유물만 어두운 바탕 가운데. (활·물소뿔·신기전만)", ["유물 모양이 또렷하다"], ["오려 내기 손질이 든다"]],
+  ["H4", "흑백 사진", { hero: "bw" }, "격자 G3과 짝.", ["통일감"], ["유물 색이 사라진다"]],
+];
+function draw2() {
+  const s = stops.find((x) => x.id === sel.value);
+  document.getElementById("grid2").innerHTML = H.map(([id, name, o, idea, plus, minus, now]) => `<section class="ditem">
+    <div class="ditem__name"><span>${id}</span>${esc(name)} ${now ? '<b class="now">지금</b>' : ""}</div><div class="ditem__idea">${esc(idea)}</div>
+    ${phone(id, detail(s, { ...o, noBack: true }))}${li(plus, "plus")}${li(minus, "minus")}</section>`).join("");
+}
+sel.onchange = draw2;
+wire(document.getElementById("grid2"));
+wireQuiz(document.getElementById("grid2"), (id) => stops.find((x) => x.id === id));
+draw2();
+</script>
+</body>
+</html>
