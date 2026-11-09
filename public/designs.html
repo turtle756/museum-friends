@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>디자인 방향 · 유물 친구 시안 갤러리</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&family=Noto+Sans+KR:wght@400;500;700;800;900&family=Noto+Serif+KR:wght@400;500;700&family=Song+Myung&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/g.css">
+<link rel="stylesheet" href="/assets/css/ds.css">
+</head>
+<body class="dsbody">
+<main class="gmain">
+  <h1>디자인 방향</h1>
+  <p class="lead">유명 서비스들이 공개한 디자인 규칙(DESIGN.md)을 우리 부모 카드에 그대로 입혀 봤습니다. 디자인을 말로 설명하기 어려우니, 보고 고르기만 하면 됩니다.</p>
+  <div class="note"><b>보는 법:</b> 글꼴, 모서리, 여백, 선, 그림자, 버튼 모양은 각 서비스 규칙을 따랐고 내용은 우리 카드입니다. <b>"활 공방 16색"</b>을 누르면 모양은 그대로 두고 색만 우리 팔레트로 바뀝니다. 틀은 남의 검증된 규칙에서, 색과 내용은 우리 것에서 가져오는 방식입니다.</div>
+  <div class="dstool">
+    <label>카드 <select id="card"></select></label>
+    <label>정류장 <select id="stop"></select></label>
+    <label>그림 <select id="img"><option value="photo">현장 사진</option><option value="pixel">픽셀(있는 곳만)</option></select></label>
+    <span class="seg" role="group" aria-label="색"><button type="button" data-ours="0" aria-pressed="true">각 서비스 색</button><button type="button" data-ours="1" aria-pressed="false">활 공방 16색</button></span>
+  </div>
+  <div class="dsgrid" id="grid"></div>
+  <div class="dsexplain">
+    <div><h3>DESIGN.md가 뭔가요?</h3><p class="small" style="margin:0">색의 역할, 글꼴, 모서리, 여백, 부품 모양, 해야 할 것과 하지 말 것을 적은 한 장짜리 문서입니다. AI에게 이 문서를 주면 매번 같은 결정을 따라 만듭니다. 구글이 형식을 정했고, 지금 가장 널리 쓰이는 방식입니다.</p></div>
+    <div><h3>다음 단계</h3><p class="small" style="margin:0">마음에 드는 방향을 1~2개 고르면, 그 규칙을 출발점으로 <b>우리 DESIGN.md(활 공방판)</b>를 만들어 모든 화면에 적용합니다. 섞어도 됩니다. 예: "Claude의 명조 제목 + Airbnb의 둥근 사진".</p></div>
+    <div><h3>바꾼 것</h3><p class="small" style="margin:0">브랜드 글꼴은 공개 글꼴이 아니라서 비슷한 한글 글꼴로 바꿨습니다(Apple 칸만 아이폰에서는 실제 시스템 글꼴). 서비스 이름은 참고용이며, 그 로고나 이름을 우리 화면에 쓰지 않습니다. 규칙 출처: <a href="https://github.com/VoltAgent/awesome-design-md">VoltAgent/awesome-design-md</a> (MIT).</p></div>
+  </div>
+</main>
+<script type="module">
+import { chrome, esc, loadStops } from "/assets/js/core.js";
+import { CARD_LAYOUTS, renderCard, wireCards } from "/assets/js/cards.js";
+import { DESIGN_SYSTEMS, dsVars } from "/assets/js/designs.js";
+import { DECIDED } from "/assets/js/options.js";
+chrome();
+const { stops } = await loadStops();
+const $ = (id) => document.getElementById(id);
+const pick = CARD_LAYOUTS.filter((L) => DECIDED.cards.includes(L.id));
+$("card").innerHTML = pick.map((L) => `<option value="${L.id}">${L.id} ${esc(L.name)}</option>`).join("");
+$("stop").innerHTML = stops.map((s) => `<option value="${s.id}">${s.no}. ${esc(s.name)}</option>`).join("");
+$("stop").value = "singijeon";
+let ours = false;
+function phone(name, inner, style, cls) {
+  return `<div class="phone"><div class="phone__bar"><span>부모 휴대폰</span><span>${esc(name)}</span></div>
+    <div class="phone__screen ${cls}" style="${esc(style)}">${inner}</div></div>`;
+}
+function draw() {
+  const s = stops.find((x) => x.id === $("stop").value);
+  const theme = $("img").value === "photo" ? "trad" : "pixel";
+  const card = (th) => renderCard($("card").value, s, { total: stops.length, theme: th, stops });
+  const nav = `<div class="ds-nav"><button class="ds-btn" type="button">다음 정류장</button></div>`;
+  const now = `<section class="dsitem"><div class="dsitem__name"><span class="chip chip--dark">지금</span> 현재 시안</div>
+    <div class="dsitem__one">굵은 먹 테두리와 딱딱한 그림자, 활 공방 16색. 비교 기준.</div>
+    <div class="dsitem__keys"><span>굵은 테두리</span><span>16색</span><span>픽셀</span></div>
+    ${phone("현재 시안", card(theme === "trad" ? "trad" : "pixel"), "", "")}</section>`;
+  $("grid").innerHTML = now + DESIGN_SYSTEMS.map((d) => `<section class="dsitem" id="${d.id}">
+    <div class="dsitem__name">${esc(d.name)} 규칙</div>
+    <div class="dsitem__one">${esc(d.one)}</div>
+    <div class="dsitem__keys">${d.keys.map((k) => `<span>${esc(k)}</span>`).join("")}</div>
+    ${phone(d.name, card(theme) + nav, dsVars(d, ours), "ds")}
+    <div class="dsitem__src"><a href="https://github.com/VoltAgent/awesome-design-md/tree/main/design-md/${d.ref}">원본 DESIGN.md 보기</a></div></section>`).join("");
+}
+document.querySelector(".seg").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-ours]");
+  if (!b) return;
+  ours = b.dataset.ours === "1";
+  document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  draw();
+});
+$("card").onchange = $("stop").onchange = $("img").onchange = draw;
+wireCards($("grid"));
+draw();
+</script>
+</body>
+</html>

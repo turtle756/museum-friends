@@ -16,12 +16,14 @@
     <label>정류장 <select id="stop"></select></label>
     <label>그림 스타일 <select id="theme"><option value="pixel">사진 기반 픽셀</option><option value="trad">전통 느낌(실제 사진)</option><option value="mix">혼합</option></select></label>
   </div>
+  <div class="note warn"><b>11/9 팀 회의: C1 한마디형, C3 대본형, C8 정답지형이 후보로 남았습니다.</b> 세 카드는 <a href="/designs.html">디자인 방향</a>에서 여러 디자인으로 입혀 볼 수 있습니다.</div>
   <div class="note">비교할 때 볼 것: 부모가 <b>3초 안에</b> 첫마디를 꺼낼 수 있는가, 휴대폰을 <b>오래 보지 않아도</b> 되는가, 아이가 화면을 <b>뺏고 싶어지지 않는가</b>.</div>
   <div id="grid" class="grid grid--phones"></div>
 </main>
 <script type="module">
 import { chrome, loadStops, esc } from "/assets/js/core.js";
 import { CARD_LAYOUTS, renderCard, wireCards } from "/assets/js/cards.js";
+import { DECIDED } from "/assets/js/options.js";
 chrome();
 const data = await loadStops();
 const stops = data.stops;
@@ -32,7 +34,7 @@ sel.value = params.get("stop") || "singijeon";
 function draw() {
   const s = stops.find((x) => x.id === sel.value);
   grid.innerHTML = CARD_LAYOUTS.map((L) => `<section class="shot" id="${L.id}">
-    <div class="shot__cap"><span class="chip chip--red">${L.id}</span> ${esc(L.name)}</div>
+    <div class="shot__cap"><span class="chip chip--red">${L.id}</span> ${esc(L.name)}${DECIDED.cards.includes(L.id) ? ' <span class="chip">회의 후보</span>' : ""}</div>
     <div class="shot__sub">${esc(L.idea)}</div>
     <div class="phone"><div class="phone__bar"><span>부모 휴대폰</span><span>${esc(s.name)}</span></div>
       <div class="phone__screen">${renderCard(L.id, s, { total: stops.length, theme: th.value, stops })}</div></div>

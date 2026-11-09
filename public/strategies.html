@@ -12,14 +12,17 @@
   <h1>큰 전략 6안</h1>
   <p class="lead">누가 무엇을 들고 다니는지, 박물관이 이미 운영하는 「부천활탐험대」와 어떤 관계인지에 따라 나눴습니다. 전략마다 어울리는 카드·활동지·도장·이야기 틀·동선을 묶어 두었고, 각 칸을 누르면 해당 시안으로 갑니다.</p>
   <div class="note">모든 전략의 공통점: 아이 손에는 휴대폰이 없고, 부모가 카드를 보고 이야기해 줍니다. 다른 점은 <b>아이 손에 무엇을 쥐여 주는가</b>입니다.</div>
+  <div class="note warn" id="decided"></div>
   <div id="list" class="grid" style="gap:28px"></div>
 </main>
 <script type="module">
 import { chrome, esc, icon } from "/assets/js/core.js";
-import { STRATEGIES, STAMPS, THEMES, ROUTES } from "/assets/js/options.js";
+import { STRATEGIES, STAMPS, THEMES, ROUTES, DECIDED } from "/assets/js/options.js";
 import { CARD_LAYOUTS } from "/assets/js/cards.js";
 import { SHEETS } from "/assets/js/sheets.js";
 chrome();
+const picked = STRATEGIES.find((x) => x.id === DECIDED.strategy);
+document.getElementById("decided").innerHTML = `<b>${DECIDED.date} 팀 회의 결정: 큰 전략 ${picked.id} · ${esc(picked.name)}</b>. 아래 B 카드에 표시했습니다. 나머지 안은 비교용으로 남겨 둡니다.`;
 const nm = (arr, id) => (arr.find((x) => x.id === id) || {}).name || "";
 const li = (a, cls) => `<ul class="pc ${cls}">${a.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
 document.getElementById("list").innerHTML = STRATEGIES.map((S) => {
@@ -34,7 +37,7 @@ document.getElementById("list").innerHTML = STRATEGIES.map((S) => {
   return `<article class="box strat" id="${S.id}">
     <div class="strat__key">${S.id}</div>
     <div>
-      <h2 style="margin-top:0">${esc(S.name)}</h2>
+      <h2 style="margin-top:0">${esc(S.name)}${S.id === DECIDED.strategy ? ' <span class="chip chip--red">회의에서 선택</span>' : ""}</h2>
       <p class="strat__one">${esc(S.one)}</p>
       <div class="who">
         <div>${icon("fold", 36)}<span><b>아이 손</b>${esc(S.kid)}</span></div>

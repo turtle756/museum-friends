@@ -7,7 +7,7 @@ export const COLORS = {
 
 const NAV = [
   ["index.html", "처음"], ["strategies.html", "큰 전략"], ["themes.html", "이야기 틀"], ["cards.html", "부모 카드"],
-  ["sheets.html", "아이 활동지"], ["stamps.html", "도장 방식"], ["styles.html", "그림 스타일"], ["routes.html", "동선"],
+  ["sheets.html", "아이 활동지"], ["stamps.html", "도장 방식"], ["styles.html", "그림 스타일"], ["designs.html", "디자인 방향"], ["routes.html", "동선"],
   ["compare.html", "비교표"],
 ];
 
