@@ -116,7 +116,7 @@ def test_pages_and_static_files_are_served(client):
         assert 'content="noindex, nofollow"' in html, name
         assert 'rel="icon"' in html, name
     assets = ["/assets/css/g.css", "/assets/css/sheet.css", "/assets/data/stops.json", "/assets/js/core.js",
-              "/assets/js/cards.js", "/assets/js/sheets.js", "/assets/js/options.js", "/assets/js/designs.js", "/assets/css/ds.css", "/robots.txt",
+              "/assets/js/cards.js", "/assets/js/sheets.js", "/assets/js/options.js", "/assets/img/ref/met.jpg", "/robots.txt",
               "/img/sample-101.svg", "/vendor/jsqr/jsQR.js"]
     for path in assets:
         assert client.get(path).status_code == 200, path

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 
 import { CARD_LAYOUTS, renderCard } from "../../public/assets/js/cards.js";
@@ -69,19 +69,9 @@ test("약도는 강조한 정류장을 빨갛게 칠한다", () => {
   assert.equal((svg.match(/#B8322A/g) || []).length, 1);
 });
 
-test("디자인 방향 테마는 모든 변수를 채우고, 우리 16색 모드에서는 팔레트 색만 쓴다", async () => {
-  const { DESIGN_SYSTEMS, dsVars } = await import("../../public/assets/js/designs.js");
-  const { COLORS } = await import("../../public/assets/js/core.js");
-  const palette = new Set(Object.values(COLORS).map((c) => c.toLowerCase()));
-  for (const d of DESIGN_SYSTEMS) {
-    for (const ours of [false, true]) {
-      const css = dsVars(d, ours);
-      assert.doesNotMatch(css, /undefined|null|:;/, `${d.id} ${ours}`);
-      if (!ours) continue;
-      for (const key of ["--bg", "--surface", "--text", "--accent", "--on-accent", "--head-c", "--ask-c"]) {
-        const val = css.match(new RegExp(`${key}:([^;]+)`))[1].toLowerCase();
-        assert.ok(palette.has(val), `${d.id} ${key}=${val} 은 16색이 아님`);
-      }
-    }
-  }
+test("디자인 참고 페이지의 캡처 이미지가 모두 있다", () => {
+  const html = readFileSync(new URL("../../public/designs.html", import.meta.url), "utf8");
+  const ids = [...html.matchAll(/\["([a-z]+)", "[^"]+", "[^"]*", "https:/g)].map((m) => m[1]);
+  assert.ok(ids.length >= 16, `캡처 ${ids.length}개`);
+  for (const id of ids) assert.ok(existsSync(new URL(`../../public/assets/img/ref/${id}.jpg`, import.meta.url)), id);
 });

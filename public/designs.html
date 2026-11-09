@@ -3,74 +3,100 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>디자인 방향 · 유물 친구 시안 갤러리</title>
+<title>디자인 참고 · 유물 친구 시안 갤러리</title>
 <link rel="icon" href="/favicon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&family=Noto+Sans+KR:wght@400;500;700;800;900&family=Noto+Serif+KR:wght@400;500;700&family=Song+Myung&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/g.css">
-<link rel="stylesheet" href="/assets/css/ds.css">
+<style>
+/* 이 페이지는 남의 디자인을 보는 곳이라 갤러리 색을 빼고 무채색으로 둔다 */
+body { background: #ffffff; }
+.gbar { background: #2b2b2b; }
+.gbar__home { color: #fff; }
+.gbar nav a[aria-current="page"] { border-color: #fff; color: #fff; }
+.note { background: #f6f6f6; }
+.refgrid { display: grid; gap: 30px 22px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); justify-items: center; }
+.ref { width: 300px; max-width: 100%; display: flex; flex-direction: column; gap: 8px; }
+.ref__name { font-weight: 800; font-size: 1.05rem; }
+.ref__name small { font-weight: 500; color: #777; margin-left: 6px; }
+.ref__look { font-size: .88rem; color: #333; min-height: 3.6em; }
+.ref__links { display: flex; gap: 12px; font-size: .82rem; flex-wrap: wrap; }
+.ref__links a { color: #1b1b1b; }
+.dev { width: 300px; max-width: 100%; height: 600px; border: 8px solid #1b1b1b; border-radius: 30px; overflow: hidden; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.14); }
+.dev__scroll { height: 100%; overflow-y: auto; }
+.dev__scroll img { width: 100%; display: block; }
+.dev iframe { width: 390px; height: 776px; border: 0; transform: scale(.7282); transform-origin: 0 0; }
+.sec { margin-top: 44px; }
+.pickbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 10px 0 18px; }
+.pickbar select { font: inherit; padding: 6px 10px; border: 1px solid #999; border-radius: 8px; background: #fff; }
+.viewer { display: flex; gap: 22px; flex-wrap: wrap; align-items: flex-start; }
+.viewer__info { max-width: 420px; font-size: .92rem; }
+</style>
 </head>
-<body class="dsbody">
+<body>
 <main class="gmain">
-  <h1>디자인 방향</h1>
-  <p class="lead">유명 서비스들이 공개한 디자인 규칙(DESIGN.md)을 우리 부모 카드에 그대로 입혀 봤습니다. 디자인을 말로 설명하기 어려우니, 보고 고르기만 하면 됩니다.</p>
-  <div class="note"><b>보는 법:</b> 글꼴, 모서리, 여백, 선, 그림자, 버튼 모양은 각 서비스 규칙을 따랐고 내용은 우리 카드입니다. <b>"활 공방 16색"</b>을 누르면 모양은 그대로 두고 색만 우리 팔레트로 바뀝니다. 틀은 남의 검증된 규칙에서, 색과 내용은 우리 것에서 가져오는 방식입니다.</div>
-  <div class="dstool">
-    <label>카드 <select id="card"></select></label>
-    <label>정류장 <select id="stop"></select></label>
-    <label>그림 <select id="img"><option value="photo">현장 사진</option><option value="pixel">픽셀(있는 곳만)</option></select></label>
-    <span class="seg" role="group" aria-label="색"><button type="button" data-ours="0" aria-pressed="true">각 서비스 색</button><button type="button" data-ours="1" aria-pressed="false">활 공방 16색</button></span>
-  </div>
-  <div class="dsgrid" id="grid"></div>
-  <div class="dsexplain">
-    <div><h3>DESIGN.md가 뭔가요?</h3><p class="small" style="margin:0">색의 역할, 글꼴, 모서리, 여백, 부품 모양, 해야 할 것과 하지 말 것을 적은 한 장짜리 문서입니다. AI에게 이 문서를 주면 매번 같은 결정을 따라 만듭니다. 구글이 형식을 정했고, 지금 가장 널리 쓰이는 방식입니다.</p></div>
-    <div><h3>다음 단계</h3><p class="small" style="margin:0">마음에 드는 방향을 1~2개 고르면, 그 규칙을 출발점으로 <b>우리 DESIGN.md(활 공방판)</b>를 만들어 모든 화면에 적용합니다. 섞어도 됩니다. 예: "Claude의 명조 제목 + Airbnb의 둥근 사진".</p></div>
-    <div><h3>바꾼 것</h3><p class="small" style="margin:0">브랜드 글꼴은 공개 글꼴이 아니라서 비슷한 한글 글꼴로 바꿨습니다(Apple 칸만 아이폰에서는 실제 시스템 글꼴). 서비스 이름은 참고용이며, 그 로고나 이름을 우리 화면에 쓰지 않습니다. 규칙 출처: <a href="https://github.com/VoltAgent/awesome-design-md">VoltAgent/awesome-design-md</a> (MIT).</p></div>
-  </div>
+  <h1>디자인 참고</h1>
+  <p class="lead">디자인은 글로 설명을 읽어서는 좋은지 나쁜지 알 수 없습니다. 그래서 유명한 곳들의 <b>실제 화면을 그대로</b> 모았습니다. 모두 휴대폰 폭(390px)에서 본 첫 화면이고, 화면 안을 위아래로 넘겨 볼 수 있습니다.</p>
+  <div class="note">보면서 "이거 좋다" 싶은 것을 1~3개 고르면, 그 화면을 기준으로 우리 부모 카드를 만듭니다. 각 칸 아래의 한 줄은 눈여겨볼 점입니다. 캡처는 2026-11-09 기준이며 회의 참고용입니다(각 사이트의 저작물).</div>
+
+  <section class="sec">
+    <h2>박물관과 박물관 안내 앱</h2>
+    <div class="refgrid" id="museums"></div>
+  </section>
+
+  <section class="sec">
+    <h2>디자인으로 유명한 서비스</h2>
+    <div class="refgrid" id="brands"></div>
+  </section>
+
+  <section class="sec" id="guides">
+    <h2>디자인 규칙 미리보기 84곳</h2>
+    <p>위 서비스들을 포함해 84곳의 디자인 규칙을 정리한 문서(DESIGN.md)와, 그 규칙으로 만든 미리보기 화면입니다. 실제 사이트가 아니라 <b>규칙 요약 화면</b>이라 색, 글꼴, 버튼 모양을 한눈에 보기 좋습니다(영어).</p>
+    <div class="pickbar"><label>고르기 <select id="pick"></select></label><a id="open" target="_blank" rel="noopener">새 창에서 크게 보기</a></div>
+    <div class="viewer"><div class="dev"><iframe id="frame" title="디자인 규칙 미리보기" loading="lazy"></iframe></div>
+      <div class="viewer__info">출처: <a href="https://getdesign.md">getdesign.md</a> · <a href="https://github.com/VoltAgent/awesome-design-md">VoltAgent/awesome-design-md</a> (MIT). 고른 곳의 DESIGN.md는 AI에게 그대로 넘겨 "이 규칙으로 만들어"라고 할 수 있는 형식입니다.</div></div>
+  </section>
 </main>
 <script type="module">
-import { chrome, esc, loadStops } from "/assets/js/core.js";
-import { CARD_LAYOUTS, renderCard, wireCards } from "/assets/js/cards.js";
-import { DESIGN_SYSTEMS, dsVars } from "/assets/js/designs.js";
-import { DECIDED } from "/assets/js/options.js";
+import { chrome, esc } from "/assets/js/core.js";
 chrome();
-const { stops } = await loadStops();
-const $ = (id) => document.getElementById(id);
-const pick = CARD_LAYOUTS.filter((L) => DECIDED.cards.includes(L.id));
-$("card").innerHTML = pick.map((L) => `<option value="${L.id}">${L.id} ${esc(L.name)}</option>`).join("");
-$("stop").innerHTML = stops.map((s) => `<option value="${s.id}">${s.no}. ${esc(s.name)}</option>`).join("");
-$("stop").value = "singijeon";
-let ours = false;
-function phone(name, inner, style, cls) {
-  return `<div class="phone"><div class="phone__bar"><span>부모 휴대폰</span><span>${esc(name)}</span></div>
-    <div class="phone__screen ${cls}" style="${esc(style)}">${inner}</div></div>`;
+const MUSEUMS = [
+  ["met", "메트로폴리탄 미술관", "뉴욕", "https://www.metmuseum.org/", "건물 사진을 화면 가득 깔고, 큰 환영 문장과 빨간 입장권 버튼 하나. 관람 정보는 아이콘 한 줄씩."],
+  ["moma", "MoMA", "뉴욕", "https://www.moma.org/", "흰 바탕에 굵은 검정 글자와 작품 사진. 상자 없이 글자 크기만으로 구분하고, 강조는 연두색 덩어리 하나."],
+  ["rijks", "레이크스 미술관", "암스테르담", "https://www.rijksmuseum.nl/en", "그림 한 장이 화면 전체. 글은 그 위에 흰 글씨로 최소한만."],
+  ["british", "영국박물관", "런던", "https://www.britishmuseum.org/", "검정과 흰색 띠를 번갈아. 관람 정보는 아이콘과 한 줄, 큰 사진 카드에 금색 제목."],
+  ["cooperhewitt", "쿠퍼 휴잇 디자인 박물관", "뉴욕", "https://www.cooperhewitt.org/", "디자인 박물관답게 사진 타일을 빽빽하게, 좁고 굵은 제목 글씨. 정보보다 이미지가 먼저."],
+  ["smartify", "Smartify", "박물관 안내 앱", "https://smartify.org/", "어두운 바탕에 사진 카드가 세로로 하나씩. 큰 흰 제목과 화살표, 한 화면에 한 가지."],
+  ["bloomberg", "Bloomberg Connects", "박물관 안내 앱", "https://www.bloombergconnects.org/", "손에 든 휴대폰 사진, 큰 문장 하나, 버튼 하나. 전 세계 박물관이 쓰는 무료 안내 앱."],
+  ["nmk", "국립중앙박물관", "서울", "https://www.museum.go.kr/", "공지 띠, 전시 포스터, 관람 시간 표가 차례로. 작은 글씨와 정보가 많은 편(비교용)."],
+];
+const BRANDS = [
+  ["apple", "Apple", "", "https://www.apple.com/kr/", "제품 사진 한 장이 화면 한 칸. 검정 판과 밝은 판을 번갈아, 버튼은 작은 파란 알약 두 개.", "apple"],
+  ["airbnb", "Airbnb", "", "https://www.airbnb.co.kr/", "사진 카드가 가로로 넘어감. 둥근 모서리, 하트 버튼, 사진 아래 짧은 글 두 줄.", "airbnb"],
+  ["notion", "Notion", "", "https://www.notion.com/ko", "손그림 얼굴 아이콘, 큰 굵은 제목, 파란 버튼 하나. 아래는 실제 화면을 카드로 보여 줌.", "notion"],
+  ["claude", "Claude", "", "https://claude.com/ko", "크림색 바탕에 큰 글씨 한 문장. 장식 없이 여백으로.", "claude"],
+  ["wired", "WIRED", "잡지", "https://www.wired.com/", "신문 지면처럼 좁고 굵은 제목, 두 단, 가는 줄로 구분. 그림은 원색 일러스트.", "wired"],
+  ["starbucks", "스타벅스", "", "https://www.starbucks.co.kr/", "계절 색 바탕에 음료 사진을 지그재그로, 손글씨 느낌 제목.", "starbucks"],
+  ["uber", "Uber", "", "https://www.uber.com/kr/ko/", "흑백 두 색. 검정 띠 안에 입력칸 두 개와 버튼 하나, 할 일이 바로 보임.", "uber"],
+  ["spotify", "Spotify", "", "https://www.spotify.com/kr-ko/premium/", "강한 원색 그림 위에 큰 굵은 문장, 초록 알약 버튼 하나. 아래는 비교표.", "spotify"],
+];
+const GUIDES = ["1win", "airbnb", "airtable", "aljazeera", "apple", "binance", "bmw-m", "bmw", "bugatti", "cal", "claude", "clay", "clickhouse", "cohere", "coinbase", "composio", "cursor", "dell-1996", "dji", "elevenlabs", "expo", "ferrari", "figma", "framer", "hashicorp", "hp", "ibm", "intercom", "jobright", "kraken", "lamborghini", "linear.app", "lovable", "mastercard", "mercury", "meta", "minimax", "mintlify", "miro", "mistral.ai", "mongodb", "mydealz", "nerdwallet", "nike", "nintendo-2001", "notion", "nvidia", "ollama", "opencode.ai", "oracle", "oura", "pinterest", "playstation", "posthog", "raycast", "renault", "replicate", "resend", "revolut", "runwayml", "sanity", "sap", "sentry", "shopify", "slack", "spacex", "spotify", "starbucks", "stripe", "supabase", "superhuman", "tesla", "theverge", "together.ai", "uber", "vercel", "vodafone", "voltagent", "warp", "webflow", "wired", "wise", "x.ai", "zapier"];
+const card = ([id, name, where, url, look, guide]) => `<section class="ref" id="${id}">
+  <div class="ref__name">${esc(name)}${where ? `<small>${esc(where)}</small>` : ""}</div>
+  <div class="dev"><div class="dev__scroll"><img src="/assets/img/ref/${id}.jpg" alt="${esc(name)} 휴대폰 첫 화면" loading="lazy"></div></div>
+  <div class="ref__look">${esc(look)}</div>
+  <div class="ref__links"><a href="${url}" target="_blank" rel="noopener">실제 사이트 열기</a>${guide ? `<a href="#guides" data-guide="${guide}">디자인 규칙 미리보기</a>` : ""}</div>
+</section>`;
+document.getElementById("museums").innerHTML = MUSEUMS.map(card).join("");
+document.getElementById("brands").innerHTML = BRANDS.map(card).join("");
+const pick = document.getElementById("pick"), frame = document.getElementById("frame"), open = document.getElementById("open");
+pick.innerHTML = GUIDES.map((g) => `<option value="${g}">${g}</option>`).join("");
+function show(g) {
+  pick.value = g;
+  const url = `https://getdesign.md/design-md/${encodeURIComponent(g)}/preview`;
+  frame.src = url; open.href = url;
 }
-function draw() {
-  const s = stops.find((x) => x.id === $("stop").value);
-  const theme = $("img").value === "photo" ? "trad" : "pixel";
-  const card = (th) => renderCard($("card").value, s, { total: stops.length, theme: th, stops });
-  const nav = `<div class="ds-nav"><button class="ds-btn" type="button">다음 정류장</button></div>`;
-  const now = `<section class="dsitem"><div class="dsitem__name"><span class="chip chip--dark">지금</span> 현재 시안</div>
-    <div class="dsitem__one">굵은 먹 테두리와 딱딱한 그림자, 활 공방 16색. 비교 기준.</div>
-    <div class="dsitem__keys"><span>굵은 테두리</span><span>16색</span><span>픽셀</span></div>
-    ${phone("현재 시안", card(theme === "trad" ? "trad" : "pixel"), "", "")}</section>`;
-  $("grid").innerHTML = now + DESIGN_SYSTEMS.map((d) => `<section class="dsitem" id="${d.id}">
-    <div class="dsitem__name">${esc(d.name)} 규칙</div>
-    <div class="dsitem__one">${esc(d.one)}</div>
-    <div class="dsitem__keys">${d.keys.map((k) => `<span>${esc(k)}</span>`).join("")}</div>
-    ${phone(d.name, card(theme) + nav, dsVars(d, ours), "ds")}
-    <div class="dsitem__src"><a href="https://github.com/VoltAgent/awesome-design-md/tree/main/design-md/${d.ref}">원본 DESIGN.md 보기</a></div></section>`).join("");
-}
-document.querySelector(".seg").addEventListener("click", (e) => {
-  const b = e.target.closest("[data-ours]");
-  if (!b) return;
-  ours = b.dataset.ours === "1";
-  document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
-  draw();
-});
-$("card").onchange = $("stop").onchange = $("img").onchange = draw;
-wireCards($("grid"));
-draw();
+pick.onchange = () => show(pick.value);
+document.addEventListener("click", (e) => { const a = e.target.closest("[data-guide]"); if (a) show(a.dataset.guide); });
+show("apple");
 </script>
 </body>
 </html>
