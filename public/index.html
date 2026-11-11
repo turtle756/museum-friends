@@ -19,7 +19,7 @@
 import { loadStops } from "/assets/js/core.js";
 import { home, detail, wireQuiz, loadSeen, markSeen, clearSeen, getTheme, setTheme } from "/assets/js/app.js";
 const data = await loadStops();
-const items = [...data.stops, ...(data.extras || [])];   // 정류장 8곳 + 추가 유물
+const items = [...data.stops, ...(data.extras || [])].filter((s) => s.grid !== false);   // 처음 8곳 + 추가 유물(나눠진 칸은 뺌)
 const root = document.getElementById("app");
 const opts = {};
 let homeScroll = 0;

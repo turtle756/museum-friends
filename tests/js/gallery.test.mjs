@@ -5,11 +5,12 @@ import { test } from "node:test";
 import { detail, home, quizzes, sortKo, tile } from "../../public/assets/js/app.js";
 
 const data = JSON.parse(readFileSync(new URL("../../public/assets/data/stops.json", import.meta.url), "utf8"));
-const items = [...data.stops, ...(data.extras || [])];
+const all = [...data.stops, ...(data.extras || [])];
+const items = all.filter((s) => s.grid !== false);
 
 test("유물 id가 겹치지 않고 사진 파일이 모두 있다", () => {
-  assert.equal(new Set(items.map((s) => s.id)).size, items.length);
-  for (const s of items) assert.ok(existsSync(new URL(`../../public/assets/img/photo/${s.photo}.jpg`, import.meta.url)), s.id);
+  assert.equal(new Set(all.map((s) => s.id)).size, all.length);
+  for (const s of all) assert.ok(existsSync(new URL(`../../public/assets/img/photo/${s.photo}.jpg`, import.meta.url)), s.id);
 });
 
 test("퀴즈 정답은 보기 안에 있다", () => {
@@ -49,4 +50,11 @@ test("첫 화면이 불러오는 이름이 app.js에 모두 있다 (빈 화면 �
   const m = html.match(/import \{([^}]+)\} from "\/assets\/js\/app\.js"/);
   assert.ok(m, "app.js import 줄");
   for (const name of m[1].split(",").map((x) => x.trim())) assert.equal(typeof mod[name], "function", name);
+});
+
+test("추가 유물은 모두 근거 설명판과 퀴즈가 있다", () => {
+  for (const s of data.extras) {
+    assert.ok(s.source && s.headline && s.tell && s.look && s.ask, s.id);
+    assert.ok(quizzes(s).length >= 1, s.id);
+  }
 });
