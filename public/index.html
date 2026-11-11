@@ -10,35 +10,41 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="/assets/css/app.css">
+<script>try { if (localStorage.getItem("mf-theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}</script>
 </head>
 <body>
-<div class="devstrip"><span>시안 · 학예사 검수 전</span><a href="/pick-card.html">고를 것 보기</a></div>
+<div class="devstrip"><span>시안 · 학예사 검수 전</span></div>
 <main class="app" id="app" aria-live="polite"></main>
 <script type="module">
 import { loadStops } from "/assets/js/core.js";
-import { home, detail, wire, wireQuiz } from "/assets/js/app.js";
-const { stops } = await loadStops();
+import { home, detail, wire, wireQuiz, loadSeen, markSeen, clearSeen, getTheme, setTheme } from "/assets/js/app.js";
+const data = await loadStops();
+const items = [...data.stops, ...(data.extras || [])];   // 정류장 8곳 + 추가 유물
 const root = document.getElementById("app");
-const q = new URLSearchParams(location.search);
-const opts = { layout: q.get("card") || "C1" };
+const opts = {};
 let homeScroll = 0;
 function route() {
   const m = location.hash.match(/^#\/a\/([\w-]+)/);
-  const s = m && stops.find((x) => x.id === m[1]);
+  const s = m && items.find((x) => x.id === m[1]);
   if (s) {
     if (!root.querySelector(".detail")) homeScroll = window.scrollY;
+    markSeen(s.id);
     root.innerHTML = detail(s, opts);
     document.title = `${s.name} · 부천활박물관 부모 카드`;
     window.scrollTo(0, 0);
   } else {
-    root.innerHTML = home(stops, opts);
+    root.innerHTML = home(items, { ...opts, seen: loadSeen(), theme: getTheme() });
     document.title = "부천활박물관 부모 카드 · 시안";
     window.scrollTo(0, homeScroll);
   }
 }
+root.addEventListener("click", (e) => {
+  if (e.target.closest("[data-theme-toggle]")) { setTheme(getTheme() === "light" ? "dark" : "light"); route(); }
+  else if (e.target.closest("[data-clear-seen]")) { clearSeen(); route(); }
+});
 addEventListener("hashchange", route);
 wire(root);
-wireQuiz(root, (id) => stops.find((x) => x.id === id));
+wireQuiz(root, (id) => items.find((x) => x.id === id));
 route();
 </script>
 </body>

@@ -38,8 +38,6 @@ button { font: inherit; color: inherit; }
 .detail { padding-bottom: 40px; }
 .hero { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--surface); }
 .hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.hero--cut { display: flex; align-items: center; justify-content: center; background: var(--surface); }
-.hero--cut img { width: 82%; height: 82%; object-fit: contain; }
 .back { position: absolute; top: 14px; left: 14px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(250, 250, 250, .92); color: #1b1b1b;
   display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
 .back svg, .arrow svg { width: 20px; height: 20px; }
@@ -58,30 +56,12 @@ button { font: inherit; color: inherit; }
 .more[open] summary::after { content: "−"; }
 .more p { margin: 0 0 14px; }
 .src { color: var(--sub); font-size: .78rem; }
-/* C3 말풍선 */
-.bubbles { display: flex; flex-direction: column; gap: 10px; }
-.bub { background: var(--surface-2); border-radius: 22px 22px 22px 6px; padding: 14px 16px; font-size: 1.05rem; max-width: 94%; }
-.bub--ask { background: var(--accent); color: var(--on-accent); font-weight: 700; }
-/* C8 힌트 사다리 */
-.ladder { display: flex; flex-direction: column; gap: 10px; }
-.ladder button { text-align: left; border: 0; border-radius: 999px; background: var(--surface-2); padding: 14px 20px; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; }
-.ladder button::after { content: "열기"; color: var(--sub); font-weight: 500; font-size: .85rem; }
-.ladder button[aria-expanded="true"]::after { content: "닫기"; }
-.ladder button.is-answer[aria-expanded="true"] { background: var(--accent); color: var(--on-accent); }
-.ladder__open { padding: 4px 20px 6px; }
 .btn-wide { display: block; width: 100%; text-align: center; border: 0; border-radius: 999px; padding: 15px; background: var(--accent); color: var(--on-accent); font-weight: 700; text-decoration: none; margin-top: 8px; }
 
 @media (min-width: 700px) {
   .app { border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
 }
 
-/* 그림 처리 변형 (고를 것 탭에서 비교) */
-.tile--cut { background: var(--surface); }
-.tile--cut img.is-cut { object-fit: contain; padding: 14%; }
-.tile__text { position: absolute; inset: 0; display: flex; align-items: flex-end; padding: 14px; font-weight: 700; font-size: 1.15rem; line-height: 1.25; background: var(--surface); border: 1px solid var(--bg); }
-.tile--below { aspect-ratio: auto; }
-.tile--below img { aspect-ratio: 1; height: auto; }
-.tile__below { display: block; padding: 8px 10px 14px; font-weight: 700; font-size: .9rem; background: var(--bg); }
 .hero-card { position: relative; padding: 14px 14px 0; }
 .hero--rounded { border-radius: var(--radius); }
 .hero-card .back { top: 28px; left: 28px; }
@@ -136,3 +116,22 @@ button { font: inherit; color: inherit; }
 @keyframes qUp { from { transform: translateY(100%); } to { transform: none; } }
 @keyframes qShake { 0%, 100% { transform: none; } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 @media (prefers-reduced-motion: reduce) { .quiz, .quiz *, .quiz__stage--next, .quiz__sheet { animation: none !important; transition: none !important; } }
+
+/* 11/9 확정: 본 유물 표시, 밝은 화면(K4 한지) 전환 */
+.tile__seen { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: rgba(250, 250, 250, .92); color: #1b1b1b; display: flex; align-items: center; justify-content: center; }
+.tile__seen svg { width: 16px; height: 16px; }
+.home__head { position: relative; }
+.themebtn { position: absolute; top: 18px; right: 14px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.themebtn svg { width: 20px; height: 20px; }
+.linkbtn { border: 0; background: none; color: var(--text); text-decoration: underline; cursor: pointer; padding: 0 0 10px; font-size: .85rem; }
+:root { --accent-shadow: #b9b9b9; }
+.btn-quiz, .quiz__go { box-shadow: 0 4px 0 var(--accent-shadow); }
+.btn-quiz:active, .quiz__go:active { box-shadow: 0 1px 0 var(--accent-shadow); }
+:root[data-theme="light"] {
+  --bg: #FFFAF0; --surface: #F1E4CA; --surface-2: #F1E4CA; --line: #DDB984;
+  --text: #24160F; --sub: #5E3621; --accent: #24160F; --on-accent: #FFFAF0; --ask: #7E1C17;
+  --accent-shadow: #5E3621; --ok-text: #2f7d00; --bad-text: #b8322a;
+  color-scheme: light;
+}
+:root[data-theme="light"] .back { background: #24160F; color: #FFFAF0; }
+:root[data-theme="light"] .tile__seen { background: #24160F; color: #FFFAF0; }
