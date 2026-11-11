@@ -20,16 +20,24 @@ button { font: inherit; color: inherit; }
 
 .app { max-width: var(--app-w); margin: 0 auto; min-height: 100svh; }
 
-/* 격자 화면 */
-.home__head { padding: 26px 18px 18px; }
-.home__brand { text-align: center; margin-bottom: 22px; }
-.home__brand img { height: 49px; width: auto; background: #fafafa; border-radius: 14px; padding: 6px 12px; box-sizing: content-box; }
-.home__title { font-size: 1.75rem; font-weight: 700; line-height: 1.25; margin: 0; }
-.home__sub { color: var(--sub); font-size: .9rem; margin-top: 6px; }
+/* 격자 화면: 인스타 프로필 머리(위 막대: 공식 로고 + 밝기 버튼, 따라 내려옴 / 숫자 / 한 줄 소개) */
+a, button { -webkit-tap-highlight-color: transparent; }
+.home__bar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 0 12px 0 18px; background: var(--bg); }
+.home__logo { margin: 0; line-height: 0; }
+.logo { height: 28px; width: auto; }
+.logo--light { display: none; }
+:root[data-theme="light"] .logo--dark { display: none; }
+:root[data-theme="light"] .logo--light { display: block; }
+.home__head { padding: 6px 18px 18px; }
+.home__stats { display: flex; gap: 20px; color: var(--sub); font-size: .95rem; }
+.home__stats b { display: inline-block; color: var(--text); font-size: 1.1rem; font-weight: 700; margin-right: 2px; }
+.home__stats .is-bump b { animation: qPop .5s cubic-bezier(.2, 1.6, .4, 1) .4s both; }
+.home__bio { margin: 2px 0 0; color: var(--sub); font-size: .9rem; }
 .feed { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
 .tile { position: relative; display: block; aspect-ratio: 1; overflow: hidden; background: var(--surface); text-decoration: none; }
-.tile img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
-.tile:active img { transform: scale(.97); }
+.tile img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: transform .2s, opacity .35s; }
+.tile img.is-in { opacity: 1; }
+.tile:active img { transform: scale(.96); }
 .tile__name { position: absolute; left: 0; right: 0; bottom: 0; padding: 28px 12px 10px; font-weight: 700; font-size: .95rem; line-height: 1.3;
   background: linear-gradient(transparent, rgba(0, 0, 0, .72)); color: #fff; }
 .home__foot { padding: 22px 18px 40px; color: var(--sub); font-size: .8rem; }
@@ -56,7 +64,8 @@ button { font: inherit; color: inherit; }
 .more[open] summary::after { content: "−"; }
 .more p { margin: 0 0 14px; }
 .src { color: var(--sub); font-size: .78rem; }
-.btn-wide { display: block; width: 100%; text-align: center; border: 0; border-radius: 999px; padding: 15px; background: var(--accent); color: var(--on-accent); font-weight: 700; text-decoration: none; margin-top: 8px; }
+.btn-wide { display: block; width: 100%; text-align: center; border: 0; border-radius: 999px; padding: 15px; background: var(--accent); color: var(--on-accent); font-weight: 700; text-decoration: none; margin-top: 8px; transition: transform .1s; }
+.btn-wide:active, .back:active, .themebtn:active { transform: scale(.96); }
 
 @media (min-width: 700px) {
   .app { border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
@@ -71,7 +80,7 @@ button { font: inherit; color: inherit; }
 .app { position: relative; }
 .btn-quiz { display: block; width: 100%; border: 0; border-radius: 16px; padding: 15px; font-weight: 700; font-size: 1.05rem; cursor: pointer;
   background: var(--accent); color: var(--on-accent); box-shadow: 0 4px 0 #b9b9b9; margin-bottom: 4px; }
-.btn-quiz:active { transform: translateY(3px); box-shadow: 0 1px 0 #b9b9b9; }
+.btn-quiz { transition: transform .1s, box-shadow .1s, filter .1s; }
 .quizcard { background: var(--surface); border-radius: var(--radius); padding: 18px; display: grid; gap: 14px; }
 .quizcard__q { font-size: 1.35rem; font-weight: 700; line-height: 1.35; }
 .quiz { position: fixed; inset: 0; max-width: var(--app-w); margin: 0 auto; background: var(--bg); z-index: 50; display: flex; flex-direction: column; animation: qFade .2s ease; }
@@ -79,54 +88,71 @@ button { font: inherit; color: inherit; }
 .quiz__top { display: flex; gap: 12px; align-items: center; padding: 14px 16px 6px; }
 .quiz__x { width: 40px; height: 40px; border: 0; background: transparent; color: var(--sub); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .quiz__x svg { width: 22px; height: 22px; }
-.quiz__bar { flex: 1; height: 14px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
-.quiz__bar span { display: block; height: 100%; border-radius: 999px; background: var(--ok); transition: width .45s cubic-bezier(.3, 1.4, .5, 1); }
+.quiz__bar { flex: 1; height: 16px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.quiz__bar span { position: relative; display: block; height: 100%; border-radius: 999px; background: var(--ok); transition: width .3s ease-out; }
+.quiz__bar span::after { content: ""; position: absolute; left: 8px; right: 8px; top: 3px; height: 4px; border-radius: 999px; background: rgba(255, 255, 255, .35); }
 .quiz__stage { flex: 1; overflow-y: auto; padding: 20px 18px; }
 .quiz__stage--next { animation: qSlide .32s cubic-bezier(.2, .8, .2, 1); }
 .quiz__stage--open { animation: qFade .25s ease; }
 .quiz__hint-label { color: var(--sub); font-size: .82rem; margin-bottom: 8px; }
 .quiz__q { font-size: 1.45rem; font-weight: 700; line-height: 1.35; }
 .quiz__choices { display: grid; gap: 12px; margin: 22px 0 14px; }
-.quiz__c { border: 2px solid var(--line); border-bottom-width: 5px; border-radius: 16px; background: transparent; padding: 15px 16px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: transform .08s, background .15s, border-color .15s; }
-.quiz__c:active { transform: translateY(2px); border-bottom-width: 3px; }
-.quiz__c.is-on { border-color: var(--text); background: var(--surface-2); }
-.quiz__c.is-right { border-color: var(--ok); background: rgba(88, 204, 2, .16); color: var(--ok-text); }
-.quiz__c.is-wrong { border-color: var(--bad); background: rgba(255, 75, 75, .14); color: var(--bad-text); animation: qShake .35s; }
+.quiz__c { border: 2px solid var(--line); box-shadow: 0 4px 0 var(--line); border-radius: 16px; background: transparent; padding: 15px 16px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: transform .1s, box-shadow .1s, background .15s, border-color .15s; }
+.quiz__c:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 var(--line); }
+.quiz__c.is-on { border-color: var(--text); box-shadow: 0 4px 0 var(--text); background: var(--surface-2); }
+.quiz__c.is-right { border-color: var(--ok); box-shadow: 0 4px 0 var(--ok); background: rgba(88, 204, 2, .16); color: var(--ok-text); }
+.quiz__c.is-wrong { border-color: var(--bad); box-shadow: 0 4px 0 var(--bad); background: rgba(255, 75, 75, .14); color: var(--bad-text); animation: qShake .35s; }
 .quiz__c:disabled { cursor: default; }
 .quiz__hintbtn { border: 0; background: none; color: var(--sub); text-decoration: underline; cursor: pointer; padding: 6px 0; }
 .quiz__hint { background: var(--surface); border-radius: 14px; padding: 12px 14px; animation: qFade .2s; }
 .quiz__foot { padding: 14px 18px calc(18px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
 .quiz__go { width: 100%; border: 0; border-radius: 16px; padding: 15px; font-weight: 700; font-size: 1.05rem; cursor: pointer; background: var(--accent); color: var(--on-accent); box-shadow: 0 4px 0 #b9b9b9; }
-.quiz__go:active { transform: translateY(3px); box-shadow: 0 1px 0 #b9b9b9; }
+.quiz__go { transition: transform .1s, box-shadow .1s, filter .1s; }
 .quiz__go:disabled { background: var(--surface-2); color: var(--sub); box-shadow: none; cursor: default; }
 .quiz__sheet { padding: 18px 18px calc(18px + env(safe-area-inset-bottom)); animation: qUp .28s cubic-bezier(.2, .8, .2, 1); display: grid; gap: 8px; }
 .quiz__sheet--ok { background: rgba(88, 204, 2, .14); border-top: 2px solid var(--ok); }
 .quiz__sheet--bad { background: rgba(255, 75, 75, .12); border-top: 2px solid var(--bad); }
-.quiz__verdict { font-size: 1.3rem; font-weight: 700; }
+.quiz__verdict { font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+.quiz__mark { width: 34px; height: 34px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; flex: none; animation: qPop .45s cubic-bezier(.2, 1.6, .4, 1) .12s both; }
+.quiz__mark svg { width: 20px; height: 20px; }
+.quiz__sheet--ok .quiz__mark { background: var(--ok); }
+.quiz__sheet--bad .quiz__mark { background: var(--bad); }
 .quiz__sheet--ok .quiz__verdict { color: var(--ok-text); }
 .quiz__sheet--bad .quiz__verdict { color: var(--bad-text); }
 .quiz__sheet--ok .quiz__go { background: var(--ok); color: #0f2400; box-shadow: 0 4px 0 #3f9100; }
 .quiz__sheet--bad .quiz__go { background: var(--bad); color: #fff; box-shadow: 0 4px 0 #c42f2f; }
 .quiz__end { text-align: center; padding-top: 70px; }
-.quiz__big { font-size: 3.4rem; font-weight: 700; color: var(--ok-text); line-height: 1; margin-bottom: 14px; }
+.quiz__big { font-size: 3.4rem; font-weight: 700; color: var(--ok-text); line-height: 1; margin-bottom: 14px; animation: qPop .55s cubic-bezier(.2, 1.6, .4, 1) .15s both; }
+.confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2; }
+.confetti i { position: absolute; left: 50%; top: 26%; width: 9px; height: 13px; border-radius: 2px; }
 .quiz__endtext { color: var(--sub); }
 @keyframes qFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes qOut { to { opacity: 0; transform: translateY(12px); } }
 @keyframes qSlide { from { opacity: 0; transform: translateX(48px); } to { opacity: 1; transform: none; } }
 @keyframes qUp { from { transform: translateY(100%); } to { transform: none; } }
 @keyframes qShake { 0%, 100% { transform: none; } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
-@media (prefers-reduced-motion: reduce) { .quiz, .quiz *, .quiz__stage--next, .quiz__sheet { animation: none !important; transition: none !important; } }
+@keyframes qPop { from { transform: scale(0); } to { transform: scale(1); } }
+
+/* 격자 사진 ↔ 카드 사진 이어지기 (View Transitions) */
+::view-transition-group(art) { animation-duration: .38s; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+::view-transition-old(art), ::view-transition-new(art) { height: 100%; object-fit: cover; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
+/* 움직임 줄이기를 켠 기기에서는 모든 움직임을 끈다 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
 
 /* 11/9 확정: 본 유물 표시, 밝은 화면(K4 한지) 전환 */
 .tile__seen { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: rgba(250, 250, 250, .92); color: #1b1b1b; display: flex; align-items: center; justify-content: center; }
 .tile__seen svg { width: 16px; height: 16px; }
-.home__head { position: relative; }
-.themebtn { position: absolute; top: 18px; right: 14px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.tile__seen.is-new { animation: qPop .5s cubic-bezier(.2, 1.6, .4, 1) .4s both; }
+.themebtn { width: 44px; height: 44px; transition: transform .1s; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .themebtn svg { width: 20px; height: 20px; }
 .linkbtn { border: 0; background: none; color: var(--text); text-decoration: underline; cursor: pointer; padding: 0 0 10px; font-size: .85rem; }
 :root { --accent-shadow: #b9b9b9; }
 .btn-quiz, .quiz__go { box-shadow: 0 4px 0 var(--accent-shadow); }
-.btn-quiz:active, .quiz__go:active { box-shadow: 0 1px 0 var(--accent-shadow); }
+.btn-quiz:active, .quiz__go:active:not(:disabled), .quiz__sheet .quiz__go:active { transform: translateY(4px); box-shadow: 0 0 0 transparent; filter: brightness(.95); }
 :root[data-theme="light"] {
   --bg: #FFFAF0; --surface: #F1E4CA; --surface-2: #F1E4CA; --line: #DDB984;
   --text: #24160F; --sub: #5E3621; --accent: #24160F; --on-accent: #FFFAF0; --ask: #7E1C17;

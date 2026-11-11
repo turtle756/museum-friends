@@ -31,6 +31,22 @@ test("본 유물에만 표시가 붙는다", () => {
   assert.doesNotMatch(tile(items[1], { seen }), /tile__seen/);
 });
 
+test("방금 처음 본 유물만 체크 표시가 톡 나타난다", () => {
+  const seen = new Set([items[0].id, items[1].id]);
+  assert.match(tile(items[0], { seen, fresh: items[0].id }), /tile__seen is-new/);
+  assert.doesNotMatch(tile(items[1], { seen, fresh: items[0].id }), /is-new/);
+});
+
+test("첫 화면 머리: 공식 로고(어두운·밝은 화면용)가 있고 숫자가 맞다", () => {
+  const html = home(items, { seen: new Set([items[0].id]) });
+  for (const v of ["dark", "light"]) {
+    assert.match(html, new RegExp(`bow-logo-${v}\\.png`));
+    assert.ok(existsSync(new URL(`../../public/assets/img/brand/bow-logo-${v}.png`, import.meta.url)), v);
+  }
+  assert.match(html, new RegExp(`<b>${items.length}</b> 유물`));
+  assert.match(html, /<b>1<\/b> 봤어요/);
+});
+
 test("모든 유물 카드가 빈 값 없이 그려진다", () => {
   for (const s of items) {
     const html = detail(s);
