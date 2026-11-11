@@ -42,3 +42,11 @@ test("공유·저장·로그인 같은 기능이 없다", () => {
   const html = home(items) + items.map((s) => detail(s)).join("");
   assert.doesNotMatch(html, /공유|저장하기|로그인|좋아요/);
 });
+
+test("첫 화면이 불러오는 이름이 app.js에 모두 있다 (빈 화면 방지)", async () => {
+  const html = readFileSync(new URL("../../public/index.html", import.meta.url), "utf8");
+  const mod = await import("../../public/assets/js/app.js");
+  const m = html.match(/import \{([^}]+)\} from "\/assets\/js\/app\.js"/);
+  assert.ok(m, "app.js import 줄");
+  for (const name of m[1].split(",").map((x) => x.trim())) assert.equal(typeof mod[name], "function", name);
+});
