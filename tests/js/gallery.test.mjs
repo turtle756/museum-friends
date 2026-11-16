@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 
-import { detail, home, intro, quizBtn, quizzes, rich, sortKo, tile } from "../../public/assets/js/app.js";
+import { detail, home, intro, quizBtn, quizzes, sortKo, tile } from "../../public/assets/js/app.js";
 
 const data = JSON.parse(readFileSync(new URL("../../public/assets/data/stops.json", import.meta.url), "utf8"));
 const all = [...data.stops, ...(data.extras || [])];
@@ -80,10 +80,19 @@ test("카드에 '물어볼 것' 칸이 없고 퀴즈 풀어보기 버튼만 있�
   }
 });
 
-test("**키워드**는 형광펜으로, 글자는 안전하게 바뀐다", () => {
-  assert.equal(rich("쾅! **100개** <b>"), '쾅! <mark class="kw kw--info">100개</mark> &lt;b&gt;');
-  assert.match(rich("**공룡**", "story"), /kw--story/);
-  for (const s of items) assert.doesNotMatch(detail(s), /\*\*/, s.id);   // 짝이 안 맞는 ** 가 남지 않음
+test("같이 볼 곳은 없고, 문단 속 강조 표시(**)도 없다", () => {
+  for (const x of [...data.stops, ...data.extras]) {
+    assert.ok(!("look" in x), x.id);
+    for (const k of ["headline", "tell", "imagine", "more"]) assert.ok(!(x[k] || "").includes("**"), `${x.id}.${k}`);
+  }
+  for (const x of items) assert.doesNotMatch(detail(x), /같이 볼 곳/, x.id);
+});
+
+test("자막은 2~3줄, 줄마다 짧게(16자 이하), 첫마디 바로 아래", () => {
+  for (const x of items.filter((y) => y.caps)) {
+    assert.ok(x.caps.length >= 2 && x.caps.length <= 3 && x.caps.every((c) => c.length <= 16), x.id);
+    assert.match(detail(x), /class="d__title">[^<]+<\/h1><div class="caps"><span class="cap">/, x.id);
+  }
 });
 
 test("들어가기 전 안내 화면: 화면 전체가 버튼이고 AI 대신 여기서 찾으라는 말이 있다", () => {
@@ -91,15 +100,6 @@ test("들어가기 전 안내 화면: 화면 전체가 버튼이고 AI 대신 �
   assert.match(html, /^<button type="button" class="intro" data-intro>/);
   assert.match(html, /AI에게 묻지 말고/);
   assert.match(html, /화면을 누르면 시작해요/);
-});
-
-test("사실 칸의 강조는 빨강(info), 상상 이야기의 강조는 주황(story)", () => {
-  for (const s of items) {
-    const html = detail(s);
-    const imagine = (html.match(/<section class="sec sec--imagine">[\s\S]*?<\/section>/) || [""])[0];
-    assert.doesNotMatch(html.replace(imagine, ""), /kw--story/, s.id);
-    assert.doesNotMatch(imagine, /kw--info/, s.id);
-  }
 });
 
 test("상상 이야기는 '진짜 역사 아님' 칸에만 들어간다", () => {
@@ -142,7 +142,7 @@ test("첫 화면이 불러오는 이름이 app.js에 모두 있다 (빈 화면 �
 
 test("추가 유물은 모두 근거 설명판과 퀴즈가 있다", () => {
   for (const s of data.extras) {
-    assert.ok(s.source && s.headline && s.tell && s.look, s.id);
+    assert.ok(s.source && s.headline && s.tell, s.id);
     assert.ok(quizzes(s).length >= 1, s.id);
   }
 });

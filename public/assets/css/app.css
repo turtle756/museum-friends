@@ -58,12 +58,14 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .sec__label { font-size: .72rem; letter-spacing: .14em; color: var(--sub); margin-bottom: 6px; }
 .sec__text { font-size: 1.02rem; }
 .sec--tell .sec__text { font-size: 1.1rem; }
-/* 키워드 강조(무한도전 자막처럼): 사실 = 빨간 굵은 글씨, 상상 이야기 = 주황 형광펜 */
-.kw { background: none; color: inherit; font-weight: 800; padding: 0 .06em; border-radius: 2px; }
-.kw--info { color: #ff6259; }
-.kw--story { color: inherit; box-shadow: inset 0 -.5em 0 rgba(255, 150, 0, .5); }
-:root[data-theme="light"] .kw--info { color: #c4261d; }
-:root[data-theme="light"] .kw--story { box-shadow: inset 0 -.5em 0 rgba(255, 150, 0, .38); }
+/* 예능 자막: 첫마디 아래 짧은 줄 2개를 따로 뗀 빨간 바(사실). 문단 속 색칠은 하지 않는다. */
+.caps { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 12px; }
+.cap { display: inline-block; background: #e8000b; color: #fff; font-weight: 800; font-size: 1.12rem; line-height: 1.3; padding: 6px 12px; border-radius: 6px; box-shadow: 3px 3px 0 rgba(0, 0, 0, .35); }
+.cap:nth-child(2) { transform: rotate(-1.2deg); }
+/* 안내 화면의 색 뜻: 빨간 바 = 진짜 정보, 주황 점선 = 상상 이야기 */
+.tag { display: inline-block; font-weight: 800; padding: 0 7px; border-radius: 5px; line-height: 1.5; color: var(--text); }
+.tag--info { background: #e8000b; color: #fff; }
+.tag--story { border: 1px dashed #ff9600; }
 /* 상상 이야기 칸: 주황 점선 상자 + '진짜 역사 아님' */
 /* 들어가기 전 안내 화면: 화면 전체가 하나의 버튼 */
 .intro { position: fixed; inset: 0; z-index: 60; width: 100%; max-width: var(--app-w); margin: 0 auto; border: 0; cursor: pointer;
@@ -72,7 +74,6 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .intro .logo { height: 30px; width: auto; margin-bottom: 10px; }
 .intro__title { font-size: 2.1rem; font-weight: 800; line-height: 1.25; }
 .intro__text { color: var(--sub); font-size: 1.02rem; line-height: 1.7; }
-.intro__text .kw--info { color: #ff6259; }
 .intro__tap { position: absolute; left: 0; right: 0; bottom: calc(40px + env(safe-area-inset-bottom)); text-align: center; color: var(--sub); font-size: .92rem; animation: introPulse 1.8s ease-in-out infinite; }
 @keyframes introPulse { 50% { opacity: .35; } }
 .sec--imagine { border: 1px dashed #ff9600; border-radius: 18px; padding: 14px 16px; background: var(--surface); }

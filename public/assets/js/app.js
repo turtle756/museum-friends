@@ -38,7 +38,7 @@ export function intro() {
   const logo = (v) => `<img class="logo logo--${v}" src="/assets/img/brand/bow-logo-${v}.png" alt="부천활박물관" width="180" height="30">`;
   return `<button type="button" class="intro" data-intro>${logo("dark")}${logo("light")}
     <span class="intro__title">AI에게 묻지 말고<br>여기서 찾아보세요</span>
-    <span class="intro__text"><mark class="kw kw--info">진짜 정보</mark>는 박물관 설명판에서 옮겼어요.<br><mark class="kw kw--story">상상 이야기</mark>는 재미로 지어낸 거예요.</span>
+    <span class="intro__text"><span class="tag tag--info">진짜 정보</span>는 박물관 설명판에서 옮겼어요.<br><span class="tag tag--story">상상 이야기</span>는 재미로 지어낸 거예요.</span>
     <span class="intro__tap">화면을 누르면 시작해요</span></button>`;
 }
 
@@ -73,12 +73,12 @@ export function settle(root) {
 }
 
 // ---------- 유물 카드 (C1: 한마디 → 볼 곳 → 이야기 → 질문 → 퀴즈 → 더 물어보면) ----------
-// **키워드** 강조 (무한도전 자막처럼 부모가 훑어봐도 핵심이 보이게)
-// kind: info = 설명판에서 온 사실(빨간 글씨), story = 상상 이야기(주황 형광펜). 색과 모양을 둘 다 달리해 설명 없이 구분되게.
-export const rich = (t, kind = "info") => esc(t).replace(/\*\*(.+?)\*\*/g, `<mark class="kw kw--${kind}">$1</mark>`);
-const sec = (cls, label, text) => (text ? `<section class="sec sec--${cls}"><div class="sec__label">${label}</div><div class="sec__text">${rich(text)}</div></section>` : "");
+// 11/16 예능 자막 방식: 문단 속 단어마다 색칠하지 않는다. 핵심은 첫마디 아래 짧은 자막 2줄(빨간 바 = 사실)로 따로 떼고,
+// 문단은 맨 글로 둔다. 상상 이야기는 주황 점선 상자로만 구분한다.
+const sec = (cls, label, text) => (text ? `<section class="sec sec--${cls}"><div class="sec__label">${label}</div><div class="sec__text">${esc(text)}</div></section>` : "");
+const capsHtml = (s) => (s.caps && s.caps.length ? `<div class="caps">${s.caps.map((c) => `<span class="cap">${esc(c)}</span>`).join("")}</div>` : "");
 // 상상 이야기: 고증 문제를 피하려고 일부러 말이 안 되게 쓴 칸. 진짜 역사가 아님을 칸 이름에 붙인다.
-const imagineSec = (s) => (s.imagine ? `<section class="sec sec--imagine"><div class="sec__label">상상 이야기<span>진짜 역사 아님</span></div><div class="sec__text">${rich(s.imagine, "story")}</div></section>` : "");
+const imagineSec = (s) => (s.imagine ? `<section class="sec sec--imagine"><div class="sec__label">상상 이야기<span>진짜 역사 아님</span></div><div class="sec__text">${esc(s.imagine)}</div></section>` : "");
 export const quizzes = (s) => [s.quiz, ...(s.extraQuiz || [])].filter(Boolean);
 // 퀴즈 버튼: 안 풀었으면 흰 버튼, 다 맞혔으면 초록, 틀린 게 있으면 주황 (듀오링고 색)
 export function quizBtn(s, score) {
@@ -93,11 +93,11 @@ const backLogo = (v) => `<img class="logo logo--${v}" src="/assets/img/brand/bow
 export function detail(s, o = {}) {
   const back = o.noBack ? "" : `<a class="back back--brand" href="#/" aria-label="목록으로">${ARROW_LEFT}${backLogo("dark")}${backLogo("light")}</a>`;
   const quiz = quizBtn(s, o.score);
-  const more = s.more ? `<details class="more" open><summary>아이가 더 물어보면</summary><p>${rich(s.more)}</p><p class="src">근거: ${esc(s.source)}</p></details>`
+  const more = s.more ? `<details class="more" open><summary>아이가 더 물어보면</summary><p>${esc(s.more)}</p><p class="src">근거: ${esc(s.source)}</p></details>`
     : `<p class="src">근거: ${esc(s.source)}</p>`;
   return `<article class="detail"><div class="hero-card"><div class="hero hero--rounded"><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}"></div>${back}</div>
-    <div class="d__body"><div><div class="d__zone">${esc(s.zone)}</div><h1 class="d__title">${rich(s.headline)}</h1></div>
-    ${sec("look", "같이 볼 곳", s.look)}${sec("tell", "들려줄 이야기", s.tell)}${imagineSec(s)}${quiz}${more}
+    <div class="d__body"><div><div class="d__zone">${esc(s.zone)}</div><h1 class="d__title">${esc(s.headline)}</h1>${capsHtml(s)}</div>
+    ${sec("tell", "들려줄 이야기", s.tell)}${imagineSec(s)}${quiz}${more}
     ${o.noBack ? "" : '<a class="btn-wide" href="#/">다른 유물 보기</a>'}</div></article>`;
 }
 
