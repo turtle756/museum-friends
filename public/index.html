@@ -31,7 +31,7 @@ function render(s) {
     document.title = `${s.name} · 부천활박물관 부모 카드`;
     window.scrollTo(0, 0);
   } else {
-    root.innerHTML = home(items, { ...opts, seen: loadSeen(), theme: getTheme(), fresh });
+    root.innerHTML = home(items, { ...opts, seen: loadSeen(), scores: loadScores(), theme: getTheme(), fresh });
     fresh = null;
     document.title = "부천활박물관 부모 카드 · 시안";
     window.scrollTo(0, homeScroll);

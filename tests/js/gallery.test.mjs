@@ -35,6 +35,15 @@ test("퀴즈 푼 유물에만 체크가 붙는다", () => {
   assert.doesNotMatch(tile(items[1], { seen }), /tile__seen/);
 });
 
+test("틀린 것이 있는 유물은 격자에 체크 대신 다시 도전(↻) 표시", () => {
+  const [a, b] = items;
+  const o = { seen: new Set([a.id, b.id]), scores: { [a.id]: { right: 2, total: 2 }, [b.id]: { right: 1, total: 2 } } };
+  assert.doesNotMatch(tile(a, o), /tile__seen--retry/);
+  assert.match(tile(a, o), /M5 12\.5l4\.5 4\.5L19 7\.5/);          // ✓
+  assert.match(tile(b, o), /tile__seen tile__seen--retry/);
+  assert.doesNotMatch(tile(b, o), /M5 12\.5l4\.5 4\.5L19 7\.5/);   // ✓ 없음
+});
+
 test("방금 처음 푼 유물만 체크가 톡 나타난다", () => {
   const seen = new Set([items[0].id, items[1].id]);
   assert.match(tile(items[0], { seen, fresh: items[0].id }), /tile__seen is-new/);

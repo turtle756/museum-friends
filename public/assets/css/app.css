@@ -155,6 +155,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .tile__seen { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: rgba(250, 250, 250, .92); color: #1b1b1b; display: flex; align-items: center; justify-content: center; }
 .tile__seen svg { width: 16px; height: 16px; }
 .tile__seen.is-new { animation: qPop .5s cubic-bezier(.2, 1.6, .4, 1) .4s both; }
+.tile__seen--retry, :root[data-theme="light"] .tile__seen.tile__seen--retry { background: #ff9600; color: #fff; }   /* 카드의 '다시 도전' 버튼과 같은 색 */
 .themebtn { width: 44px; height: 44px; transition: transform .1s; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .themebtn svg { width: 20px; height: 20px; }
 .linkbtn { border: 0; background: none; color: var(--text); text-decoration: underline; cursor: pointer; padding: 0 0 10px; font-size: .85rem; }

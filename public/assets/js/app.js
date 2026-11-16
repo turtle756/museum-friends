@@ -36,7 +36,9 @@ export const sortKo = (list) => [...list].sort((a, b) => a.name.localeCompare(b.
 // ---------- 격자 ----------
 export const SITE = "https://www.bcmuseum.or.kr/ko/pages/intro?tab=tab2";   // 공식 사이트의 부천활박물관 소개
 export function tile(s, o = {}) {
-  const seen = o.seen && o.seen.has(s.id) ? `<span class="tile__seen${o.fresh === s.id ? " is-new" : ""}" title="퀴즈 푼 유물">${CHECK}</span>` : "";
+  const sc = o.scores && o.scores[s.id], retry = !!sc && sc.right < sc.total;   // 틀린 것이 있으면 ✓ 대신 ↻
+  const seen = o.seen && o.seen.has(s.id)
+    ? `<span class="tile__seen${retry ? " tile__seen--retry" : ""}${o.fresh === s.id ? " is-new" : ""}" title="${retry ? "다시 도전할 유물" : "퀴즈 다 맞힌 유물"}">${retry ? RETRY : CHECK}</span>` : "";
   return `<a class="tile${seen ? " is-seen" : ""}" href="#/a/${s.id}" data-id="${s.id}"><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}" loading="lazy"><span class="tile__name">${esc(s.name)}</span>${seen}</a>`;
 }
 
