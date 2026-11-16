@@ -8,6 +8,7 @@ const ARROW_LEFT = icon('<path d="M15 5l-7 7 7 7"/>', 2.4);
 const CHECK = icon('<path d="M5 12.5l4.5 4.5L19 7.5"/>', 3);
 const CLOSE = icon('<path d="M6 6l12 12M18 6L6 18"/>', 2.6);
 const SUN = icon('<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/>', 2);
+const OUT = icon('<path d="M7 17L17 7M9 7h8v8"/>', 2.2);
 const MOON = icon('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>', 2);
 
 // ---------- 기기에 남기는 것: 퀴즈를 끝까지 푼 유물(체크), 밝게/어둡게 (저장 못 해도 화면은 동작) ----------
@@ -24,6 +25,7 @@ export function setTheme(v) { store.set("mf-theme", v); document.documentElement
 export const sortKo = (list) => [...list].sort((a, b) => a.name.localeCompare(b.name, "ko"));
 
 // ---------- 격자 ----------
+export const SITE = "https://www.bcmuseum.or.kr/ko/pages/intro?tab=tab2";   // 공식 사이트의 부천활박물관 소개
 export function tile(s, o = {}) {
   const seen = o.seen && o.seen.has(s.id) ? `<span class="tile__seen${o.fresh === s.id ? " is-new" : ""}" title="퀴즈 푼 유물">${CHECK}</span>` : "";
   return `<a class="tile${seen ? " is-seen" : ""}" href="#/a/${s.id}" data-id="${s.id}"><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}" loading="lazy"><span class="tile__name">${esc(s.name)}</span>${seen}</a>`;
@@ -39,7 +41,7 @@ export function home(items, o = {}) {
     <header class="home__head"><div class="home__stats"><span><b>${list.length}</b> 유물</span><span${o.fresh ? ' class="is-bump"' : ""}><b>${n}</b> 풀었어요</span></div>
       <p class="home__bio">아이와 함께 보는 유물 이야기 카드</p></header>
     <div class="feed">${list.map((s) => tile(s, o)).join("")}</div>
-    <footer class="home__foot">${n ? '<button type="button" class="linkbtn" data-clear-seen>체크 모두 지우기</button><br>' : ""}시안 · 학예사 검수 전. 내용은 박물관 설명판 원문을 옮긴 것입니다.</footer>`;
+    <footer class="home__foot"><a class="sitebtn" href="${SITE}" target="_blank" rel="noopener">부천활박물관 공식 사이트${OUT}</a>${n ? '<button type="button" class="linkbtn" data-clear-seen>체크 모두 지우기</button><br>' : ""}시안 · 학예사 검수 전. 내용은 박물관 설명판 원문을 옮긴 것입니다.</footer>`;
 }
 
 // 격자 사진: 다 받아지면 서서히 나타나게 (이미 받아 둔 사진은 바로)
@@ -53,6 +55,11 @@ export function settle(root) {
 // ---------- 유물 카드 (C1: 한마디 → 볼 곳 → 이야기 → 질문 → 퀴즈 → 더 물어보면) ----------
 const sec = (cls, label, text) => (text ? `<section class="sec sec--${cls}"><div class="sec__label">${label}</div><div class="sec__text">${esc(text)}</div></section>` : "");
 export const quizzes = (s) => [s.quiz, ...(s.extraQuiz || [])].filter(Boolean);
+// 물어볼 것 = 퀴즈 화면의 질문과 같은 글 (11/16: 퀴즈 들어가기 전과 후의 질문을 하나로)
+const askSec = (s) => {
+  const qs = quizzes(s);
+  return qs.length ? `<section class="sec sec--ask"><div class="sec__label">물어볼 것</div>${qs.map((q) => `<div class="sec__text">${esc(q.q)}</div>`).join("")}</section>` : "";
+};
 
 export function detail(s, o = {}) {
   const back = o.noBack ? "" : `<a class="back" href="#/" aria-label="목록으로">${ARROW_LEFT}</a>`;
@@ -61,7 +68,7 @@ export function detail(s, o = {}) {
     : `<p class="src">근거: ${esc(s.source)}</p>`;
   return `<article class="detail"><div class="hero-card"><div class="hero hero--rounded"><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}"></div>${back}</div>
     <div class="d__body"><div><div class="d__zone">${esc(s.zone)}</div><h1 class="d__title">${esc(s.headline)}</h1></div>
-    ${sec("look", "같이 볼 곳", s.look)}${sec("tell", "들려줄 이야기", s.tell)}${sec("ask", "물어볼 것", s.ask)}${quiz}${more}
+    ${sec("look", "같이 볼 곳", s.look)}${sec("tell", "들려줄 이야기", s.tell)}${askSec(s)}${quiz}${more}
     ${o.noBack ? "" : '<a class="btn-wide" href="#/">다른 유물 보기</a>'}</div></article>`;
 }
 

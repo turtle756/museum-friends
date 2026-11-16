@@ -16,7 +16,7 @@ button { font: inherit; color: inherit; }
 
 /* 앱 밖 개발용 띠: 앱 화면이 아니라는 표시 */
 .devstrip { display: flex; gap: 10px; justify-content: space-between; align-items: center; padding: 6px 14px; font-size: .75rem; color: var(--sub); border-bottom: 1px solid var(--line); max-width: var(--app-w); margin: 0 auto; }
-.devstrip a { color: var(--text); }
+.devstrip a { color: var(--sub); text-decoration: underline; }   /* 카드 시안으로 가는 임시 링크 */
 
 .app { max-width: var(--app-w); margin: 0 auto; min-height: 100svh; }
 
@@ -41,6 +41,10 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .tile__name { position: absolute; left: 0; right: 0; bottom: 0; padding: 28px 12px 10px; font-weight: 700; font-size: .95rem; line-height: 1.3;
   background: linear-gradient(transparent, rgba(0, 0, 0, .72)); color: #fff; }
 .home__foot { padding: 22px 18px 40px; color: var(--sub); font-size: .8rem; }
+.sitebtn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 14px; margin-bottom: 18px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); font-size: .95rem; font-weight: 700; text-decoration: none; transition: transform .1s; }
+.sitebtn svg { width: 16px; height: 16px; }
+.sitebtn:active { transform: scale(.97); }
+.sec--ask .sec__text + .sec__text { margin-top: 12px; }
 
 /* 유물 카드 화면 */
 .detail { padding-bottom: 40px; }

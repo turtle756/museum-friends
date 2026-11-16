@@ -112,7 +112,8 @@ def test_pages_and_static_files_are_served(client):
     assert 'name="robots" content="noindex, nofollow"' in home
     assets = ["/assets/css/app.css", "/assets/js/app.js", "/assets/js/core.js", "/assets/data/stops.json",
               "/assets/img/brand/bow-logo-dark.png", "/assets/img/brand/bow-logo-light.png", "/assets/img/photo/singijeon.jpg", "/robots.txt",
-              "/img/sample-101.svg", "/vendor/jsqr/jsQR.js"]
+              "/img/sample-101.svg", "/vendor/jsqr/jsQR.js",
+              "/cards.html", "/assets/js/cards.js", "/assets/css/cards.css"]
     for path in assets:
         assert client.get(path).status_code == 200, path
 

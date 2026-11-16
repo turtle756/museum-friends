@@ -63,6 +63,18 @@ test("'아이가 더 물어보면'은 처음부터 펼쳐져 있다", () => {
   for (const s of items.filter((x) => x.more)) assert.match(detail(s), /<details class="more" open>/, s.id);
 });
 
+test("물어볼 것은 퀴즈 화면의 질문과 같다", () => {
+  for (const s of items) {
+    const ask = detail(s).match(/<section class="sec sec--ask">(.*?)<\/section>/s)[1];
+    const shown = [...ask.matchAll(/class="sec__text">([^<]+)</g)].map((m) => m[1]);
+    assert.deepEqual(shown, quizzes(s).map((q) => q.q.replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/"/g, "&quot;")), s.id);
+  }
+});
+
+test("첫 화면 맨 아래에 공식 사이트 버튼이 있다", () => {
+  assert.match(home(items), /class="sitebtn" href="https:\/\/www\.bcmuseum\.or\.kr\/ko\/pages\/intro\?tab=tab2" target="_blank" rel="noopener"/);
+});
+
 test("공유·저장·로그인 같은 기능이 없다", () => {
   const html = home(items) + items.map((s) => detail(s)).join("");
   assert.doesNotMatch(html, /공유|저장하기|로그인|좋아요/);
@@ -78,7 +90,7 @@ test("첫 화면이 불러오는 이름이 app.js에 모두 있다 (빈 화면 �
 
 test("추가 유물은 모두 근거 설명판과 퀴즈가 있다", () => {
   for (const s of data.extras) {
-    assert.ok(s.source && s.headline && s.tell && s.look && s.ask, s.id);
+    assert.ok(s.source && s.headline && s.tell && s.look, s.id);
     assert.ok(quizzes(s).length >= 1, s.id);
   }
 });
