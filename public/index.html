@@ -26,9 +26,7 @@ const calm = matchMedia("(prefers-reduced-motion: reduce)");
 let homeScroll = 0, lastId = null, fresh = null;
 function render(s) {
   if (s) {
-    fresh = loadSeen().has(s.id) ? null : s.id;   // 처음 본 유물이면 격자로 돌아갈 때 체크 표시가 톡 나타난다
     lastId = s.id;
-    markSeen(s.id);
     root.innerHTML = detail(s, opts);
     document.title = `${s.name} · 부천활박물관 부모 카드`;
     window.scrollTo(0, 0);
@@ -63,7 +61,8 @@ root.addEventListener("click", (e) => {
   else if (e.target.closest("[data-clear-seen]")) { homeScroll = window.scrollY; clearSeen(); route(); }
 });
 addEventListener("hashchange", route);
-wireQuiz(root, (id) => items.find((x) => x.id === id));
+// 퀴즈를 끝까지 풀어야 체크한다. 처음 푼 유물이면 격자로 돌아갈 때 체크가 톡 나타난다.
+wireQuiz(root, (id) => items.find((x) => x.id === id), (id) => { if (!loadSeen().has(id)) fresh = id; markSeen(id); });
 route();
 </script>
 </body>
