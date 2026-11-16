@@ -26,12 +26,25 @@ test("모든 시안이 카드마다 빈 값 없이 그려지고 뒷면도 있다
   const html = page(all);
   assert.doesNotMatch(html, /undefined|null|NaN/);
   for (const v of VARIANTS) {
-    const start = html.indexOf(`<section class="vsec" id="v-${v.id}">`);
+    const start = html.indexOf(`id="v-${v.id}"`);
     assert.ok(start >= 0, v.id);
     const sec = html.slice(start, html.indexOf("</section>", start));
     assert.equal((sec.match(/class="card card--/g) || []).length, withCard.length + 1, v.id);
     assert.match(sec, /card--back/, v.id);
   }
+});
+
+test("수정판은 원래 시안 바로 아래에 붙고, 뒷면에 전통 문양이 들어간다", () => {
+  const html = page(all);
+  VARIANTS.forEach((v, i) => {
+    if (!v.base) return;
+    const parent = VARIANTS.slice(0, i).reverse().find((x) => !x.base);
+    assert.equal(parent.id, v.base, v.id);
+    const start = html.indexOf(`id="v-${v.id}"`);
+    const sec = html.slice(start, html.indexOf("</section>", start));
+    assert.match(sec, new RegExp(`card--back[^>]*>${v.back ? "<div class=\"card__motif" : ""}`), v.id);
+    assert.match(sec, new RegExp(`<span>시안 ${v.label}</span>`), v.id);
+  });
 });
 
 test("앱 맨 위 띠에 카드 시안으로 가는 임시 링크가 있다", () => {

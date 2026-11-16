@@ -213,6 +213,89 @@ a { color: inherit; }
 .card--gold .card__skill p { color: rgba(244, 231, 197, .85); }
 .card--gold .card__foot { color: #8a7a55; font-family: var(--font); }
 
+/* ---------- 11/16 수정판: 11번(세로 이름)의 먹색 #24160f · 금색 #d4a24a/#f0cf8a 를 포인트로 ---------- */
+.vsec--sub { border-top-style: dashed; }
+.vsec--sub h2 span { color: #d4a24a; }
+
+/* 2-1 금색 포인트 */
+.card--catalog-gold { box-shadow: inset 0 0 0 calc(var(--u) * 2) #fffaf0, inset 0 0 0 calc(var(--u) * 2.5) #d4a24a, inset 0 0 0 calc(var(--u) * 3.3) #fffaf0, inset 0 0 0 calc(var(--u) * 3.6) #d4a24a; }
+.card--catalog-gold .card__photo { border-color: #d4a24a; }
+.card--catalog-gold .card__cat { color: #a8771c; letter-spacing: .12em; }
+.card--catalog-gold .card__name::after { content: ""; display: block; width: calc(var(--u) * 12); height: calc(var(--u) * .9); background: #d4a24a; margin-top: calc(var(--u) * 1.3); }
+.card--catalog-gold .card__skill { border-top-color: #d4a24a; }
+.card--catalog-gold .card__skill-name { color: #a8771c; }
+.card--catalog-gold .card__power { box-shadow: inset 0 0 0 calc(var(--u) * 1) #b3261e, inset 0 0 0 calc(var(--u) * 1.5) #fffaf0, 0 0 0 calc(var(--u) * .9) #d4a24a; }
+
+/* 2-2 먹색 이름띠 */
+.card--catalog-band { box-shadow: inset 0 0 0 calc(var(--u) * 2) #fffaf0, inset 0 0 0 calc(var(--u) * 2.4) #d4a24a; }
+.card--catalog-band .card__photo { border-color: #d4a24a; }
+.card--catalog-band .card__head { background: #24160f; margin: 0 calc(var(--u) * -2.6); padding: calc(var(--u) * 2) calc(var(--u) * 3.4) calc(var(--u) * 2.2); border-top: calc(var(--u) * .7) solid #d4a24a; }
+.card--catalog-band .card__cat { color: #d4a24a; }
+.card--catalog-band .card__name { color: #f0cf8a; }
+.card--catalog-band .card__skill { border-top: 0; padding-top: 0; }
+
+/* 2-3 금박 도장 */
+.card--catalog-seal { box-shadow: inset 0 0 0 calc(var(--u) * 2) #fffaf0, inset 0 0 0 calc(var(--u) * 2.5) #d4a24a; }
+.card--catalog-seal .card__photo { border-color: #d4a24a; }
+.card--catalog-seal .card__power { background: #24160f; color: #f0cf8a; transform: none; border-radius: calc(var(--u) * 1.6);
+  box-shadow: inset 0 0 0 calc(var(--u) * 1) #24160f, inset 0 0 0 calc(var(--u) * 1.4) #d4a24a; }
+.card--catalog-seal .card__power span { color: #d4a24a; }
+.card--catalog-seal .card__cat { color: #a8771c; }
+.card--catalog-seal .card__skill { border-top-color: #d4a24a; }
+.card--catalog-seal .card__skill-name { color: #24160f; border-left: calc(var(--u) * 1.1) solid #d4a24a; padding-left: calc(var(--u) * 2); }
+
+/* 2-4 먹 액자 */
+.card--catalog-frame { padding: calc(var(--u) * 8); box-shadow: inset 0 0 0 calc(var(--u) * 3.6) #24160f, inset 0 0 0 calc(var(--u) * 4.1) #d4a24a, inset 0 0 0 calc(var(--u) * 5) #fffaf0, inset 0 0 0 calc(var(--u) * 5.3) #d4a24a; }
+.card--catalog-frame .card__power { top: calc(var(--u) * 5.6); right: calc(var(--u) * 5.6); }
+.card--catalog-frame .card__photo { border-color: #d4a24a; flex-basis: 50%; }
+.card--catalog-frame .card__cat { color: #a8771c; }
+.card--catalog-frame .card__skill { border-top-color: #d4a24a; }
+
+/* 5-2 금색 포인트 */
+.card--plan-gold { border-color: #d4a24a; }
+.card--plan-gold .card__photo, .card--plan-gold .card__skill { border-color: #d4a24a; }
+.card--plan-gold .card__power { background: radial-gradient(#0e2c4f 57%, transparent 58%), conic-gradient(#f0cf8a calc(var(--p) * 360deg), rgba(212, 162, 74, .25) 0); }
+.card--plan-gold .card__power b, .card--plan-gold .card__skill-name { color: #f0cf8a; }
+.card--plan-gold .card__power span, .card--plan-gold .card__cat, .card--plan-gold .card__foot { color: #d4a24a; }
+
+/* 5-3 먹색 바탕 */
+.card--plan-ink { background-color: #24160f; color: #fffaf0; border-color: #d4a24a;
+  background-image: linear-gradient(rgba(212, 162, 74, .11) 1px, transparent 1px), linear-gradient(90deg, rgba(212, 162, 74, .11) 1px, transparent 1px); }
+.card--plan-ink .card__photo, .card--plan-ink .card__skill { border-color: #d4a24a; }
+.card--plan-ink .card__power { background: radial-gradient(#24160f 57%, transparent 58%), conic-gradient(#f0cf8a calc(var(--p) * 360deg), rgba(212, 162, 74, .22) 0); }
+.card--plan-ink .card__power b, .card--plan-ink .card__skill-name { color: #f0cf8a; }
+.card--plan-ink .card__power span, .card--plan-ink .card__cat, .card--plan-ink .card__foot { color: #d4a24a; }
+.card--plan-ink .card__skill p { color: rgba(255, 250, 240, .86); }
+
+/* 5-4 빨강 포인트(로고 빨강) */
+.card--plan-red { border-color: #ff6b5f; }
+.card--plan-red .card__photo { border-color: #ff6b5f; }
+.card--plan-red .card__skill { border-color: rgba(255, 107, 95, .75); }
+.card--plan-red .card__power { background: radial-gradient(#0e2c4f 57%, transparent 58%), conic-gradient(#ff4a3d calc(var(--p) * 360deg), rgba(156, 195, 255, .25) 0); }
+.card--plan-red .card__power b, .card--plan-red .card__skill-name { color: #ff7a70; }
+
+/* ---------- 뒷면 전통 문양: 흐리게 깔고 로고는 위에 ---------- */
+.card__motif { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.card__motif svg { position: absolute; display: block; overflow: visible; }
+.card__motif--center svg { width: 84%; left: 8%; top: 50%; transform: translateY(-50%); }
+.card__motif--corners svg { width: 66%; aspect-ratio: 1; }
+.card__motif--corners svg:first-child { top: 0; right: 0; }
+.card__motif--corners svg:last-child { bottom: 0; left: 0; transform: rotate(180deg); }
+.card__motif--corners svg { overflow: hidden; }
+.card__motif--field svg { inset: 0; width: 100%; height: 100%; }
+.card__plate { display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 3); width: 78%; padding: calc(var(--u) * 6) calc(var(--u) * 5);
+  background: var(--plate); border: 1px solid var(--plate-line); border-radius: calc(var(--u) * 2); }
+.card--back .card__plate img { width: 100%; }
+.card--catalog .card__motif { color: #b8862b; opacity: .3; }
+.card--catalog { --plate: #fffaf0; --plate-line: #d4a24a; }
+.card--plan .card__motif { color: #9cc3ff; opacity: .26; }
+.card--plan { --plate: #0e2c4f; --plate-line: #9cc3ff; }
+.card--plan-gold .card__motif, .card--plan-ink .card__motif { color: #d4a24a; opacity: .3; }
+.card--plan-gold .card__motif { opacity: .38; }
+.card--plan-ink { --plate: #24160f; --plate-line: #d4a24a; }
+.card--plan-red .card__motif { color: #ff7a70; opacity: .3; }
+.card--catalog-frame.card--back, .card--catalog-frame.card--back .card__motif { padding: 0; }
+
 /* 인쇄: 실제 크기(63×88mm), 시안마다 새 쪽 */
 @media print {
   body { background: #fff; color: #000; }
