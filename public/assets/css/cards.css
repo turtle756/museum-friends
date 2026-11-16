@@ -58,15 +58,12 @@ a { color: inherit; }
 .card__foot { display: flex; justify-content: space-between; align-items: center; font-size: calc(var(--u) * 3); font-weight: 600; }
 .card__foot img { height: calc(var(--u) * 4.2); width: auto; }
 
-/* 뒷면: 이름과 이야기 + 로고 (5-1은 모눈 바탕 그대로, 2-1은 연화문을 흐리게) */
+/* 뒷면: 이름과 이야기 + 로고 (무늬·이름판 없이 카드 바탕 그대로) */
 .card--back .card__backin { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 4); }
 .card--back .card__backin img { width: 46%; height: auto; }
 .card__story { text-align: center; padding: 0 calc(var(--u) * 9); }
 .card__story h4 { margin: 0 0 calc(var(--u) * 2.4); font-size: calc(var(--u) * 6.6); font-weight: 800; line-height: 1.2; }
 .card__story p { margin: 0; font-size: calc(var(--u) * 4.1); line-height: 1.65; }
-.card__motif { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-.card__motif svg { position: absolute; display: block; }
-.card__motif--center svg { width: 84%; left: 8%; top: 50%; transform: translateY(-50%); }
 
 /* ---------- 5-1 설계도 (결정): 남색 모눈, 전투력만큼 차오르는 눈금 ---------- */
 .card--plan { background-color: #0e2c4f; color: #e8f1ff; padding: calc(var(--u) * 5); gap: calc(var(--u) * 2.6); border: calc(var(--u) * .8) solid #9cc3ff;
@@ -95,7 +92,6 @@ a { color: inherit; }
 .card--catalog .card__skill { border-top: 1px solid #d4a24a; padding-top: calc(var(--u) * 2); }
 .card--catalog .card__skill-name { color: #a8771c; }
 .card--catalog .card__foot { color: #7a5a3a; font-family: var(--font); }
-.card--catalog .card__motif { color: #b8862b; opacity: .3; }
 
 /* 인쇄: 실제 크기(63×88mm), 시안마다 새 쪽 */
 @media print {

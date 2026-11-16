@@ -1,34 +1,19 @@
 // 아이에게 주는 유물 카드. 카드 내용은 stops.json의 card 칸(종류, 전투력, 스킬 이름, 뒷면 이야기).
 // 전투력은 고증이 아니라 아이 눈에 세 보이는 정도. 앞면에는 설명글을 두지 않는다(사진·이름·전투력·스킬 이름만).
-// 11/16 결정: 5-1(설계도, 뒷면은 무늬·이름판 없이 깨끗하게). 2-1(한지 도록 + 금색 포인트)은 예비. 나머지 시안은 삭제(git 기록에 남음).
+// 11/16 결정: 5-1(설계도, 뒷면은 무늬·이름판 없이 깨끗하게). 2-1(한지 도록 + 금색 포인트)은 예비(뒷면 역시 무늬 없음). 나머지 시안은 삭제(git 기록에 남음).
 import { esc } from "./core.js";
 
 // logo: 카드 바탕이 어두우면 흰 로고(dark), 밝으면 원색 로고(light)
 export const VARIANTS = [
   { id: "plan-back", base: "plan", label: "5-1", tag: "결정", name: "설계도 · 깨끗한 뒷면", logo: "dark", back: { layout: "plain" },
     desc: "남색 모눈 설계도, 전투력만큼 차오르는 동그란 눈금. 뒷면은 모눈 위에 이름·이야기·로고만." },
-  { id: "catalog-gold", base: "catalog", label: "2-1", tag: "예비", name: "한지 도록 · 금색 포인트", logo: "light", back: { motif: "lotus", layout: "center" },
-    desc: "한지색 바탕, 금색 이중 테두리, 빨간 낙관 도장 전투력. 뒷면 가운데 연화문(수막새 연꽃무늬)." },
+  { id: "catalog-gold", base: "catalog", label: "2-1", tag: "예비", name: "한지 도록 · 금색 포인트", logo: "light", back: { layout: "plain" },
+    desc: "한지색 바탕, 금색 이중 테두리, 빨간 낙관 도장 전투력. 뒷면은 한지 바탕 위에 이름·이야기·로고만." },
 ];
 
 const CAT = { 총통: "cannon", 신기전: "rocket", 활: "bow", 화살: "arrow" };
 const cls = (v) => `card--${v.base} card--${v.id}`;
-const f2 = (n) => +n.toFixed(2);
 
-// ---------- 뒷면 전통 문양 (선은 currentColor, 흐리기는 CSS) ----------
-// 연화문: 수막새 기와의 연꽃 — 바깥 테, 구슬 띠(연주문), 꽃잎 8장(안쪽 줄), 사이잎, 씨방
-function lotus(sw = 1.4) {
-  let p = "";
-  for (let k = 0; k < 8; k++) {
-    const a = k * 45;
-    p += `<path d="M50 14C59 22 59 35 50 42C41 35 41 22 50 14Z" transform="rotate(${a} 50 50)"/><path d="M50 20C54.5 25 54.5 32 50 36C45.5 32 45.5 25 50 20Z" transform="rotate(${a} 50 50)"/><path d="M50 17V27" transform="rotate(${a + 22.5} 50 50)"/>`;
-  }
-  let seeds = '<circle cx="50" cy="50" r="1.5" fill="currentColor"/>';
-  for (let k = 0; k < 6; k++) { const t = (k * 60 * Math.PI) / 180; seeds += `<circle cx="${f2(50 + 5 * Math.cos(t))}" cy="${f2(50 + 5 * Math.sin(t))}" r="1.2" fill="currentColor"/>`; }
-  return `<g fill="none" stroke="currentColor" stroke-width="${sw}"><circle cx="50" cy="50" r="47"/><circle cx="50" cy="50" r="43.5" stroke-width="${f2(sw * 1.9)}" stroke-linecap="round" stroke-dasharray="0.01 5.47"/><circle cx="50" cy="50" r="40"/>${p}<circle cx="50" cy="50" r="9"/>${seeds}</g>`;
-}
-// 뒷면 문양: 예비 2-1만 가운데 연화문. 결정 5-1은 무늬 없음.
-const motif = (v) => (v.back.motif === "lotus" ? `<div class="card__motif card__motif--center"><svg viewBox="0 0 100 100" aria-hidden="true">${lotus()}</svg></div>` : "");
 const logo = (v) => `<img src="/assets/img/brand/bow-logo-${v.logo}.png" alt="부천활박물관" width="168" height="28">`;
 
 // 만화식 말풍선: 그림 위에 HTML로 얹는다(생성 그림에 한글을 쓰게 하면 글자가 깨져서). x·y는 사진 칸 기준 %, tail은 꼬리 방향.
@@ -48,9 +33,9 @@ export function card(s, v, no, art) {
   </article>`;
 }
 
-// 뒷면: 유물 이름과 이야기 + 로고 (5-1은 모눈 바탕 위에 그대로, 2-1은 연화문 위에)
+// 뒷면: 유물 이름과 이야기 + 로고 (무늬·이름판 없이 카드 바탕 위에 그대로)
 export function back(v, s) {
-  return `<article class="card ${cls(v)} card--back" data-cat="cannon">${motif(v)}<div class="card__backin"><div class="card__story"><h4>${esc(s.name)}</h4><p>${esc(s.card.story)}</p></div>${logo(v)}</div></article>`;
+  return `<article class="card ${cls(v)} card--back" data-cat="cannon"><div class="card__backin"><div class="card__story"><h4>${esc(s.name)}</h4><p>${esc(s.card.story)}</p></div>${logo(v)}</div></article>`;
 }
 
 // all: 격자에 나오는 유물 전체(카드 번호 = 가나다순 자리). 카드 내용이 있는 유물만 전투력 높은 순으로 그린다.

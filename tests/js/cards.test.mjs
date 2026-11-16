@@ -31,8 +31,8 @@ test("모든 시안이 카드마다 빈 값 없이 그려지고, 뒷면(이야�
     assert.ok(start >= 0, v.id);
     const sec = html.slice(start, html.indexOf("</section>", start));
     assert.equal((sec.match(/class="card card--/g) || []).length, withCard.length + 1, v.id);
-    if (v.back.motif) assert.match(sec, /card--back[^>]*><div class="card__motif/, v.id);
-    else assert.match(sec, /card--back[^>]*><div class="card__backin"><div class="card__story">/, v.id);   // 5-1: 무늬·이름판 없이 깨끗한 뒷면
+    assert.match(sec, /card--back[^>]*><div class="card__backin"><div class="card__story">/, v.id);   // 무늬·이름판 없이 깨끗한 뒷면
+    assert.doesNotMatch(sec, /card__motif|card__plate/, v.id);
     assert.match(sec, new RegExp(`<span>시안 ${v.label} · ${v.tag}</span>`), v.id);
   }
 });
