@@ -453,24 +453,6 @@
               "y": 30,
               "tail": "right"
             }
-          },
-          {
-            "file": "shinjeon_b.jpg",
-            "bubble": {
-              "text": "마음을…\n불태워라!",
-              "x": 4,
-              "y": 30,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "shinjeon_c.jpg",
-            "bubble": {
-              "text": "마음을…\n불태워라!",
-              "x": 4,
-              "y": 30,
-              "tail": "right"
-            }
           }
         ]
       }
@@ -526,24 +508,6 @@
               "x": 4,
               "y": 4,
               "tail": "right"
-            }
-          },
-          {
-            "file": "pyeonjeon_b.jpg",
-            "bubble": {
-              "text": "빠르다…!",
-              "x": 4,
-              "y": 4,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "pyeonjeon_c.jpg",
-            "bubble": {
-              "text": "빠르다…!",
-              "x": 40,
-              "y": 3,
-              "tail": "left"
             }
           }
         ]
@@ -602,24 +566,6 @@
               "x": 4,
               "y": 4,
               "tail": "down"
-            }
-          },
-          {
-            "file": "myeongjeok_b.jpg",
-            "bubble": {
-              "text": "당연하지!!!",
-              "x": 6,
-              "y": 16,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "myeongjeok_c.jpg",
-            "bubble": {
-              "text": "당연하지!!!",
-              "x": 30,
-              "y": 14,
-              "tail": "right"
             }
           }
         ]
@@ -690,24 +636,6 @@
               "text": "왼손은…\n거들 뿐.",
               "x": 42,
               "y": 30,
-              "tail": "left"
-            }
-          },
-          {
-            "file": "bakdu_b.jpg",
-            "bubble": {
-              "text": "왼손은…\n거들 뿐.",
-              "x": 4,
-              "y": 14,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "bakdu_c.jpg",
-            "bubble": {
-              "text": "왼손은…\n거들 뿐.",
-              "x": 50,
-              "y": 28,
               "tail": "left"
             }
           }
@@ -872,24 +800,6 @@
               "y": 4,
               "tail": "right"
             }
-          },
-          {
-            "file": "byeolhwangja_b.jpg",
-            "bubble": {
-              "text": "난 거북선 최강의\n대포가 될 거야!",
-              "x": 4,
-              "y": 4,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "byeolhwangja_c.jpg",
-            "bubble": {
-              "text": "난 거북선 최강의\n대포가 될 거야!",
-              "x": 4,
-              "y": 6,
-              "tail": "right"
-            }
           }
         ]
       }
@@ -956,24 +866,6 @@
               "text": "우리 둘은\n최강이니까.",
               "x": 4,
               "y": 4,
-              "tail": "down"
-            }
-          },
-          {
-            "file": "samchong_b.jpg",
-            "bubble": {
-              "text": "우리 둘은\n최강이니까.",
-              "x": 4,
-              "y": 4,
-              "tail": "down"
-            }
-          },
-          {
-            "file": "samchong_c.jpg",
-            "bubble": {
-              "text": "우리 둘은\n최강이니까.",
-              "x": 14,
-              "y": 8,
               "tail": "down"
             }
           }

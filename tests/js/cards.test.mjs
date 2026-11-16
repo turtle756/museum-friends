@@ -76,8 +76,9 @@ test("그림 카드: 모든 카드에 그림이 있고, 후보는 A·B·C 세 �
   const html = page(all);
   const section = (id) => html.slice(html.indexOf(`id="${id}"`), html.indexOf("</section>", html.indexOf(`id="${id}"`)));
   const cands = withCard.filter((s) => s.card.art.length === 3), picked = withCard.filter((s) => s.card.art.length === 1);
-  const pick = section("v-pick");
-  assert.match(pick, new RegExp(`고를 후보 ${cands.length}장`));
+  const pick = cands.length ? section("v-pick") : "";
+  if (cands.length) assert.match(pick, new RegExp(`고를 후보 ${cands.length}장`));
+  else assert.ok(!html.includes('id="v-pick"'));   // 다 고르면 후보 칸은 사라진다
   for (const s of cands) {
     const row = pick.slice(pick.indexOf(`id="pick-${s.id}"`)).split('<div class="pick"')[0];
     assert.equal((row.match(/class="card card--plan card--plan-back" data-cat/g) || []).length, 3, s.id);
