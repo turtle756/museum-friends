@@ -62,10 +62,10 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .caps { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 12px; }
 .cap { display: inline-block; background: #e8000b; color: #fff; font-weight: 800; font-size: 1.12rem; line-height: 1.3; padding: 6px 12px; border-radius: 6px; box-shadow: 3px 3px 0 rgba(0, 0, 0, .35); }
 .cap:nth-child(2) { transform: rotate(-1.2deg); }
-/* 안내 화면의 색 뜻: 빨간 바 = 진짜 정보, 주황 점선 = 상상 이야기 */
-.tag { display: inline-block; font-weight: 800; padding: 0 7px; border-radius: 5px; line-height: 1.5; color: var(--text); }
-.tag--info { background: #e8000b; color: #fff; }
-.tag--story { border: 1px dashed #ff9600; }
+/* 이야기 한 편: 짧은 문단, 넉넉한 줄 간격, 대사 문단은 굵게 */
+.story { display: flex; flex-direction: column; gap: 12px; }
+.story p { margin: 0; font-size: 1.1rem; line-height: 1.75; }
+.story p.say { font-weight: 700; }
 /* 상상 이야기 칸: 주황 점선 상자 + '진짜 역사 아님' */
 /* 들어가기 전 안내 화면: 화면 전체가 하나의 버튼 */
 .intro { position: fixed; inset: 0; z-index: 60; width: 100%; max-width: var(--app-w); margin: 0 auto; border: 0; cursor: pointer;

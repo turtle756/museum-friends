@@ -84,6 +84,7 @@ test("같이 볼 곳은 없고, 문단 속 강조 표시(**)도 없다", () => {
   for (const x of [...data.stops, ...data.extras]) {
     assert.ok(!("look" in x), x.id);
     for (const k of ["headline", "tell", "imagine", "more"]) assert.ok(!(x[k] || "").includes("**"), `${x.id}.${k}`);
+    for (const p of x.story || []) assert.ok(!p.includes("**"), `${x.id}.story`);
   }
   for (const x of items) assert.doesNotMatch(detail(x), /같이 볼 곳/, x.id);
 });
@@ -92,6 +93,18 @@ test("자막은 2~3줄, 줄마다 짧게(16자 이하), 첫마디 바로 아래"
   for (const x of items.filter((y) => y.caps)) {
     assert.ok(x.caps.length >= 2 && x.caps.length <= 3 && x.caps.every((c) => c.length <= 16), x.id);
     assert.match(detail(x), /class="d__title">[^<]+<\/h1><div class="caps"><span class="cap">/, x.id);
+  }
+});
+
+test("이야기 한 편 카드: 제목 아래 짧은 문단들, 자막·들려줄 이야기·상상 이야기 칸은 없음", () => {
+  const withStory = items.filter((x) => x.story);
+  assert.ok(withStory.length >= 1);
+  for (const x of withStory) {
+    const html = detail(x);
+    assert.match(html, /<section class="story"><p/, x.id);
+    assert.equal((html.match(/<p( class="say")?>/g) || []).length - (x.more ? 1 : 0), x.story.length, x.id);
+    assert.doesNotMatch(html, /class="caps"|sec--tell|sec--imagine|진짜 역사 아님/, x.id);
+    assert.ok(x.story.every((p) => p.length > 0 && p.length <= 90), x.id);   // 잠깐씩 읽어도 읽히게: 문단은 짧게
   }
 });
 
@@ -142,7 +155,7 @@ test("첫 화면이 불러오는 이름이 app.js에 모두 있다 (빈 화면 �
 
 test("추가 유물은 모두 근거 설명판과 퀴즈가 있다", () => {
   for (const s of data.extras) {
-    assert.ok(s.source && s.headline && s.tell, s.id);
+    assert.ok(s.source && s.headline && (s.tell || s.story), s.id);
     assert.ok(quizzes(s).length >= 1, s.id);
   }
 });
