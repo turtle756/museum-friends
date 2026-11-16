@@ -48,11 +48,12 @@ test("앞면에는 설명글이 없고 이야기는 뒷면에만 있다", () => 
 test("생성 그림 카드 시험 칸: 그림 파일이 있고 5-1 틀로 그려진다", async () => {
   const { existsSync } = await import("node:fs");
   const arts = withCard.filter((s) => s.card.art);
-  for (const s of arts) for (const a of s.card.art) assert.ok(existsSync(new URL(`../../public/assets/img/art/${a}`, import.meta.url)), a);
+  for (const s of arts) for (const a of s.card.art) assert.ok(existsSync(new URL(`../../public/assets/img/art/${a.file}`, import.meta.url)), a.file);
   if (arts.length) {
     const html = page(all);
     assert.match(html, /id="v-art"/);
     assert.match(html, /card__photo card__photo--art"><img src="\/assets\/img\/art\//);
+    for (const s of arts) for (const a of s.card.art.filter((x) => x.bubble)) assert.ok(html.includes(`class="bubble bubble--${a.bubble.tail}"`), a.file);
   }
 });
 

@@ -38,12 +38,15 @@ function motif(v) {
 }
 const logo = (v) => `<img src="/assets/img/brand/bow-logo-${v.logo}.png" alt="부천활박물관" width="168" height="28">`;
 
-// art: 사진 대신 쓸 생성 그림 파일 이름(/assets/img/art/). 없으면 실제 사진.
+// 만화식 말풍선: 그림 위에 HTML로 얹는다(생성 그림에 한글을 쓰게 하면 글자가 깨져서). x·y는 사진 칸 기준 %, tail은 꼬리 방향.
+const bubble = (b) => (b ? `<div class="bubble bubble--${b.tail === "right" ? "right" : "left"}" style="left:${+b.x}%;top:${+b.y}%">${esc(b.text).replace(/\n/g, "<br>")}</div>` : "");
+
+// art: 사진 대신 쓸 생성 그림 { file, bubble? } (/assets/img/art/). 없으면 실제 사진.
 export function card(s, v, no, art) {
   const c = s.card;
-  const src = art ? `/assets/img/art/${art}` : `/assets/img/photo/${s.photo}.jpg`;
+  const src = art ? `/assets/img/art/${art.file}` : `/assets/img/photo/${s.photo}.jpg`;
   return `<article class="card ${cls(v)}" data-cat="${CAT[c.cat] || "etc"}" style="--p:${c.power / 1000}">
-    <div class="card__photo${art ? " card__photo--art" : ""}"><img src="${src}" alt="${esc(s.name)}" loading="lazy"></div>
+    <div class="card__photo${art ? " card__photo--art" : ""}"><img src="${src}" alt="${esc(s.name)}" loading="lazy">${art ? bubble(art.bubble) : ""}</div>
     <div class="card__power"><span>전투력</span><b>${c.power}</b></div>
     <div class="card__head"><span class="card__cat">${esc(c.cat)}</span><h3 class="card__name">${esc(s.name)}</h3></div>
     <div class="card__skill">${c.skills.map((k) => `<b class="card__skill-name">${esc(k)}</b>`).join("")}</div>
