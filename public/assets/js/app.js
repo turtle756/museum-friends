@@ -73,14 +73,14 @@ export function settle(root) {
 }
 
 // ---------- 유물 카드 (C1: 한마디 → 볼 곳 → 이야기 → 질문 → 퀴즈 → 더 물어보면) ----------
-// 11/16 예능 자막 방식: 문단 속 단어마다 색칠하지 않는다. 핵심은 첫마디 아래 짧은 자막 2줄(빨간 바 = 사실)로 따로 떼고,
-// 문단은 맨 글로 둔다. 상상 이야기는 주황 점선 상자로만 구분한다.
-const sec = (cls, label, text) => (text ? `<section class="sec sec--${cls}"><div class="sec__label">${label}</div><div class="sec__text">${esc(text)}</div></section>` : "");
-// 11/16 이야기 한 편(story): 첫마디가 제목, 짧은 문단을 이어서. 따옴표로 시작하는 대사 문단은 조금 굵게(훑어 읽기 쉽게).
-const storyHtml = (s) => (s.story ? `<section class="story">${s.story.map((p) => `<p${p.startsWith('"') ? ' class="say"' : ""}>${esc(p)}</p>`).join("")}</section>` : "");
-const capsHtml = (s) => (s.caps && s.caps.length ? `<div class="caps">${s.caps.map((c) => `<span class="cap">${esc(c)}</span>`).join("")}</div>` : "");
-// 상상 이야기: 고증 문제를 피하려고 일부러 말이 안 되게 쓴 칸. 진짜 역사가 아님을 칸 이름에 붙인다.
-const imagineSec = (s) => (s.imagine ? `<section class="sec sec--imagine"><div class="sec__label">상상 이야기<span>진짜 역사 아님</span></div><div class="sec__text">${esc(s.imagine)}</div></section>` : "");
+// 11/16 이야기 한 편(story): 첫마디가 제목, 짧은 문단을 이어서. 따옴표로 시작하는 대사 문단은 굵게(훑어 읽기 쉽게),
+// ★로 시작하는 줄은 빌드업 끝에 터지는 기술명 한 방 — 크게·금색으로(★ 자체는 보이지 않음).
+const storyLine = (raw) => {
+  const boom = raw.startsWith("★"), p = boom ? raw.slice(1) : raw;
+  const cls = boom ? "say boom" : p.startsWith('"') ? "say" : "";
+  return `<p${cls ? ` class="${cls}"` : ""}>${esc(p)}</p>`;
+};
+const storyHtml = (s) => (s.story ? `<section class="story">${s.story.map(storyLine).join("")}</section>` : "");
 export const quizzes = (s) => [s.quiz, ...(s.extraQuiz || [])].filter(Boolean);
 // 퀴즈 버튼: 안 풀었으면 흰 버튼, 다 맞혔으면 초록, 틀린 게 있으면 주황 (듀오링고 색)
 export function quizBtn(s, score) {
@@ -98,8 +98,8 @@ export function detail(s, o = {}) {
   const more = s.more ? `<details class="more" open><summary>아이가 더 물어보면</summary><p>${esc(s.more)}</p><p class="src">근거: ${esc(s.source)}</p></details>`
     : `<p class="src">근거: ${esc(s.source)}</p>`;
   return `<article class="detail"><div class="hero-card"><div class="hero hero--rounded"><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}"></div>${back}</div>
-    <div class="d__body"><div><div class="d__zone">${esc(s.zone)}</div><h1 class="d__title">${esc(s.headline)}</h1>${capsHtml(s)}</div>
-    ${storyHtml(s)}${sec("tell", "들려줄 이야기", s.tell)}${imagineSec(s)}${quiz}${more}
+    <div class="d__body"><div><div class="d__zone">${esc(s.zone)}</div><h1 class="d__title">${esc(s.headline)}</h1></div>
+    ${storyHtml(s)}${quiz}${more}
     ${o.noBack ? "" : '<a class="btn-wide" href="#/">다른 유물 보기</a>'}</div></article>`;
 }
 

@@ -58,6 +58,7 @@ function route() {
     const to = s ? root.querySelector(".hero") : root.querySelector(`.tile[data-id="${backId}"] img`);
     if (from && to) to.style.viewTransitionName = "art";
   });
+  t.ready.catch(() => {});   // 빠르게 연달아 누르면 앞 전환이 건너뛰어진다(정상) — 콘솔 오류로 남기지 않음
   t.finished.finally(() => root.querySelectorAll(".hero, .tile img").forEach((e) => { e.style.viewTransitionName = ""; }));
 }
 root.addEventListener("click", (e) => {

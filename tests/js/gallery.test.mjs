@@ -89,11 +89,14 @@ test("같이 볼 곳은 없고, 문단 속 강조 표시(**)도 없다", () => {
   for (const x of items) assert.doesNotMatch(detail(x), /같이 볼 곳/, x.id);
 });
 
-test("자막은 2~3줄, 줄마다 짧게(16자 이하), 첫마디 바로 아래", () => {
-  for (const x of items.filter((y) => y.caps)) {
-    assert.ok(x.caps.length >= 2 && x.caps.length <= 3 && x.caps.every((c) => c.length <= 16), x.id);
-    assert.match(detail(x), /class="d__title">[^<]+<\/h1><div class="caps"><span class="cap">/, x.id);
-  }
+test("★ 줄은 크게 보이는 기술명(boom)으로 그려진다", () => {
+  const x = items.find((y) => (y.story || []).some((p) => p.startsWith("★")));
+  assert.ok(x);
+  assert.match(detail(x), /<p class="say boom">(&quot;|")/);
+});
+
+test("격자의 모든 유물에 이야기 한 편이 있다", () => {
+  for (const x of items) assert.ok(Array.isArray(x.story) && x.story.length >= 5, x.id);
 });
 
 test("이야기 한 편 카드: 제목 아래 짧은 문단들, 자막·들려줄 이야기·상상 이야기 칸은 없음", () => {
@@ -102,7 +105,9 @@ test("이야기 한 편 카드: 제목 아래 짧은 문단들, 자막·들려�
   for (const x of withStory) {
     const html = detail(x);
     assert.match(html, /<section class="story"><p/, x.id);
-    assert.equal((html.match(/<p( class="say")?>/g) || []).length - (x.more ? 1 : 0), x.story.length, x.id);
+    const story = html.match(/<section class="story">([\s\S]*?)<\/section>/)[1];
+    assert.equal((story.match(/<p[ >]/g) || []).length, x.story.length, x.id);
+    assert.ok(!html.includes("★"), x.id);   // 기술명 표시는 화면에 안 보임
     assert.doesNotMatch(html, /class="caps"|sec--tell|sec--imagine|진짜 역사 아님/, x.id);
     assert.ok(x.story.every((p) => p.length > 0 && p.length <= 90), x.id);   // 잠깐씩 읽어도 읽히게: 문단은 짧게
   }
@@ -113,12 +118,6 @@ test("들어가기 전 안내 화면: 화면 전체가 버튼이고 AI 대신 �
   assert.match(html, /^<button type="button" class="intro" data-intro>/);
   assert.match(html, /AI에게 묻지 말고/);
   assert.match(html, /화면을 누르면 시작해요/);
-});
-
-test("상상 이야기는 '진짜 역사 아님' 칸에만 들어간다", () => {
-  for (const s of items.filter((x) => x.imagine)) {
-    assert.match(detail(s), /sec--imagine[\s\S]*진짜 역사 아님/, s.id);
-  }
 });
 
 test("퀴즈 버튼은 결과에 따라 바뀐다 (안 풂 / 다 맞힘 / 다시 도전)", () => {

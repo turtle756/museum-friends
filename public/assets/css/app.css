@@ -57,16 +57,12 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .d__title { font-size: 1.7rem; font-weight: 700; line-height: 1.25; margin: 2px 0 0; }
 .sec__label { font-size: .72rem; letter-spacing: .14em; color: var(--sub); margin-bottom: 6px; }
 .sec__text { font-size: 1.02rem; }
-.sec--tell .sec__text { font-size: 1.1rem; }
-/* 예능 자막: 첫마디 아래 짧은 줄 2개를 따로 뗀 빨간 바(사실). 문단 속 색칠은 하지 않는다. */
-.caps { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 12px; }
-.cap { display: inline-block; background: #e8000b; color: #fff; font-weight: 800; font-size: 1.12rem; line-height: 1.3; padding: 6px 12px; border-radius: 6px; box-shadow: 3px 3px 0 rgba(0, 0, 0, .35); }
-.cap:nth-child(2) { transform: rotate(-1.2deg); }
 /* 이야기 한 편: 짧은 문단, 넉넉한 줄 간격, 대사 문단은 굵게 */
 .story { display: flex; flex-direction: column; gap: 12px; }
 .story p { margin: 0; font-size: 1.1rem; line-height: 1.75; }
 .story p.say { font-weight: 700; }
-/* 상상 이야기 칸: 주황 점선 상자 + '진짜 역사 아님' */
+.story p.boom { font-size: 1.5rem; font-weight: 800; line-height: 1.35; color: #ffd166; margin: 6px 0; white-space: pre-line; }   /* 기술명 한 방 */
+:root[data-theme="light"] .story p.boom { color: #b3261e; }
 /* 들어가기 전 안내 화면: 화면 전체가 하나의 버튼 */
 .intro { position: fixed; inset: 0; z-index: 60; width: 100%; max-width: var(--app-w); margin: 0 auto; border: 0; cursor: pointer;
   display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 20px; text-align: left;
@@ -76,9 +72,6 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .intro__text { color: var(--sub); font-size: 1.02rem; line-height: 1.7; }
 .intro__tap { position: absolute; left: 0; right: 0; bottom: calc(40px + env(safe-area-inset-bottom)); text-align: center; color: var(--sub); font-size: .92rem; animation: introPulse 1.8s ease-in-out infinite; }
 @keyframes introPulse { 50% { opacity: .35; } }
-.sec--imagine { border: 1px dashed #ff9600; border-radius: 18px; padding: 14px 16px; background: var(--surface); }
-.sec--imagine .sec__label span { margin-left: 8px; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--text); letter-spacing: 0; }
-.sec--imagine .sec__text { font-size: 1.05rem; }
 .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 .more { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .more summary { list-style: none; cursor: pointer; padding: 14px 0; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
