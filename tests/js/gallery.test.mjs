@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 
-import { detail, home, quizzes, sortKo, tile } from "../../public/assets/js/app.js";
+import { detail, home, quizBtn, quizzes, sortKo, tile } from "../../public/assets/js/app.js";
 
 const data = JSON.parse(readFileSync(new URL("../../public/assets/data/stops.json", import.meta.url), "utf8"));
 const all = [...data.stops, ...(data.extras || [])];
@@ -63,12 +63,27 @@ test("'아이가 더 물어보면'은 처음부터 펼쳐져 있다", () => {
   for (const s of items.filter((x) => x.more)) assert.match(detail(s), /<details class="more" open>/, s.id);
 });
 
-test("물어볼 것은 퀴즈 화면의 질문과 같다", () => {
+test("물어볼 것은 퀴즈 첫 질문 하나만 보여 준다", () => {
   for (const s of items) {
     const ask = detail(s).match(/<section class="sec sec--ask">(.*?)<\/section>/s)[1];
     const shown = [...ask.matchAll(/class="sec__text">([^<]+)</g)].map((m) => m[1]);
-    assert.deepEqual(shown, quizzes(s).map((q) => q.q.replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/"/g, "&quot;")), s.id);
+    assert.deepEqual(shown, [quizzes(s)[0].q.replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/"/g, "&quot;")], s.id);
   }
+});
+
+test("퀴즈 버튼은 결과에 따라 바뀐다 (안 풂 / 다 맞힘 / 다시 도전)", () => {
+  const s = items.find((x) => quizzes(x).length >= 2) || items[0];
+  assert.match(quizBtn(s), /class="btn-quiz" data-quiz=[^>]*>퀴즈로 물어보기</);
+  assert.match(quizBtn(s, { right: 2, total: 2 }), /btn-quiz--perfect[\s\S]*다 맞혔어요[\s\S]*다시 풀기/);
+  assert.match(quizBtn(s, { right: 1, total: 2 }), /btn-quiz--retry[\s\S]*1\/2 맞혔어요[\s\S]*다시 도전/);
+  assert.match(detail(s, { score: { right: 1, total: 2 } }), /btn-quiz--retry/);
+});
+
+test("카드의 뒤로 버튼에 부천활박물관 로고가 있다", () => {
+  const html = detail(items[0]);
+  assert.match(html, /<a class="back back--brand" href="#\/" aria-label="목록으로">/);
+  assert.match(html, /bow-logo-dark\.png/);
+  assert.match(html, /bow-logo-light\.png/);
 });
 
 test("첫 화면 맨 아래에 공식 사이트 버튼이 있다", () => {

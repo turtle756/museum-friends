@@ -77,7 +77,11 @@ a, button { -webkit-tap-highlight-color: transparent; }
 
 .hero-card { position: relative; padding: 14px 14px 0; }
 .hero--rounded { border-radius: var(--radius); }
-.hero-card .back { top: 28px; left: 28px; }
+.hero-card .back { top: 36px; left: 26px; }
+/* 뒤로 버튼 = 반투명 알약 안에 화살표 + 부천활박물관 로고 */
+.back--brand { width: auto; height: 44px; padding: 0 16px 0 10px; gap: 8px; border-radius: 999px; color: #fff; background: rgba(20, 20, 20, .42);
+  -webkit-backdrop-filter: blur(12px) saturate(140%); backdrop-filter: blur(12px) saturate(140%); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); }
+.back--brand .logo { height: 17px; width: auto; opacity: .88; }
 
 /* 듀오링고식 퀴즈: 진행 막대, 눌리는 보기 버튼, 아래에서 올라오는 결과, 옆으로 밀려 들어오는 다음 문제 */
 :root { --ok: #58cc02; --ok-text: #8ee04a; --bad: #ff4b4b; --bad-text: #ff8a8a; }
@@ -164,4 +168,14 @@ a, button { -webkit-tap-highlight-color: transparent; }
   color-scheme: light;
 }
 :root[data-theme="light"] .back { background: #24160F; color: #FFFAF0; }
+:root[data-theme="light"] .back--brand { background: rgba(255, 250, 240, .62); color: #24160F; box-shadow: inset 0 0 0 1px rgba(36, 22, 15, .14); }
+/* 퀴즈 버튼 결과 상태: 다 맞힘 초록, 다시 도전 주황 (듀오링고 색과 아래 두께) */
+.btn-quiz { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-quiz svg { width: 20px; height: 20px; flex: none; }
+.btn-quiz small { font-size: .88rem; font-weight: 600; opacity: .92; padding-left: 10px; border-left: 1px solid currentColor; line-height: 1.1; }
+.btn-quiz--perfect { background: #58cc02; color: #fff; --accent-shadow: #58a700; }
+.btn-quiz--retry { background: #ff9600; color: #fff; --accent-shadow: #cc7a00; }
+.btn-quiz--new { animation: qBump .5s cubic-bezier(.2, 1.4, .4, 1) .05s both; }
+.app:has(.quiz) .btn-quiz--new { animation-play-state: paused; }   /* 퀴즈 창이 닫히는 순간 튄다 */
+@keyframes qBump { 0% { transform: scale(.9); } 60% { transform: scale(1.04); } 100% { transform: none; } }
 :root[data-theme="light"] .tile__seen { background: #24160F; color: #FFFAF0; }

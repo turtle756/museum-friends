@@ -17,7 +17,7 @@
 <main class="app" id="app" aria-live="polite"></main>
 <script type="module">
 import { loadStops } from "/assets/js/core.js";
-import { home, detail, settle, wireQuiz, loadSeen, markSeen, clearSeen, getTheme, setTheme } from "/assets/js/app.js";
+import { home, detail, settle, wireQuiz, quizBtn, loadSeen, markSeen, clearSeen, loadScores, saveScore, getTheme, setTheme } from "/assets/js/app.js";
 const data = await loadStops();
 const items = [...data.stops, ...(data.extras || [])].filter((s) => s.grid !== false);   // 처음 8곳 + 추가 유물(나눠진 칸은 뺌)
 const root = document.getElementById("app");
@@ -27,7 +27,7 @@ let homeScroll = 0, lastId = null, fresh = null;
 function render(s) {
   if (s) {
     lastId = s.id;
-    root.innerHTML = detail(s, opts);
+    root.innerHTML = detail(s, { ...opts, score: loadScores()[s.id] });
     document.title = `${s.name} · 부천활박물관 부모 카드`;
     window.scrollTo(0, 0);
   } else {
@@ -62,7 +62,14 @@ root.addEventListener("click", (e) => {
 });
 addEventListener("hashchange", route);
 // 퀴즈를 끝까지 풀어야 체크한다. 처음 푼 유물이면 격자로 돌아갈 때 체크가 톡 나타난다.
-wireQuiz(root, (id) => items.find((x) => x.id === id), (id) => { if (!loadSeen().has(id)) fresh = id; markSeen(id); });
+// 점수를 남기고, 카드의 퀴즈 버튼을 결과(다 맞힘/다시 도전)로 바꾼다. 바뀐 버튼은 퀴즈 창이 닫힐 때 톡 튄다.
+wireQuiz(root, (id) => items.find((x) => x.id === id), (id, right, total) => {
+  if (!loadSeen().has(id)) fresh = id;
+  markSeen(id);
+  const score = saveScore(id, right, total);
+  const s = items.find((x) => x.id === id), b = root.querySelector(`[data-quiz="${id}"]`);
+  if (s && b) { b.outerHTML = quizBtn(s, score); root.querySelector(`[data-quiz="${id}"]`).classList.add("btn-quiz--new"); }
+});
 route();
 </script>
 </body>

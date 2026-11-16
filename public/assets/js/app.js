@@ -9,6 +9,7 @@ const CHECK = icon('<path d="M5 12.5l4.5 4.5L19 7.5"/>', 3);
 const CLOSE = icon('<path d="M6 6l12 12M18 6L6 18"/>', 2.6);
 const SUN = icon('<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/>', 2);
 const OUT = icon('<path d="M7 17L17 7M9 7h8v8"/>', 2.2);
+const RETRY = icon('<path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v3.8h3.8"/>', 2.4);
 const MOON = icon('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>', 2);
 
 // ---------- 기기에 남기는 것: 퀴즈를 끝까지 푼 유물(체크), 밝게/어둡게 (저장 못 해도 화면은 동작) ----------
@@ -19,7 +20,15 @@ const store = {
 };
 export function loadSeen() { try { return new Set(JSON.parse(store.get("mf-done") || "[]")); } catch { return new Set(); } }
 export function markSeen(id) { const s = loadSeen(); s.add(id); store.set("mf-done", JSON.stringify([...s])); return s; }
-export function clearSeen() { store.set("mf-done", "[]"); return new Set(); }
+export function clearSeen() { store.set("mf-done", "[]"); store.set("mf-score", "{}"); return new Set(); }
+// 퀴즈 결과: 유물마다 가장 잘한 점수 { right, total } (다시 풀어 더 맞히면 바뀜)
+export function loadScores() { try { return JSON.parse(store.get("mf-score") || "{}") || {}; } catch { return {}; } }
+export function saveScore(id, right, total) {
+  const all = loadScores();
+  if (!all[id] || right >= all[id].right) all[id] = { right, total };
+  store.set("mf-score", JSON.stringify(all));
+  return all[id];
+}
 export function getTheme() { return store.get("mf-theme") === "light" ? "light" : "dark"; }
 export function setTheme(v) { store.set("mf-theme", v); document.documentElement.dataset.theme = v; }
 export const sortKo = (list) => [...list].sort((a, b) => a.name.localeCompare(b.name, "ko"));
@@ -55,15 +64,24 @@ export function settle(root) {
 // ---------- 유물 카드 (C1: 한마디 → 볼 곳 → 이야기 → 질문 → 퀴즈 → 더 물어보면) ----------
 const sec = (cls, label, text) => (text ? `<section class="sec sec--${cls}"><div class="sec__label">${label}</div><div class="sec__text">${esc(text)}</div></section>` : "");
 export const quizzes = (s) => [s.quiz, ...(s.extraQuiz || [])].filter(Boolean);
-// 물어볼 것 = 퀴즈 화면의 질문과 같은 글 (11/16: 퀴즈 들어가기 전과 후의 질문을 하나로)
+// 물어볼 것 = 퀴즈 첫 화면의 질문과 같은 글 (질문이 여럿이어도 첫 번째만)
 const askSec = (s) => {
-  const qs = quizzes(s);
-  return qs.length ? `<section class="sec sec--ask"><div class="sec__label">물어볼 것</div>${qs.map((q) => `<div class="sec__text">${esc(q.q)}</div>`).join("")}</section>` : "";
+  const q = quizzes(s)[0];
+  return q ? `<section class="sec sec--ask"><div class="sec__label">물어볼 것</div><div class="sec__text">${esc(q.q)}</div></section>` : "";
 };
+// 퀴즈 버튼: 안 풀었으면 흰 버튼, 다 맞혔으면 초록, 틀린 게 있으면 주황 (듀오링고 색)
+export function quizBtn(s, score) {
+  if (!quizzes(s).length) return "";
+  if (!score) return `<button type="button" class="btn-quiz" data-quiz="${s.id}">퀴즈로 물어보기</button>`;
+  const perfect = score.right >= score.total;
+  return `<button type="button" class="btn-quiz btn-quiz--${perfect ? "perfect" : "retry"}" data-quiz="${s.id}">${perfect ? CHECK : RETRY}`
+    + `<span>${perfect ? "다 맞혔어요" : `${score.right}/${score.total} 맞혔어요`}</span><small>${perfect ? "다시 풀기" : "다시 도전"}</small></button>`;
+}
+const backLogo = (v) => `<img class="logo logo--${v}" src="/assets/img/brand/bow-logo-${v}.png" alt="" width="102" height="17">`;
 
 export function detail(s, o = {}) {
-  const back = o.noBack ? "" : `<a class="back" href="#/" aria-label="목록으로">${ARROW_LEFT}</a>`;
-  const quiz = quizzes(s).length ? `<button type="button" class="btn-quiz" data-quiz="${s.id}">퀴즈로 물어보기</button>` : "";
+  const back = o.noBack ? "" : `<a class="back back--brand" href="#/" aria-label="목록으로">${ARROW_LEFT}${backLogo("dark")}${backLogo("light")}</a>`;
+  const quiz = quizBtn(s, o.score);
   const more = s.more ? `<details class="more" open><summary>아이가 더 물어보면</summary><p>${esc(s.more)}</p><p class="src">근거: ${esc(s.source)}</p></details>`
     : `<p class="src">근거: ${esc(s.source)}</p>`;
   return `<article class="detail"><div class="hero-card"><div class="hero hero--rounded"><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}"></div>${back}</div>
@@ -119,7 +137,7 @@ export function openQuiz(root, s, onDone, onSolved) {
       <div class="quiz__foot"><button type="button" class="quiz__go" data-q="check" disabled>확인</button></div>`;
   }
   function finish() {
-    if (onSolved) onSolved(s.id);   // 마지막 문제까지 답하면 체크 (맞고 틀림은 상관없음)
+    if (onSolved) onSolved(s.id, right, qs.length);   // 마지막 문제까지 답하면 체크(맞고 틀림 무관)와 점수 저장
     box.innerHTML = `${top(100)}<div class="quiz__stage quiz__stage--next quiz__end"><div class="quiz__big">${right}/${qs.length}</div>
         <div class="quiz__q">${right === qs.length ? "다 맞혔어요!" : "잘했어요!"}</div><p class="quiz__endtext">이제 이야기를 들려줄 차례예요.</p></div>
       <div class="quiz__foot"><button type="button" class="quiz__go" data-q="done">이야기 보기</button></div>`;
