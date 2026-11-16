@@ -65,10 +65,12 @@ export function back(v, s) {
 export function page(all) {
   const order = [...all].sort((a, b) => a.name.localeCompare(b.name, "ko")).map((s) => s.id);
   const cards = all.filter((s) => s.card).sort((a, b) => b.card.power - a.card.power);
-  // 시험: 생성 그림 카드(유명 장면의 자세를 빌린 우리 캐릭터, 대포는 실제 사진을 참조). 줄 맨 끝은 지금의 사진 카드.
+  // 그림 카드: 뇌리에 꽂히는 만화 장면이 있는 유물만. 유물마다 한 줄 [그림 A][그림 B][그림 C][뒷면].
+  // 그림은 유명 장면의 자세·구도를 빌린 우리 캐릭터(A 꼬마, B 소년, C 원작 느낌을 더 세게), 유물은 실제 사진을 참조해 생성.
   const v0 = VARIANTS[0], arts = cards.filter((s) => s.card.art && s.card.art.length);
-  const artSec = arts.length ? `<section class="vsec" id="v-art"><h2><span>시험 · 그림 카드</span>5-1 틀 + 생성 그림</h2><p>사진 대신 생성한 그림(유명 장면의 자세를 빌린 우리 캐릭터, 대포는 실제 사진을 참조해 그림). 줄 맨 끝은 지금의 사진 카드.</p>
-    <div class="row">${arts.map((s) => s.card.art.map((a) => card(s, v0, order.indexOf(s.id) + 1, a)).join("") + card(s, v0, order.indexOf(s.id) + 1)).join("")}</div></section>` : "";
+  const artSec = arts.length ? `<section class="vsec" id="v-art"><h2><span>시험 · 그림 카드</span>5-1 틀 + 생성 그림</h2><p>유명 만화 장면의 자세를 빌린 우리 캐릭터. A 꼬마, B 소년, C 원작 느낌을 더 세게. 유물은 실제 사진을 참조해 그림. 줄마다 맨 끝은 뒷면.</p>
+    ${arts.map((s) => `<h3 class="artrow">${esc(s.name)}<span>${esc(s.card.scene || "")}</span></h3>
+    <div class="row">${s.card.art.map((a) => card(s, v0, order.indexOf(s.id) + 1, a)).join("")}${back(v0, s)}</div>`).join("")}</section>` : "";
   return artSec + VARIANTS.map((v) => `<section class="vsec" id="v-${v.id}"><h2><span>시안 ${v.label} · ${v.tag}</span>${esc(v.name)}</h2><p>${esc(v.desc)}</p>
     <div class="row">${cards.map((s) => card(s, v, order.indexOf(s.id) + 1)).join("")}${back(v, cards[0])}</div></section>`).join("");
 }

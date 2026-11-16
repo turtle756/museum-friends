@@ -52,6 +52,10 @@ test("생성 그림 카드 시험 칸: 그림 파일이 있고 5-1 틀로 그려
   if (arts.length) {
     const html = page(all);
     assert.match(html, /id="v-art"/);
+    const artSec = html.slice(html.indexOf('id="v-art"'), html.indexOf("</section>", html.indexOf('id="v-art"')));
+    assert.equal((artSec.match(/class="row"/g) || []).length, arts.length);            // 유물마다 한 줄
+    assert.equal((artSec.match(/card--back/g) || []).length, arts.length);             // 줄마다 맨 끝 뒷면
+    for (const s of arts) assert.ok(s.card.scene && s.card.art.length >= 2, s.id);       // 장면 메모 + 그림 여러 장
     assert.match(html, /card__photo card__photo--art"><img src="\/assets\/img\/art\//);
     for (const s of arts) for (const a of s.card.art.filter((x) => x.bubble)) assert.ok(html.includes(`class="bubble bubble--${a.bubble.tail}"`), a.file);
   }
