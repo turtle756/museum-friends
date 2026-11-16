@@ -1,5 +1,5 @@
 /* 아이에게 주는 유물 카드. 실제 트레이딩 카드 크기(63×88mm) 비율이고, 모든 치수는 카드 폭(--w)에 비례한다.
-   11/16 결정: 5-1(설계도 + 뒷면 칠보문). 2-1(한지 도록 + 금색 포인트)은 예비. 5-1 뒷면은 무늬·이름판 없이 깨끗하게. 나머지 시안은 삭제(git 기록에 남음). */
+   11/16 결정: 5-1(설계도). 2-1(한지 도록 + 금색 포인트)은 예비. 뒷면은 둘 다 무늬·이름판 없이 깨끗하게. 나머지 시안은 삭제(git 기록에 남음). */
 :root {
   --bg: #1b1b1b; --text: #fafafa; --sub: #a9a9a9; --line: #3a3a3a;
   --font: "Poppins", "Pretendard Variable", "Pretendard", system-ui, sans-serif;
@@ -21,6 +21,12 @@ a { color: inherit; }
 .row { display: flex; gap: 14px; overflow-x: auto; padding: 4px 18px 22px; scroll-snap-type: x mandatory; scroll-padding: 18px; }
 .row > .card { scroll-snap-align: start; }
 @media (min-width: 1000px) { .row { flex-wrap: wrap; overflow: visible; } }
+/* 그림 후보 줄: 유물 이름 + 원작 장면, 카드 밑에 A·B·C */
+.pick h3 { margin: 6px 18px 8px; font-size: 1.02rem; line-height: 1.35; }
+.pick h3 small { display: block; color: var(--sub); font-weight: 500; font-size: .82rem; }
+.row { align-items: flex-start; }
+.pick__opt { margin: 0; flex: none; scroll-snap-align: start; text-align: center; }
+.pick__opt figcaption { margin-top: 6px; font-weight: 700; font-size: 1.1rem; color: #ffd166; }
 
 /* ---------- 카드 공통 ---------- */
 .card {

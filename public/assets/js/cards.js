@@ -39,13 +39,20 @@ export function back(v, s) {
 }
 
 // all: 격자에 나오는 유물 전체(카드 번호 = 가나다순 자리). 카드 내용이 있는 유물만 전투력 높은 순으로 그린다.
+// 아이 카드는 12장: 손에 쥘 만한 실물 유물만(그림·설명판·재료 묶음은 부모 앱에만).
 export function page(all) {
   const order = [...all].sort((a, b) => a.name.localeCompare(b.name, "ko")).map((s) => s.id);
+  const no = (s) => order.indexOf(s.id) + 1;
   const cards = all.filter((s) => s.card).sort((a, b) => b.card.power - a.card.power);
-  // 그림 카드 8장(기획자가 고른 한 장씩): 유명 만화 장면의 자세를 빌린 우리 캐릭터, 유물은 실제 사진을 참조해 생성. 앞면·뒷면 짝으로.
-  const v0 = VARIANTS[0], arts = cards.filter((s) => s.card.art && s.card.art.length);
-  const artSec = arts.length ? `<section class="vsec" id="v-art"><h2><span>그림 카드 · 고른 ${arts.length}장</span>5-1 틀</h2><p>앞면과 뒷면을 짝지어 놓았습니다. 유명 만화 장면의 자세를 빌린 우리 캐릭터, 유물은 실제 사진을 참조해 그림.</p>
-    <div class="row">${arts.map((s) => card(s, v0, order.indexOf(s.id) + 1, s.card.art[0]) + back(v0, s)).join("")}</div></section>` : "";
-  return artSec + VARIANTS.map((v) => `<section class="vsec" id="v-${v.id}"><h2><span>시안 ${v.label} · ${v.tag}</span>${esc(v.name)}</h2><p>${esc(v.desc)}</p>
-    <div class="row">${cards.map((s) => card(s, v, order.indexOf(s.id) + 1)).join("")}${back(v, cards[0])}</div></section>`).join("");
+  // 그림 카드: 유명 만화 장면의 자세를 빌린 우리 캐릭터, 유물은 실제 사진을 참조해 생성.
+  // 그림이 여러 장이면 기획자가 고를 후보(A 꼬마 · B 소년 · C 원작 느낌의 새 캐릭터 + 뒷면), 한 장이면 고른 것(앞뒤 짝).
+  const v0 = VARIANTS[0], arts = (s) => (s.card.art || []).length;
+  const cands = cards.filter((s) => arts(s) > 1), picked = cards.filter((s) => arts(s) === 1);
+  const pickSec = cands.length ? `<section class="vsec" id="v-pick"><h2><span>그림 카드 · 고를 후보 ${cands.length}장</span>5-1 틀</h2><p>유물마다 A(꼬마)·B(소년)·C(원작 느낌을 더 살린 새 캐릭터) 세 장과 뒷면. 마음에 드는 그림을 골라 주세요.</p>
+    ${cands.map((s) => `<div class="pick" id="pick-${s.id}"><h3>${esc(s.name)}${s.card.scene ? `<small>${esc(s.card.scene)}</small>` : ""}</h3>
+    <div class="row">${s.card.art.map((a, i) => `<figure class="pick__opt">${card(s, v0, no(s), a)}<figcaption>${"ABCDEF"[i]}</figcaption></figure>`).join("")}${back(v0, s)}</div></div>`).join("")}</section>` : "";
+  const artSec = picked.length ? `<section class="vsec" id="v-art"><h2><span>그림 카드 · 고른 ${picked.length}장</span>5-1 틀</h2><p>앞면과 뒷면을 짝지어 놓았습니다.</p>
+    <div class="row">${picked.map((s) => card(s, v0, no(s), s.card.art[0]) + back(v0, s)).join("")}</div></section>` : "";
+  return pickSec + artSec + VARIANTS.map((v) => `<section class="vsec" id="v-${v.id}"><h2><span>시안 ${v.label} · ${v.tag}</span>${esc(v.name)}</h2><p>${esc(v.desc)}</p>
+    <div class="row">${cards.map((s) => card(s, v, no(s))).join("")}${back(v, cards[0])}</div></section>`).join("");
 }
