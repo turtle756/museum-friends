@@ -38,10 +38,12 @@ function motif(v) {
 }
 const logo = (v) => `<img src="/assets/img/brand/bow-logo-${v.logo}.png" alt="부천활박물관" width="168" height="28">`;
 
-export function card(s, v, no) {
+// art: 사진 대신 쓸 생성 그림 파일 이름(/assets/img/art/). 없으면 실제 사진.
+export function card(s, v, no, art) {
   const c = s.card;
+  const src = art ? `/assets/img/art/${art}` : `/assets/img/photo/${s.photo}.jpg`;
   return `<article class="card ${cls(v)}" data-cat="${CAT[c.cat] || "etc"}" style="--p:${c.power / 1000}">
-    <div class="card__photo"><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}" loading="lazy"></div>
+    <div class="card__photo${art ? " card__photo--art" : ""}"><img src="${src}" alt="${esc(s.name)}" loading="lazy"></div>
     <div class="card__power"><span>전투력</span><b>${c.power}</b></div>
     <div class="card__head"><span class="card__cat">${esc(c.cat)}</span><h3 class="card__name">${esc(s.name)}</h3></div>
     <div class="card__skill">${c.skills.map((k) => `<b class="card__skill-name">${esc(k)}</b>`).join("")}</div>
@@ -60,6 +62,10 @@ export function back(v, s) {
 export function page(all) {
   const order = [...all].sort((a, b) => a.name.localeCompare(b.name, "ko")).map((s) => s.id);
   const cards = all.filter((s) => s.card).sort((a, b) => b.card.power - a.card.power);
-  return VARIANTS.map((v) => `<section class="vsec" id="v-${v.id}"><h2><span>시안 ${v.label} · ${v.tag}</span>${esc(v.name)}</h2><p>${esc(v.desc)}</p>
+  // 시험: 생성 그림 카드(유명 장면의 자세를 빌린 우리 캐릭터, 대포는 실제 사진을 참조). 줄 맨 끝은 지금의 사진 카드.
+  const v0 = VARIANTS[0], arts = cards.filter((s) => s.card.art && s.card.art.length);
+  const artSec = arts.length ? `<section class="vsec" id="v-art"><h2><span>시험 · 그림 카드</span>5-1 틀 + 생성 그림</h2><p>사진 대신 생성한 그림(유명 장면의 자세를 빌린 우리 캐릭터, 대포는 실제 사진을 참조해 그림). 줄 맨 끝은 지금의 사진 카드.</p>
+    <div class="row">${arts.map((s) => s.card.art.map((a) => card(s, v0, order.indexOf(s.id) + 1, a)).join("") + card(s, v0, order.indexOf(s.id) + 1)).join("")}</div></section>` : "";
+  return artSec + VARIANTS.map((v) => `<section class="vsec" id="v-${v.id}"><h2><span>시안 ${v.label} · ${v.tag}</span>${esc(v.name)}</h2><p>${esc(v.desc)}</p>
     <div class="row">${cards.map((s) => card(s, v, order.indexOf(s.id) + 1)).join("")}${back(v, cards[0])}</div></section>`).join("");
 }

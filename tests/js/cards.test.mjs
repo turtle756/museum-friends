@@ -45,6 +45,17 @@ test("앞면에는 설명글이 없고 이야기는 뒷면에만 있다", () => 
   assert.ok(back(v, s).includes(s.card.story));
 });
 
+test("생성 그림 카드 시험 칸: 그림 파일이 있고 5-1 틀로 그려진다", async () => {
+  const { existsSync } = await import("node:fs");
+  const arts = withCard.filter((s) => s.card.art);
+  for (const s of arts) for (const a of s.card.art) assert.ok(existsSync(new URL(`../../public/assets/img/art/${a}`, import.meta.url)), a);
+  if (arts.length) {
+    const html = page(all);
+    assert.match(html, /id="v-art"/);
+    assert.match(html, /card__photo card__photo--art"><img src="\/assets\/img\/art\//);
+  }
+});
+
 test("5-1 스킬 칸에는 점선 네모가 없다", () => {
   assert.doesNotMatch(css, /\.card--plan \.card__skill \{[^}]*dashed/);
   assert.doesNotMatch(css, /\.card__skill \{[^}]*dashed/);

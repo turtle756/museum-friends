@@ -33,6 +33,8 @@ a { color: inherit; }
 .card__photo { overflow: hidden; min-height: 0; }
 .card:not(.card--back) .card__photo { flex: 1 1 0; }   /* 앞면에 설명글이 없으니 사진이 남는 자리를 전부 차지 */
 .card__photo img { width: 100%; height: 100%; object-fit: cover; }
+.card__photo--art img { object-position: center 15%; }   /* 생성 그림: 하늘을 가리키는 손끝이 잘리지 않게 위쪽 기준 */
+#v-art h2 span { color: #ff9600; }
 .card__power { display: flex; flex-direction: column; align-items: center; line-height: 1; z-index: 2; }
 .card__power span { font-size: calc(var(--u) * 3.2); font-weight: 700; letter-spacing: .04em; }
 .card__power b { font-family: "Poppins", sans-serif; font-size: calc(var(--u) * 9); font-weight: 700; }
