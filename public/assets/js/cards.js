@@ -1,5 +1,6 @@
 // 아이에게 주는 유물 카드 시안: 같은 카드(사진·이름·전투력·스킬)를 디자인만 바꿔 여러 벌 그린다.
-// 카드 내용은 stops.json의 card 칸. 전투력은 고증이 아니라 아이 눈에 세 보이는 정도, 스킬은 설명판 사실을 풀어 쓴 글.
+// 카드 내용은 stops.json의 card 칸. 전투력은 고증이 아니라 아이 눈에 세 보이는 정도.
+// 11/16: 앞면에는 설명글을 두지 않는다(사진·이름·전투력·스킬 이름만). 유물 이야기는 뒷면.
 import { esc } from "./core.js";
 
 // logo: 카드 바탕이 어두우면 흰 로고(dark), 밝으면 원색 로고(light)
@@ -96,13 +97,14 @@ export function card(s, v, no) {
     <div class="card__photo"><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}" loading="lazy"></div>
     <div class="card__power"><span>전투력</span><b>${c.power}</b></div>
     <div class="card__head"><span class="card__cat">${esc(c.cat)}</span><h3 class="card__name">${esc(s.name)}</h3></div>
-    <div class="card__skill"><b class="card__skill-name">${esc(c.skill)}</b><p>${esc(c.text)}</p></div>
+    <div class="card__skill">${c.skills.map((k) => `<b class="card__skill-name">${esc(k)}</b>`).join("")}</div>
     <div class="card__foot">${logo(v)}<span class="card__no">No.${String(no).padStart(2, "0")}</span></div>
   </article>`;
 }
 
-export function back(v) {
-  const mark = `${logo(v)}<span class="card__backtext">유물 카드</span>`;
+// 뒷면: 유물 이름과 이야기 + 로고 (문양이 있는 시안은 문양 위에)
+export function back(v, s) {
+  const mark = `<div class="card__story"><h4>${esc(s.name)}</h4><p>${esc(s.card.story)}</p></div>${logo(v)}`;
   const field = v.back && v.back.layout === "field";
   return `<article class="card ${cls(v)} card--back" data-cat="cannon">${motif(v)}<div class="card__backin">${field ? `<div class="card__plate">${mark}</div>` : mark}</div></article>`;
 }
@@ -113,5 +115,5 @@ export function page(all) {
   const cards = all.filter((s) => s.card).sort((a, b) => b.card.power - a.card.power);
   let n = 0;
   return VARIANTS.map((v) => `<section class="vsec${v.base ? " vsec--sub" : ""}" id="v-${v.id}"><h2><span>시안 ${v.label || ++n}</span>${esc(v.name)}</h2><p>${esc(v.desc)}</p>
-    <div class="row">${cards.map((s) => card(s, v, order.indexOf(s.id) + 1)).join("")}${back(v)}</div></section>`).join("");
+    <div class="row">${cards.map((s) => card(s, v, order.indexOf(s.id) + 1)).join("")}${back(v, cards[0])}</div></section>`).join("");
 }
