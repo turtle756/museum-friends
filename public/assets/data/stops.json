@@ -83,25 +83,7 @@
         "scene": "주술회전 · 허식 「무라사키」(빨강 + 파랑 = 보라)",
         "art": [
           {
-            "file": "rest_a.jpg",
-            "bubble": {
-              "text": "궁술 극의…\n만작!!!",
-              "x": 54,
-              "y": 60,
-              "tail": "left"
-            }
-          },
-          {
             "file": "rest_b.jpg",
-            "bubble": {
-              "text": "궁술 극의…\n만작!!!",
-              "x": 4,
-              "y": 4,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "rest_c.jpg",
             "bubble": {
               "text": "궁술 극의…\n만작!!!",
               "x": 4,
@@ -512,25 +494,7 @@
         "scene": "원피스 · 동료의 증표(등 돌리고 X 표시 팔 들기)",
         "art": [
           {
-            "file": "myeongjeok_a.jpg",
-            "bubble": {
-              "text": "이 소리가\n동료의 증표다!",
-              "x": 5,
-              "y": 8,
-              "tail": "right"
-            }
-          },
-          {
             "file": "myeongjeok_b.jpg",
-            "bubble": {
-              "text": "이 소리가\n동료의 증표다!",
-              "x": 5,
-              "y": 8,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "myeongjeok_c.jpg",
             "bubble": {
               "text": "이 소리가\n동료의 증표다!",
               "x": 5,
@@ -631,24 +595,6 @@
         "story": "화살촉이 버들잎을 닮은 화살이에요. 여기 있는 유엽전은 진짜로 쓰던 것이라 화살대에 주인의 이름이 쓰여 있어요.",
         "scene": "원피스 · 모자를 맡기는 부두 장면",
         "art": [
-          {
-            "file": "yuyeopjeon_a.jpg",
-            "bubble": {
-              "text": "이 화살을\n너에게 맡기마.",
-              "x": 34,
-              "y": 3,
-              "tail": "left"
-            }
-          },
-          {
-            "file": "yuyeopjeon_b.jpg",
-            "bubble": {
-              "text": "이 화살을\n너에게 맡기마.",
-              "x": 40,
-              "y": 15,
-              "tail": "left"
-            }
-          },
           {
             "file": "yuyeopjeon_c.jpg",
             "bubble": {
@@ -783,24 +729,6 @@
         "story": "각궁은 대나무, 뽕나무, 참나무, 물소뿔, 쇠심줄, 화피, 민어부레, 일곱 가지 재료로 만들어요.",
         "scene": "전대물 · 결성 포즈와 오색 폭발",
         "art": [
-          {
-            "file": "materials_a.jpg",
-            "bubble": {
-              "text": "일곱 재료 전대,\n집합!",
-              "x": 3,
-              "y": 6,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "materials_b.jpg",
-            "bubble": {
-              "text": "일곱 재료 전대,\n집합!",
-              "x": 3,
-              "y": 8,
-              "tail": "right"
-            }
-          },
           {
             "file": "materials_c.jpg",
             "bubble": {
@@ -987,29 +915,11 @@
         "scene": "주술회전 · 영역전개 손모양",
         "art": [
           {
-            "file": "hyeonja_a.jpg",
-            "bubble": {
-              "text": "주문 완성.\n철환우!!!",
-              "x": 3,
-              "y": 4,
-              "tail": "right"
-            }
-          },
-          {
             "file": "hyeonja_b.jpg",
             "bubble": {
               "text": "주문 완성.\n철환우!!!",
               "x": 2,
               "y": 3,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "hyeonja_c.jpg",
-            "bubble": {
-              "text": "주문 완성.\n철환우!!!",
-              "x": 4,
-              "y": 4,
               "tail": "right"
             }
           }
@@ -1074,29 +984,11 @@
         "scene": "나루토 · 다중 그림자 분신술",
         "art": [
           {
-            "file": "jija_a.jpg",
-            "bubble": {
-              "text": "조란\n이백연!!!",
-              "x": 58,
-              "y": 30,
-              "tail": "left"
-            }
-          },
-          {
             "file": "jija_b.jpg",
             "bubble": {
               "text": "조란\n이백연!!!",
               "x": 4,
               "y": 44,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "jija_c.jpg",
-            "bubble": {
-              "text": "조란\n이백연!!!",
-              "x": 4,
-              "y": 8,
               "tail": "right"
             }
           }
@@ -1136,29 +1028,11 @@
         "story": "화약 30량에 50근짜리 대장군전! 1,200보까지 날아가는, 총통 가운데 가장 큰 대포예요.",
         "art": [
           {
-            "file": "cheonja_a.jpg",
-            "bubble": {
-              "text": "천상천하,\n천자독존.",
-              "x": 60,
-              "y": 40,
-              "tail": "left"
-            }
-          },
-          {
             "file": "cheonja_b.jpg",
             "bubble": {
               "text": "천상천하,\n천자독존.",
               "x": 4,
               "y": 24,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "cheonja_c.jpg",
-            "bubble": {
-              "text": "천상천하,\n천자독존.",
-              "x": 4,
-              "y": 40,
               "tail": "right"
             }
           }
@@ -1233,29 +1107,11 @@
         "scene": "드래곤볼 · 초사이어인 각성",
         "art": [
           {
-            "file": "sizes_a.jpg",
-            "bubble": {
-              "text": "이것이…\n대신기전이다!!!",
-              "x": 3,
-              "y": 30,
-              "tail": "right"
-            }
-          },
-          {
             "file": "sizes_b.jpg",
             "bubble": {
               "text": "이것이…\n대신기전이다!!!",
               "x": 3,
               "y": 20,
-              "tail": "right"
-            }
-          },
-          {
-            "file": "sizes_c.jpg",
-            "bubble": {
-              "text": "이것이…\n대신기전이다!!!",
-              "x": 3,
-              "y": 8,
               "tail": "right"
             }
           }

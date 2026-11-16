@@ -23,7 +23,7 @@ test("카드 내용: 종류, 전투력(1~999), 스킬 이름 1~3개, 뒷면 이�
   }
 });
 
-test("모든 시안이 카드마다 빈 값 없이 그려지고, 뒷면(문양 + 이야기)도 있다", () => {
+test("모든 시안이 카드마다 빈 값 없이 그려지고, 뒷면(이야기)도 있다", () => {
   const html = page(all);
   assert.doesNotMatch(html, /undefined|null|NaN/);
   for (const v of VARIANTS) {
@@ -31,7 +31,8 @@ test("모든 시안이 카드마다 빈 값 없이 그려지고, 뒷면(문양 +
     assert.ok(start >= 0, v.id);
     const sec = html.slice(start, html.indexOf("</section>", start));
     assert.equal((sec.match(/class="card card--/g) || []).length, withCard.length + 1, v.id);
-    assert.match(sec, /card--back[^>]*><div class="card__motif/, v.id);
+    if (v.back.motif) assert.match(sec, /card--back[^>]*><div class="card__motif/, v.id);
+    else assert.match(sec, /card--back[^>]*><div class="card__backin"><div class="card__story">/, v.id);   // 5-1: 무늬·이름판 없이 깨끗한 뒷면
     assert.match(sec, new RegExp(`<span>시안 ${v.label} · ${v.tag}</span>`), v.id);
   }
 });
@@ -45,20 +46,21 @@ test("앞면에는 설명글이 없고 이야기는 뒷면에만 있다", () => 
   assert.ok(back(v, s).includes(s.card.story));
 });
 
-test("생성 그림 카드 시험 칸: 그림 파일이 있고 5-1 틀로 그려진다", async () => {
-  const { existsSync } = await import("node:fs");
+test("그림 카드: 고른 8장만, 유물마다 그림 한 장 + 앞뒤 짝, 남은 그림 파일만 있다", async () => {
+  const { existsSync, readdirSync } = await import("node:fs");
   const arts = withCard.filter((s) => s.card.art);
-  for (const s of arts) for (const a of s.card.art) assert.ok(existsSync(new URL(`../../public/assets/img/art/${a.file}`, import.meta.url)), a.file);
-  if (arts.length) {
-    const html = page(all);
-    assert.match(html, /id="v-art"/);
-    const artSec = html.slice(html.indexOf('id="v-art"'), html.indexOf("</section>", html.indexOf('id="v-art"')));
-    assert.equal((artSec.match(/class="row"/g) || []).length, arts.length);            // 유물마다 한 줄
-    assert.equal((artSec.match(/card--back/g) || []).length, arts.length);             // 줄마다 맨 끝 뒷면
-    for (const s of arts) assert.ok(s.card.scene && s.card.art.length >= 2, s.id);       // 장면 메모 + 그림 여러 장
-    assert.match(html, /card__photo card__photo--art"><img src="\/assets\/img\/art\//);
-    for (const s of arts) for (const a of s.card.art.filter((x) => x.bubble)) assert.ok(html.includes(`class="bubble bubble--${a.bubble.tail}"`), a.file);
+  assert.equal(arts.length, 8);
+  for (const s of arts) {
+    assert.equal(s.card.art.length, 1, s.id);
+    assert.ok(existsSync(new URL(`../../public/assets/img/art/${s.card.art[0].file}`, import.meta.url)), s.id);
   }
+  const files = readdirSync(new URL("../../public/assets/img/art/", import.meta.url));
+  assert.deepEqual(files.sort(), arts.map((s) => s.card.art[0].file).sort());   // 안 쓰는 그림은 지움
+  const html = page(all);
+  const sec = html.slice(html.indexOf('id="v-art"'), html.indexOf("</section>", html.indexOf('id="v-art"')));
+  assert.equal((sec.match(/class="card card--plan card--plan-back"/g) || []).length, 8);
+  assert.equal((sec.match(/card--back/g) || []).length, 8);
+  assert.doesNotMatch(sec, /card__motif|card__plate/);
 });
 
 test("5-1 스킬 칸에는 점선 네모가 없다", () => {

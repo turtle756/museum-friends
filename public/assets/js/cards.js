@@ -1,12 +1,12 @@
 // 아이에게 주는 유물 카드. 카드 내용은 stops.json의 card 칸(종류, 전투력, 스킬 이름, 뒷면 이야기).
 // 전투력은 고증이 아니라 아이 눈에 세 보이는 정도. 앞면에는 설명글을 두지 않는다(사진·이름·전투력·스킬 이름만).
-// 11/16 결정: 5-1(설계도 + 뒷면 칠보문). 2-1(한지 도록 + 금색 포인트)은 예비. 나머지 시안은 삭제(git 기록에 남음).
+// 11/16 결정: 5-1(설계도, 뒷면은 무늬·이름판 없이 깨끗하게). 2-1(한지 도록 + 금색 포인트)은 예비. 나머지 시안은 삭제(git 기록에 남음).
 import { esc } from "./core.js";
 
 // logo: 카드 바탕이 어두우면 흰 로고(dark), 밝으면 원색 로고(light)
 export const VARIANTS = [
-  { id: "plan-back", base: "plan", label: "5-1", tag: "결정", name: "설계도 · 뒷면 칠보문", logo: "dark", back: { motif: "chilbo", layout: "field" },
-    desc: "남색 모눈 설계도, 전투력만큼 차오르는 동그란 눈금. 뒷면 전체에 칠보문과 가운데 이름판." },
+  { id: "plan-back", base: "plan", label: "5-1", tag: "결정", name: "설계도 · 깨끗한 뒷면", logo: "dark", back: { layout: "plain" },
+    desc: "남색 모눈 설계도, 전투력만큼 차오르는 동그란 눈금. 뒷면은 모눈 위에 이름·이야기·로고만." },
   { id: "catalog-gold", base: "catalog", label: "2-1", tag: "예비", name: "한지 도록 · 금색 포인트", logo: "light", back: { motif: "lotus", layout: "center" },
     desc: "한지색 바탕, 금색 이중 테두리, 빨간 낙관 도장 전투력. 뒷면 가운데 연화문(수막새 연꽃무늬)." },
 ];
@@ -27,15 +27,8 @@ function lotus(sw = 1.4) {
   for (let k = 0; k < 6; k++) { const t = (k * 60 * Math.PI) / 180; seeds += `<circle cx="${f2(50 + 5 * Math.cos(t))}" cy="${f2(50 + 5 * Math.sin(t))}" r="1.2" fill="currentColor"/>`; }
   return `<g fill="none" stroke="currentColor" stroke-width="${sw}"><circle cx="50" cy="50" r="47"/><circle cx="50" cy="50" r="43.5" stroke-width="${f2(sw * 1.9)}" stroke-linecap="round" stroke-dasharray="0.01 5.47"/><circle cx="50" cy="50" r="40"/>${p}<circle cx="50" cy="50" r="9"/>${seeds}</g>`;
 }
-// 칠보문: 칸 꼭짓점마다 원(반지름 = 칸/√2)을 겹친 무늬
-const chilboPat = (id, t) => `<pattern id="${id}" width="${t}" height="${t}" patternUnits="userSpaceOnUse"><g fill="none" stroke="currentColor" stroke-width="${f2(t * 0.05)}">${[[0, 0], [t, 0], [0, t], [t, t]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="${f2(t / Math.SQRT2)}"/>`).join("")}</g></pattern>`;
-function motif(v) {
-  const b = v.back;
-  const inner = b.layout === "center"
-    ? `<svg viewBox="0 0 100 100" aria-hidden="true">${lotus()}</svg>`
-    : `<svg viewBox="0 0 63 88" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${chilboPat(`${v.id}-f`, 8)}</defs><rect width="63" height="88" fill="url(#${v.id}-f)"/></svg>`;
-  return `<div class="card__motif card__motif--${b.layout}">${inner}</div>`;
-}
+// 뒷면 문양: 예비 2-1만 가운데 연화문. 결정 5-1은 무늬 없음.
+const motif = (v) => (v.back.motif === "lotus" ? `<div class="card__motif card__motif--center"><svg viewBox="0 0 100 100" aria-hidden="true">${lotus()}</svg></div>` : "");
 const logo = (v) => `<img src="/assets/img/brand/bow-logo-${v.logo}.png" alt="부천활박물관" width="168" height="28">`;
 
 // 만화식 말풍선: 그림 위에 HTML로 얹는다(생성 그림에 한글을 쓰게 하면 글자가 깨져서). x·y는 사진 칸 기준 %, tail은 꼬리 방향.
@@ -55,23 +48,19 @@ export function card(s, v, no, art) {
   </article>`;
 }
 
-// 뒷면: 유물 이름과 이야기 + 로고 (문양 위에)
+// 뒷면: 유물 이름과 이야기 + 로고 (5-1은 모눈 바탕 위에 그대로, 2-1은 연화문 위에)
 export function back(v, s) {
-  const mark = `<div class="card__story"><h4>${esc(s.name)}</h4><p>${esc(s.card.story)}</p></div>${logo(v)}`;
-  const field = v.back.layout === "field";
-  return `<article class="card ${cls(v)} card--back" data-cat="cannon">${motif(v)}<div class="card__backin">${field ? `<div class="card__plate">${mark}</div>` : mark}</div></article>`;
+  return `<article class="card ${cls(v)} card--back" data-cat="cannon">${motif(v)}<div class="card__backin"><div class="card__story"><h4>${esc(s.name)}</h4><p>${esc(s.card.story)}</p></div>${logo(v)}</div></article>`;
 }
 
 // all: 격자에 나오는 유물 전체(카드 번호 = 가나다순 자리). 카드 내용이 있는 유물만 전투력 높은 순으로 그린다.
 export function page(all) {
   const order = [...all].sort((a, b) => a.name.localeCompare(b.name, "ko")).map((s) => s.id);
   const cards = all.filter((s) => s.card).sort((a, b) => b.card.power - a.card.power);
-  // 그림 카드: 뇌리에 꽂히는 만화 장면이 있는 유물만. 유물마다 한 줄 [그림 A][그림 B][그림 C][뒷면].
-  // 그림은 유명 장면의 자세·구도를 빌린 우리 캐릭터(A 꼬마, B 소년, C 원작 느낌을 더 세게), 유물은 실제 사진을 참조해 생성.
+  // 그림 카드 8장(기획자가 고른 한 장씩): 유명 만화 장면의 자세를 빌린 우리 캐릭터, 유물은 실제 사진을 참조해 생성. 앞면·뒷면 짝으로.
   const v0 = VARIANTS[0], arts = cards.filter((s) => s.card.art && s.card.art.length);
-  const artSec = arts.length ? `<section class="vsec" id="v-art"><h2><span>시험 · 그림 카드</span>5-1 틀 + 생성 그림</h2><p>유명 만화 장면의 자세를 빌린 우리 캐릭터. A 꼬마, B 소년, C 원작 느낌을 더 세게. 유물은 실제 사진을 참조해 그림. 줄마다 맨 끝은 뒷면.</p>
-    ${arts.map((s) => `<h3 class="artrow">${esc(s.name)}<span>${esc(s.card.scene || "")}</span></h3>
-    <div class="row">${s.card.art.map((a) => card(s, v0, order.indexOf(s.id) + 1, a)).join("")}${back(v0, s)}</div>`).join("")}</section>` : "";
+  const artSec = arts.length ? `<section class="vsec" id="v-art"><h2><span>그림 카드 · 고른 ${arts.length}장</span>5-1 틀</h2><p>앞면과 뒷면을 짝지어 놓았습니다. 유명 만화 장면의 자세를 빌린 우리 캐릭터, 유물은 실제 사진을 참조해 그림.</p>
+    <div class="row">${arts.map((s) => card(s, v0, order.indexOf(s.id) + 1, s.card.art[0]) + back(v0, s)).join("")}</div></section>` : "";
   return artSec + VARIANTS.map((v) => `<section class="vsec" id="v-${v.id}"><h2><span>시안 ${v.label} · ${v.tag}</span>${esc(v.name)}</h2><p>${esc(v.desc)}</p>
     <div class="row">${cards.map((s) => card(s, v, order.indexOf(s.id) + 1)).join("")}${back(v, cards[0])}</div></section>`).join("");
 }

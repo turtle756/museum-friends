@@ -1,5 +1,5 @@
 /* 아이에게 주는 유물 카드. 실제 트레이딩 카드 크기(63×88mm) 비율이고, 모든 치수는 카드 폭(--w)에 비례한다.
-   11/16 결정: 5-1(설계도 + 뒷면 칠보문). 2-1(한지 도록 + 금색 포인트)은 예비. 나머지 시안은 삭제(git 기록에 남음). */
+   11/16 결정: 5-1(설계도 + 뒷면 칠보문). 2-1(한지 도록 + 금색 포인트)은 예비. 5-1 뒷면은 무늬·이름판 없이 깨끗하게. 나머지 시안은 삭제(git 기록에 남음). */
 :root {
   --bg: #1b1b1b; --text: #fafafa; --sub: #a9a9a9; --line: #3a3a3a;
   --font: "Poppins", "Pretendard Variable", "Pretendard", system-ui, sans-serif;
@@ -46,8 +46,6 @@ a { color: inherit; }
 .bubble--down::before { left: 30%; bottom: calc(var(--u) * -4); border-width: calc(var(--u) * 4) calc(var(--u) * 1.6) 0 calc(var(--u) * 1.6); border-top-color: #111; }
 .bubble--down::after { left: calc(30% + var(--u) * .55); bottom: calc(var(--u) * -2.7); border-width: calc(var(--u) * 2.9) calc(var(--u) * 1.05) 0 calc(var(--u) * 1.05); border-top-color: #fff; }
 #v-art h2 span { color: #ff9600; }
-.artrow { margin: 18px 18px 8px; font-size: 1.05rem; }
-.artrow span { margin-left: 10px; color: var(--sub); font-size: .85rem; font-weight: 500; }
 .card__power { display: flex; flex-direction: column; align-items: center; line-height: 1; z-index: 2; }
 .card__power span { font-size: calc(var(--u) * 3.2); font-weight: 700; letter-spacing: .04em; }
 .card__power b { font-family: "Poppins", sans-serif; font-size: calc(var(--u) * 9); font-weight: 700; }
@@ -60,7 +58,7 @@ a { color: inherit; }
 .card__foot { display: flex; justify-content: space-between; align-items: center; font-size: calc(var(--u) * 3); font-weight: 600; }
 .card__foot img { height: calc(var(--u) * 4.2); width: auto; }
 
-/* 뒷면: 이름과 이야기 + 로고, 전통 문양은 흐리게 깔기 */
+/* 뒷면: 이름과 이야기 + 로고 (5-1은 모눈 바탕 그대로, 2-1은 연화문을 흐리게) */
 .card--back .card__backin { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--u) * 4); }
 .card--back .card__backin img { width: 46%; height: auto; }
 .card__story { text-align: center; padding: 0 calc(var(--u) * 9); }
@@ -69,16 +67,11 @@ a { color: inherit; }
 .card__motif { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .card__motif svg { position: absolute; display: block; }
 .card__motif--center svg { width: 84%; left: 8%; top: 50%; transform: translateY(-50%); }
-.card__motif--field svg { inset: 0; width: 100%; height: 100%; }
-.card__plate { display: flex; flex-direction: column; align-items: center; gap: calc(var(--u) * 3); width: 78%; padding: calc(var(--u) * 6) calc(var(--u) * 5);
-  background: var(--plate); border: 1px solid var(--plate-line); border-radius: calc(var(--u) * 2); }
-.card--back .card__plate img { width: 62%; }
-.card__plate .card__story { padding: 0; }
 
 /* ---------- 5-1 설계도 (결정): 남색 모눈, 전투력만큼 차오르는 눈금 ---------- */
 .card--plan { background-color: #0e2c4f; color: #e8f1ff; padding: calc(var(--u) * 5); gap: calc(var(--u) * 2.6); border: calc(var(--u) * .8) solid #9cc3ff;
   background-image: linear-gradient(rgba(255, 255, 255, .07) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .07) 1px, transparent 1px);
-  background-size: calc(var(--u) * 5) calc(var(--u) * 5); --plate: #0e2c4f; --plate-line: #9cc3ff; }
+  background-size: calc(var(--u) * 5) calc(var(--u) * 5); }
 .card--plan .card__photo { border: 1px solid #9cc3ff; }
 .card--plan .card__power { position: absolute; top: calc(var(--u) * 2.5); right: calc(var(--u) * 2.5); width: calc(var(--u) * 24); height: calc(var(--u) * 24); border-radius: 50%; justify-content: center; gap: calc(var(--u) * .6);
   background: radial-gradient(#0e2c4f 57%, transparent 58%), conic-gradient(#ffd166 calc(var(--p) * 360deg), rgba(156, 195, 255, .25) 0); }
@@ -87,10 +80,9 @@ a { color: inherit; }
 .card--plan .card__cat { color: #9cc3ff; letter-spacing: .2em; }
 .card--plan .card__skill-name { color: #ffd166; }   /* 11/16: 스킬 칸의 점선 네모는 없앰 */
 .card--plan .card__foot { color: #9cc3ff; }
-.card--plan .card__motif { color: #9cc3ff; opacity: .26; }
 
 /* ---------- 2-1 한지 도록 + 금색 포인트 (예비) ---------- */
-.card--catalog { background: #fffaf0; color: #24160f; padding: calc(var(--u) * 5.5); gap: calc(var(--u) * 2.4); font-family: var(--serif); --plate: #fffaf0; --plate-line: #d4a24a;
+.card--catalog { background: #fffaf0; color: #24160f; padding: calc(var(--u) * 5.5); gap: calc(var(--u) * 2.4); font-family: var(--serif);
   box-shadow: inset 0 0 0 calc(var(--u) * 2) #fffaf0, inset 0 0 0 calc(var(--u) * 2.5) #d4a24a, inset 0 0 0 calc(var(--u) * 3.3) #fffaf0, inset 0 0 0 calc(var(--u) * 3.6) #d4a24a; }
 .card--catalog .card__photo { border: 1px solid #d4a24a; padding: calc(var(--u) * 1.4); background: #fff; }
 .card--catalog .card__power { position: absolute; top: calc(var(--u) * 3.4); right: calc(var(--u) * 3.4); width: calc(var(--u) * 20); height: calc(var(--u) * 20); justify-content: center; gap: calc(var(--u) * .8);
