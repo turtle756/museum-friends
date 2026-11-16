@@ -39,7 +39,8 @@ function motif(v) {
 const logo = (v) => `<img src="/assets/img/brand/bow-logo-${v.logo}.png" alt="부천활박물관" width="168" height="28">`;
 
 // 만화식 말풍선: 그림 위에 HTML로 얹는다(생성 그림에 한글을 쓰게 하면 글자가 깨져서). x·y는 사진 칸 기준 %, tail은 꼬리 방향.
-const bubble = (b) => (b ? `<div class="bubble bubble--${b.tail === "right" ? "right" : "left"}" style="left:${+b.x}%;top:${+b.y}%">${esc(b.text).replace(/\n/g, "<br>")}</div>` : "");
+const TAILS = ["left", "right", "down"];   // 꼬리 방향: 왼쪽·오른쪽(가운데 높이), 아래(왼쪽에서 1/3 지점)
+const bubble = (b) => (b ? `<div class="bubble bubble--${TAILS.includes(b.tail) ? b.tail : "left"}" style="left:${+b.x}%;top:${+b.y}%">${esc(b.text).replace(/\n/g, "<br>")}</div>` : "");
 
 // art: 사진 대신 쓸 생성 그림 { file, bubble? } (/assets/img/art/). 없으면 실제 사진.
 export function card(s, v, no, art) {

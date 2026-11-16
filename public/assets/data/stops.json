@@ -644,18 +644,18 @@
             "file": "yuyeopjeon_b.jpg",
             "bubble": {
               "text": "이 화살을\n너에게 맡기마.",
-              "x": 2,
-              "y": 52,
-              "tail": "right"
+              "x": 40,
+              "y": 15,
+              "tail": "left"
             }
           },
           {
             "file": "yuyeopjeon_c.jpg",
             "bubble": {
               "text": "이 화살을\n너에게 맡기마.",
-              "x": 55,
-              "y": 40,
-              "tail": "left"
+              "x": 14,
+              "y": 6,
+              "tail": "down"
             }
           }
         ]

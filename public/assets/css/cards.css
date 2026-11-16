@@ -43,6 +43,8 @@ a { color: inherit; }
 .bubble--left::after { left: calc(var(--u) * -2.4); top: calc(52% + var(--u) * .55); border-width: calc(var(--u) * 1.05) calc(var(--u) * 2.9) calc(var(--u) * 1.05) 0; border-right-color: #fff; }
 .bubble--right::before { right: calc(var(--u) * -3.6); top: 52%; border-width: calc(var(--u) * 1.6) 0 calc(var(--u) * 1.6) calc(var(--u) * 4); border-left-color: #111; }
 .bubble--right::after { right: calc(var(--u) * -2.4); top: calc(52% + var(--u) * .55); border-width: calc(var(--u) * 1.05) 0 calc(var(--u) * 1.05) calc(var(--u) * 2.9); border-left-color: #fff; }   /* 생성 그림: 하늘을 가리키는 손끝이 잘리지 않게 위쪽 기준 */
+.bubble--down::before { left: 30%; bottom: calc(var(--u) * -4); border-width: calc(var(--u) * 4) calc(var(--u) * 1.6) 0 calc(var(--u) * 1.6); border-top-color: #111; }
+.bubble--down::after { left: calc(30% + var(--u) * .55); bottom: calc(var(--u) * -2.7); border-width: calc(var(--u) * 2.9) calc(var(--u) * 1.05) 0 calc(var(--u) * 1.05); border-top-color: #fff; }
 #v-art h2 span { color: #ff9600; }
 .artrow { margin: 18px 18px 8px; font-size: 1.05rem; }
 .artrow span { margin-left: 10px; color: var(--sub); font-size: .85rem; font-weight: 500; }
