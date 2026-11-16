@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 
-import { detail, home, quizBtn, quizzes, sortKo, tile } from "../../public/assets/js/app.js";
+import { detail, home, intro, quizBtn, quizzes, rich, sortKo, tile } from "../../public/assets/js/app.js";
 
 const data = JSON.parse(readFileSync(new URL("../../public/assets/data/stops.json", import.meta.url), "utf8"));
 const all = [...data.stops, ...(data.extras || [])];
@@ -72,17 +72,45 @@ test("'아이가 더 물어보면'은 처음부터 펼쳐져 있다", () => {
   for (const s of items.filter((x) => x.more)) assert.match(detail(s), /<details class="more" open>/, s.id);
 });
 
-test("물어볼 것은 퀴즈 첫 질문 하나만 보여 준다", () => {
+test("카드에 '물어볼 것' 칸이 없고 퀴즈 풀어보기 버튼만 있다", () => {
   for (const s of items) {
-    const ask = detail(s).match(/<section class="sec sec--ask">(.*?)<\/section>/s)[1];
-    const shown = [...ask.matchAll(/class="sec__text">([^<]+)</g)].map((m) => m[1]);
-    assert.deepEqual(shown, [quizzes(s)[0].q.replace(/&/g, "&amp;").replace(/'/g, "&#39;").replace(/"/g, "&quot;")], s.id);
+    const html = detail(s);
+    assert.doesNotMatch(html, /물어볼 것|sec--ask/, s.id);
+    assert.match(html, /data-quiz=/, s.id);
+  }
+});
+
+test("**키워드**는 형광펜으로, 글자는 안전하게 바뀐다", () => {
+  assert.equal(rich("쾅! **100개** <b>"), '쾅! <mark class="kw kw--info">100개</mark> &lt;b&gt;');
+  assert.match(rich("**공룡**", "story"), /kw--story/);
+  for (const s of items) assert.doesNotMatch(detail(s), /\*\*/, s.id);   // 짝이 안 맞는 ** 가 남지 않음
+});
+
+test("들어가기 전 안내 화면: 화면 전체가 버튼이고 AI 대신 여기서 찾으라는 말이 있다", () => {
+  const html = intro();
+  assert.match(html, /^<button type="button" class="intro" data-intro>/);
+  assert.match(html, /AI에게 묻지 말고/);
+  assert.match(html, /화면을 누르면 시작해요/);
+});
+
+test("사실 칸의 강조는 빨강(info), 상상 이야기의 강조는 주황(story)", () => {
+  for (const s of items) {
+    const html = detail(s);
+    const imagine = (html.match(/<section class="sec sec--imagine">[\s\S]*?<\/section>/) || [""])[0];
+    assert.doesNotMatch(html.replace(imagine, ""), /kw--story/, s.id);
+    assert.doesNotMatch(imagine, /kw--info/, s.id);
+  }
+});
+
+test("상상 이야기는 '진짜 역사 아님' 칸에만 들어간다", () => {
+  for (const s of items.filter((x) => x.imagine)) {
+    assert.match(detail(s), /sec--imagine[\s\S]*진짜 역사 아님/, s.id);
   }
 });
 
 test("퀴즈 버튼은 결과에 따라 바뀐다 (안 풂 / 다 맞힘 / 다시 도전)", () => {
   const s = items.find((x) => quizzes(x).length >= 2) || items[0];
-  assert.match(quizBtn(s), /class="btn-quiz" data-quiz=[^>]*>퀴즈로 물어보기</);
+  assert.match(quizBtn(s), /class="btn-quiz" data-quiz=[^>]*>퀴즈 풀어보기</);
   assert.match(quizBtn(s, { right: 2, total: 2 }), /btn-quiz--perfect[\s\S]*다 맞혔어요[\s\S]*다시 풀기/);
   assert.match(quizBtn(s, { right: 1, total: 2 }), /btn-quiz--retry[\s\S]*1\/2 맞혔어요[\s\S]*다시 도전/);
   assert.match(detail(s, { score: { right: 1, total: 2 } }), /btn-quiz--retry/);

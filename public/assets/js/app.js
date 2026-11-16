@@ -33,6 +33,15 @@ export function getTheme() { return store.get("mf-theme") === "light" ? "light" 
 export function setTheme(v) { store.set("mf-theme", v); document.documentElement.dataset.theme = v; }
 export const sortKo = (list) => [...list].sort((a, b) => a.name.localeCompare(b.name, "ko"));
 
+// ---------- 들어가기 전 안내 화면: 아무 곳이나 누르면 격자로 ----------
+export function intro() {
+  const logo = (v) => `<img class="logo logo--${v}" src="/assets/img/brand/bow-logo-${v}.png" alt="부천활박물관" width="180" height="30">`;
+  return `<button type="button" class="intro" data-intro>${logo("dark")}${logo("light")}
+    <span class="intro__title">AI에게 묻지 말고<br>여기서 찾아보세요</span>
+    <span class="intro__text"><mark class="kw kw--info">진짜 정보</mark>는 박물관 설명판에서 옮겼어요.<br><mark class="kw kw--story">상상 이야기</mark>는 재미로 지어낸 거예요.</span>
+    <span class="intro__tap">화면을 누르면 시작해요</span></button>`;
+}
+
 // ---------- 격자 ----------
 export const SITE = "https://www.bcmuseum.or.kr/ko/pages/intro?tab=tab2";   // 공식 사이트의 부천활박물관 소개
 export function tile(s, o = {}) {
@@ -64,17 +73,17 @@ export function settle(root) {
 }
 
 // ---------- 유물 카드 (C1: 한마디 → 볼 곳 → 이야기 → 질문 → 퀴즈 → 더 물어보면) ----------
-const sec = (cls, label, text) => (text ? `<section class="sec sec--${cls}"><div class="sec__label">${label}</div><div class="sec__text">${esc(text)}</div></section>` : "");
+// **키워드** 강조 (무한도전 자막처럼 부모가 훑어봐도 핵심이 보이게)
+// kind: info = 설명판에서 온 사실(빨간 글씨), story = 상상 이야기(주황 형광펜). 색과 모양을 둘 다 달리해 설명 없이 구분되게.
+export const rich = (t, kind = "info") => esc(t).replace(/\*\*(.+?)\*\*/g, `<mark class="kw kw--${kind}">$1</mark>`);
+const sec = (cls, label, text) => (text ? `<section class="sec sec--${cls}"><div class="sec__label">${label}</div><div class="sec__text">${rich(text)}</div></section>` : "");
+// 상상 이야기: 고증 문제를 피하려고 일부러 말이 안 되게 쓴 칸. 진짜 역사가 아님을 칸 이름에 붙인다.
+const imagineSec = (s) => (s.imagine ? `<section class="sec sec--imagine"><div class="sec__label">상상 이야기<span>진짜 역사 아님</span></div><div class="sec__text">${rich(s.imagine, "story")}</div></section>` : "");
 export const quizzes = (s) => [s.quiz, ...(s.extraQuiz || [])].filter(Boolean);
-// 물어볼 것 = 퀴즈 첫 화면의 질문과 같은 글 (질문이 여럿이어도 첫 번째만)
-const askSec = (s) => {
-  const q = quizzes(s)[0];
-  return q ? `<section class="sec sec--ask"><div class="sec__label">물어볼 것</div><div class="sec__text">${esc(q.q)}</div></section>` : "";
-};
 // 퀴즈 버튼: 안 풀었으면 흰 버튼, 다 맞혔으면 초록, 틀린 게 있으면 주황 (듀오링고 색)
 export function quizBtn(s, score) {
   if (!quizzes(s).length) return "";
-  if (!score) return `<button type="button" class="btn-quiz" data-quiz="${s.id}">퀴즈로 물어보기</button>`;
+  if (!score) return `<button type="button" class="btn-quiz" data-quiz="${s.id}">퀴즈 풀어보기</button>`;
   const perfect = score.right >= score.total;
   return `<button type="button" class="btn-quiz btn-quiz--${perfect ? "perfect" : "retry"}" data-quiz="${s.id}">${perfect ? CHECK : RETRY}`
     + `<span>${perfect ? "다 맞혔어요" : `${score.right}/${score.total} 맞혔어요`}</span><small>${perfect ? "다시 풀기" : "다시 도전"}</small></button>`;
@@ -84,11 +93,11 @@ const backLogo = (v) => `<img class="logo logo--${v}" src="/assets/img/brand/bow
 export function detail(s, o = {}) {
   const back = o.noBack ? "" : `<a class="back back--brand" href="#/" aria-label="목록으로">${ARROW_LEFT}${backLogo("dark")}${backLogo("light")}</a>`;
   const quiz = quizBtn(s, o.score);
-  const more = s.more ? `<details class="more" open><summary>아이가 더 물어보면</summary><p>${esc(s.more)}</p><p class="src">근거: ${esc(s.source)}</p></details>`
+  const more = s.more ? `<details class="more" open><summary>아이가 더 물어보면</summary><p>${rich(s.more)}</p><p class="src">근거: ${esc(s.source)}</p></details>`
     : `<p class="src">근거: ${esc(s.source)}</p>`;
   return `<article class="detail"><div class="hero-card"><div class="hero hero--rounded"><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}"></div>${back}</div>
-    <div class="d__body"><div><div class="d__zone">${esc(s.zone)}</div><h1 class="d__title">${esc(s.headline)}</h1></div>
-    ${sec("look", "같이 볼 곳", s.look)}${sec("tell", "들려줄 이야기", s.tell)}${askSec(s)}${quiz}${more}
+    <div class="d__body"><div><div class="d__zone">${esc(s.zone)}</div><h1 class="d__title">${rich(s.headline)}</h1></div>
+    ${sec("look", "같이 볼 곳", s.look)}${sec("tell", "들려줄 이야기", s.tell)}${imagineSec(s)}${quiz}${more}
     ${o.noBack ? "" : '<a class="btn-wide" href="#/">다른 유물 보기</a>'}</div></article>`;
 }
 

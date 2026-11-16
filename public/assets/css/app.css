@@ -44,7 +44,6 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .sitebtn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 14px; margin-bottom: 18px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); font-size: .95rem; font-weight: 700; text-decoration: none; transition: transform .1s; }
 .sitebtn svg { width: 16px; height: 16px; }
 .sitebtn:active { transform: scale(.97); }
-.sec--ask .sec__text + .sec__text { margin-top: 12px; }
 
 /* 유물 카드 화면 */
 .detail { padding-bottom: 40px; }
@@ -59,7 +58,26 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .sec__label { font-size: .72rem; letter-spacing: .14em; color: var(--sub); margin-bottom: 6px; }
 .sec__text { font-size: 1.02rem; }
 .sec--tell .sec__text { font-size: 1.1rem; }
-.sec--ask .sec__text { font-size: 1.35rem; font-weight: 700; line-height: 1.4; color: var(--ask); }
+/* 키워드 강조(무한도전 자막처럼): 사실 = 빨간 굵은 글씨, 상상 이야기 = 주황 형광펜 */
+.kw { background: none; color: inherit; font-weight: 800; padding: 0 .06em; border-radius: 2px; }
+.kw--info { color: #ff6259; }
+.kw--story { color: inherit; box-shadow: inset 0 -.5em 0 rgba(255, 150, 0, .5); }
+:root[data-theme="light"] .kw--info { color: #c4261d; }
+:root[data-theme="light"] .kw--story { box-shadow: inset 0 -.5em 0 rgba(255, 150, 0, .38); }
+/* 상상 이야기 칸: 주황 점선 상자 + '진짜 역사 아님' */
+/* 들어가기 전 안내 화면: 화면 전체가 하나의 버튼 */
+.intro { position: fixed; inset: 0; z-index: 60; width: 100%; max-width: var(--app-w); margin: 0 auto; border: 0; cursor: pointer;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 20px; text-align: left;
+  padding: 32px 28px calc(96px + env(safe-area-inset-bottom)); background: var(--bg); color: var(--text); font: inherit; }
+.intro .logo { height: 30px; width: auto; margin-bottom: 10px; }
+.intro__title { font-size: 2.1rem; font-weight: 800; line-height: 1.25; }
+.intro__text { color: var(--sub); font-size: 1.02rem; line-height: 1.7; }
+.intro__text .kw--info { color: #ff6259; }
+.intro__tap { position: absolute; left: 0; right: 0; bottom: calc(40px + env(safe-area-inset-bottom)); text-align: center; color: var(--sub); font-size: .92rem; animation: introPulse 1.8s ease-in-out infinite; }
+@keyframes introPulse { 50% { opacity: .35; } }
+.sec--imagine { border: 1px dashed #ff9600; border-radius: 18px; padding: 14px 16px; background: var(--surface); }
+.sec--imagine .sec__label span { margin-left: 8px; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--text); letter-spacing: 0; }
+.sec--imagine .sec__text { font-size: 1.05rem; }
 .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 .more { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .more summary { list-style: none; cursor: pointer; padding: 14px 0; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
