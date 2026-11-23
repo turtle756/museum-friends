@@ -13,6 +13,8 @@ export const VARIANTS = [
 
 const CAT = { 총통: "cannon", 신기전: "rocket", 활: "bow", 화살: "arrow" };
 const cls = (v) => `card--${v.base} card--${v.id}`;
+// 카드 제목: 격자 이름과 다르게 쓸 때만 card.name (예: 격자 "각궁 (김장환 제작)" → 카드 "각궁")
+const cname = (s) => s.card.name || s.name;
 
 const logo = (v) => `<img src="/assets/img/brand/bow-logo-${v.logo}.png" alt="부천활박물관" width="168" height="28">`;
 
@@ -25,9 +27,9 @@ export function card(s, v, no, art) {
   const c = s.card;
   const src = art ? `/assets/img/art/${art.file}` : `/assets/img/photo/${s.photo}.jpg`;
   return `<article class="card ${cls(v)}" data-cat="${CAT[c.cat] || "etc"}" style="--p:${c.power / 1000}">
-    <div class="card__photo${art ? " card__photo--art" : ""}"><img src="${src}" alt="${esc(s.name)}" loading="lazy">${art ? bubble(art.bubble) : ""}</div>
+    <div class="card__photo${art ? " card__photo--art" : ""}"><img src="${src}" alt="${esc(cname(s))}" loading="lazy">${art ? bubble(art.bubble) : ""}</div>
     <div class="card__power"><span>전투력</span><b>${c.power}</b></div>
-    <div class="card__head"><span class="card__cat">${esc(c.cat)}</span><h3 class="card__name">${esc(s.name)}</h3></div>
+    <div class="card__head"><span class="card__cat">${esc(c.cat)}</span><h3 class="card__name">${esc(cname(s))}</h3></div>
     <div class="card__skill">${c.skills.map((k) => `<b class="card__skill-name">${esc(k)}</b>`).join("")}</div>
     <div class="card__foot">${logo(v)}<span class="card__no">No.${String(no).padStart(2, "0")}</span></div>
   </article>`;
@@ -35,7 +37,7 @@ export function card(s, v, no, art) {
 
 // 뒷면: 유물 이름과 이야기 + 로고 (무늬·이름판 없이 카드 바탕 위에 그대로)
 export function back(v, s) {
-  return `<article class="card ${cls(v)} card--back" data-cat="cannon"><div class="card__backin"><div class="card__story"><h4>${esc(s.name)}</h4><p>${esc(s.card.story)}</p></div>${logo(v)}</div></article>`;
+  return `<article class="card ${cls(v)} card--back" data-cat="cannon"><div class="card__backin"><div class="card__story"><h4>${esc(cname(s))}</h4><p>${esc(s.card.story)}</p></div>${logo(v)}</div></article>`;
 }
 
 // all: 격자에 나오는 유물 전체(카드 번호 = 가나다순 자리). 카드 내용이 있는 유물만 전투력 높은 순으로 그린다.

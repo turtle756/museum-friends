@@ -32,6 +32,20 @@ export function saveScore(id, right, total) {
 export function getTheme() { return store.get("mf-theme") === "light" ? "light" : "dark"; }
 export function setTheme(v) { store.set("mf-theme", v); document.documentElement.dataset.theme = v; }
 export const sortKo = (list) => [...list].sort((a, b) => a.name.localeCompare(b.name, "ko"));
+// 검색: 유물 이름에서 띄어쓰기·대소문자를 무시하고 찾는다 ("천자 총통" → 천자총통)
+const norm = (t) => String(t || "").replace(/\s+/g, "").toLowerCase();
+export const matches = (name, q) => !norm(q) || norm(name).includes(norm(q));
+const SEARCH = icon('<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>', 2.2);
+// 검색어가 바뀔 때 격자를 다시 그리지 않고 칸만 숨긴다 (입력 중 화면이 깜빡이지 않게)
+export function filterFeed(root, q) {
+  let shown = 0;
+  root.querySelectorAll(".feed .tile").forEach((t) => {
+    t.hidden = !matches(t.querySelector(".tile__name").textContent, q);
+    if (!t.hidden) shown++;
+  });
+  const empty = root.querySelector("[data-empty]");
+  if (empty) empty.hidden = shown > 0;
+}
 
 // ---------- 들어가기 전 안내 화면: 아무 곳이나 누르면 격자로 ----------
 export function intro() {
@@ -48,7 +62,7 @@ export function tile(s, o = {}) {
   const sc = o.scores && o.scores[s.id], retry = !!sc && sc.right < sc.total;   // 틀린 것이 있으면 ✓ 대신 ↻
   const seen = o.seen && o.seen.has(s.id)
     ? `<span class="tile__seen${retry ? " tile__seen--retry" : ""}${o.fresh === s.id ? " is-new" : ""}" title="${retry ? "다시 도전할 유물" : "퀴즈 다 맞힌 유물"}">${retry ? RETRY : CHECK}</span>` : "";
-  return `<a class="tile${seen ? " is-seen" : ""}" href="#/a/${s.id}" data-id="${s.id}"><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}" loading="lazy"><span class="tile__name">${esc(s.name)}</span>${seen}</a>`;
+  return `<a class="tile${seen ? " is-seen" : ""}" href="#/a/${s.id}" data-id="${s.id}"${matches(s.name, o.query) ? "" : " hidden"}><img src="/assets/img/photo/${s.photo}.jpg" alt="${esc(s.name)}" loading="lazy"><span class="tile__name">${esc(s.name)}</span>${seen}</a>`;
 }
 
 export function home(items, o = {}) {
@@ -60,7 +74,9 @@ export function home(items, o = {}) {
       <button type="button" class="themebtn" data-theme-toggle aria-label="${light ? "어둡게 보기" : "밝게 보기"}">${light ? MOON : SUN}</button></div>
     <header class="home__head"><div class="home__stats"><span><b>${list.length}</b> 유물</span><span${o.fresh ? ' class="is-bump"' : ""}><b>${n}</b> 풀었어요</span></div>
       <p class="home__bio">아이와 함께 보는 유물 이야기 카드</p></header>
+    <label class="search">${SEARCH}<input type="search" data-search value="${esc(o.query || "")}" placeholder="유물 이름으로 찾기" aria-label="유물 이름으로 찾기" autocomplete="off" enterkeyhint="search"></label>
     <div class="feed">${list.map((s) => tile(s, o)).join("")}</div>
+    <p class="feed__empty" data-empty${list.some((s) => matches(s.name, o.query)) ? " hidden" : ""}>찾는 유물이 없어요</p>
     <footer class="home__foot"><a class="sitebtn" href="${SITE}" target="_blank" rel="noopener">부천활박물관 공식 사이트${OUT}</a>${n ? '<button type="button" class="linkbtn" data-clear-seen>체크 모두 지우기</button><br>' : ""}시안 · 학예사 검수 전. 내용은 박물관 설명판 원문을 옮긴 것입니다.</footer>`;
 }
 

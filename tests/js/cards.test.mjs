@@ -48,7 +48,7 @@ test("앞면에는 설명글이 없고 이야기는 뒷면에만 있다", () => 
 
 test("아이 카드는 손에 쥘 만한 실물 유물 12장이고, 그림·설명판·재료 묶음은 카드가 없다", () => {
   assert.equal(withCard.length, 12);
-  for (const name of ["득중정어사도", "북새선은도", "시대별 활과 화살촉", "각궁 재료"]) {
+  for (const name of ["득중정어사도", "북새선은도", "삼국시대의 활", "각궁 재료"]) {
     const s = all.find((x) => x.name === name);
     assert.ok(s, name);              // 부모 앱에는 그대로 남는다
     assert.equal(s.card, undefined, name);

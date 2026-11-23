@@ -17,13 +17,13 @@
 <main class="app" id="app" aria-live="polite"></main>
 <script type="module">
 import { loadStops } from "/assets/js/core.js";
-import { home, detail, intro, settle, wireQuiz, quizBtn, loadSeen, markSeen, clearSeen, loadScores, saveScore, getTheme, setTheme } from "/assets/js/app.js";
+import { home, detail, intro, settle, wireQuiz, quizBtn, filterFeed, loadSeen, markSeen, clearSeen, loadScores, saveScore, getTheme, setTheme } from "/assets/js/app.js";
 const data = await loadStops();
 const items = [...data.stops, ...(data.extras || [])].filter((s) => s.grid !== false);   // 처음 8곳 + 추가 유물(나눠진 칸은 뺌)
 const root = document.getElementById("app");
 const opts = {};
 const calm = matchMedia("(prefers-reduced-motion: reduce)");
-let homeScroll = 0, lastId = null, fresh = null;
+let homeScroll = 0, lastId = null, fresh = null, query = "";   // query: 검색어 (카드에 들어갔다 돌아와도 유지)
 // 들어가기 전 안내 화면은 방문마다 한 번 (카드 주소로 바로 들어오면 건너뜀)
 let introSeen = false;
 try { introSeen = sessionStorage.getItem("mf-intro") === "1"; } catch (e) { /* 무시 */ }
@@ -34,7 +34,7 @@ function render(s) {
     document.title = `${s.name} · 부천활박물관 부모 카드`;
     window.scrollTo(0, 0);
   } else {
-    root.innerHTML = home(items, { ...opts, seen: loadSeen(), scores: loadScores(), theme: getTheme(), fresh });
+    root.innerHTML = home(items, { ...opts, seen: loadSeen(), scores: loadScores(), theme: getTheme(), fresh, query });
     fresh = null;
     document.title = "부천활박물관 부모 카드 · 시안";
     window.scrollTo(0, homeScroll);
@@ -68,6 +68,9 @@ root.addEventListener("click", (e) => {
     if (document.startViewTransition && !calm.matches) document.startViewTransition(route); else route();
   } else if (e.target.closest("[data-theme-toggle]")) { homeScroll = window.scrollY; setTheme(getTheme() === "light" ? "dark" : "light"); route(); }
   else if (e.target.closest("[data-clear-seen]")) { homeScroll = window.scrollY; clearSeen(); route(); }
+});
+root.addEventListener("input", (e) => {
+  if (e.target.matches("[data-search]")) { query = e.target.value; filterFeed(root, query); }
 });
 addEventListener("hashchange", route);
 // 퀴즈를 끝까지 풀어야 체크한다. 처음 푼 유물이면 격자로 돌아갈 때 체크가 톡 나타난다.
