@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1b1b1b">
+<title>전체 유물 · 부천활박물관</title>
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  /* 종류 파악용 임시 페이지: 상설 유물 전부를 사진 + 이름만으로. 기획전(11/29 종료)은 뺌. 데이터 /assets/data/all.json */
+  :root { --bg: #1b1b1b; --text: #fafafa; --sub: #a9a9a9; --line: #3a3a3a; color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 "Pretendard Variable", Pretendard, system-ui, sans-serif; word-break: keep-all; }
+  a { color: inherit; }
+  .top { max-width: 1180px; margin: 0 auto; padding: 10px 16px; display: flex; justify-content: space-between; gap: 12px; font-size: .8rem; color: var(--sub); border-bottom: 1px solid var(--line); }
+  header { max-width: 1180px; margin: 0 auto; padding: 20px 16px 6px; }
+  h1 { margin: 0; font-size: 1.5rem; }
+  header p { margin: 4px 0 0; color: var(--sub); font-size: .9rem; }
+  section { max-width: 1180px; margin: 0 auto; padding: 18px 16px 4px; }
+  h2 { margin: 0 0 10px; font-size: 1.1rem; }
+  h2 span { color: var(--sub); font-weight: 500; font-size: .9rem; margin-left: 6px; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 700px) { ul { grid-template-columns: repeat(4, 1fr); } }
+  @media (min-width: 1000px) { ul { grid-template-columns: repeat(6, 1fr); } }
+  li { margin: 0; }
+  li img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; background: #2a2a2a; }
+  li b { display: block; margin-top: 5px; font-size: .92rem; font-weight: 600; line-height: 1.3; }
+</style>
+</head>
+<body>
+<div class="top"><a href="/">← 부모 앱으로</a><span>임시 · 종류 파악용</span></div>
+<header><h1>전체 유물 <span id="total"></span></h1><p>상설 전시만, 사진과 이름만. 기획전 「활의 길, 도시를 잇다」(11/29 종료)는 뺐습니다.</p></header>
+<main id="list"></main>
+<script type="module">
+const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const data = await (await fetch("/assets/data/all.json", { cache: "no-store" })).json();
+document.getElementById("total").textContent = `${data.groups.reduce((n, g) => n + g.items.length, 0)}점`;
+document.getElementById("list").innerHTML = data.groups.map((g) => `<section><h2>${esc(g.name)}<span>${g.items.length}</span></h2><ul>${
+  g.items.map((it) => `<li><img src="/assets/img/${esc(it.img)}" alt="${esc(it.name)}" loading="lazy"><b>${esc(it.name)}</b></li>`).join("")}</ul></section>`).join("");
+</script>
+</body>
+</html>
