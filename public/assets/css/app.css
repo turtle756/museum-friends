@@ -1,4 +1,4 @@
-/* 앱 시안 · Smartify 느낌: 거의 검은 바탕, 흰 글씨, 굵은 기하 글꼴, 큰 둥근 모서리, 화살표 원 버튼 */
+/* 부모 앱 · Smartify 느낌: 거의 검은 바탕, 흰 글씨, 굵은 기하 글꼴, 큰 둥근 모서리, 화살표 원 버튼 */
 :root {
   --bg: #1b1b1b; --surface: #262626; --surface-2: #303030; --line: #3a3a3a;
   --text: #fafafa; --sub: #a9a9a9; --accent: #fafafa; --on-accent: #1b1b1b; --ask: #fafafa;
@@ -13,10 +13,6 @@ body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 var(
 a { color: inherit; }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid #fafafa; outline-offset: 2px; }
-
-/* 앱 밖 개발용 띠: 앱 화면이 아니라는 표시 */
-.devstrip { display: flex; gap: 10px; justify-content: space-between; align-items: center; padding: 6px 14px; font-size: .75rem; color: var(--sub); border-bottom: 1px solid var(--line); max-width: var(--app-w); margin: 0 auto; }
-.devstrip a { color: var(--sub); text-decoration: underline; }   /* 카드 시안으로 가는 임시 링크 */
 
 .app { max-width: var(--app-w); margin: 0 auto; min-height: 100svh; }
 

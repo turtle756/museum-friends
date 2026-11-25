@@ -77,7 +77,7 @@ export function home(items, o = {}) {
     <label class="search">${SEARCH}<input type="search" data-search value="${esc(o.query || "")}" placeholder="유물 이름으로 찾기" aria-label="유물 이름으로 찾기" autocomplete="off" enterkeyhint="search"></label>
     <div class="feed">${list.map((s) => tile(s, o)).join("")}</div>
     <p class="feed__empty" data-empty${list.some((s) => matches(s.name, o.query)) ? " hidden" : ""}>찾는 유물이 없어요</p>
-    <footer class="home__foot"><a class="sitebtn" href="${SITE}" target="_blank" rel="noopener">부천활박물관 공식 사이트${OUT}</a>${n ? '<button type="button" class="linkbtn" data-clear-seen>체크 모두 지우기</button><br>' : ""}시안 · 학예사 검수 전. 내용은 박물관 설명판 원문을 옮긴 것입니다.</footer>`;
+    <footer class="home__foot"><a class="sitebtn" href="${SITE}" target="_blank" rel="noopener">부천활박물관 공식 사이트${OUT}</a>${n ? '<button type="button" class="linkbtn" data-clear-seen>체크 모두 지우기</button><br>' : ""}이야기 속 숫자와 이름은 부천활박물관 설명판에서 가져왔어요.</footer>`;
 }
 
 // 격자 사진: 다 받아지면 서서히 나타나게 (이미 받아 둔 사진은 바로)

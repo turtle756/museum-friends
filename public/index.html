@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#1b1b1b">
-<title>부천활박물관 부모 카드 · 시안</title>
+<title>부천활박물관 부모 카드</title>
 <link rel="icon" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
@@ -13,7 +13,6 @@
 <script>try { if (localStorage.getItem("mf-theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}</script>
 </head>
 <body>
-<div class="devstrip"><span>시안 · 학예사 검수 전 · <a href="/cards.html">카드 시안</a></span></div>
 <main class="app" id="app" aria-live="polite"></main>
 <script type="module">
 import { loadStops } from "/assets/js/core.js";
@@ -36,7 +35,7 @@ function render(s) {
   } else {
     root.innerHTML = home(items, { ...opts, seen: loadSeen(), scores: loadScores(), theme: getTheme(), fresh, query });
     fresh = null;
-    document.title = "부천활박물관 부모 카드 · 시안";
+    document.title = "부천활박물관 부모 카드";
     window.scrollTo(0, homeScroll);
   }
   settle(root);

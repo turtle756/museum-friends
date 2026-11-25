@@ -1,17 +1,13 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 
-import { VARIANTS, back, card, page } from "../../public/assets/js/cards.js";
+import { back, card, kidCards, sheets } from "../../public/assets/js/cards.js";
 
 const data = JSON.parse(readFileSync(new URL("../../public/assets/data/stops.json", import.meta.url), "utf8"));
 const all = [...data.stops, ...(data.extras || [])].filter((s) => s.grid !== false);
 const withCard = all.filter((s) => s.card);
 const css = readFileSync(new URL("../../public/assets/css/cards.css", import.meta.url), "utf8");
-
-test("카드 시안은 결정 5-1과 예비 2-1 두 개만 남는다", () => {
-  assert.deepEqual(VARIANTS.map((v) => [v.label, v.tag]), [["5-1", "결정"], ["2-1", "예비"]]);
-});
 
 test("카드 내용: 종류, 전투력(1~999), 스킬 이름 1~3개, 뒷면 이야기", () => {
   assert.ok(withCard.length >= 1);
@@ -23,29 +19,6 @@ test("카드 내용: 종류, 전투력(1~999), 스킬 이름 1~3개, 뒷면 이�
   }
 });
 
-test("모든 시안이 카드마다 빈 값 없이 그려지고, 뒷면(이야기)도 있다", () => {
-  const html = page(all);
-  assert.doesNotMatch(html, /undefined|null|NaN/);
-  for (const v of VARIANTS) {
-    const start = html.indexOf(`id="v-${v.id}"`);
-    assert.ok(start >= 0, v.id);
-    const sec = html.slice(start, html.indexOf("</section>", start));
-    assert.equal((sec.match(/class="card card--/g) || []).length, withCard.length + 1, v.id);
-    assert.match(sec, /card--back[^>]*><div class="card__backin"><div class="card__story">/, v.id);   // 무늬·이름판 없이 깨끗한 뒷면
-    assert.doesNotMatch(sec, /card__motif|card__plate/, v.id);
-    assert.match(sec, new RegExp(`<span>시안 ${v.label} · ${v.tag}</span>`), v.id);
-  }
-});
-
-test("앞면에는 설명글이 없고 이야기는 뒷면에만 있다", () => {
-  const v = VARIANTS[0], s = withCard[0];
-  const front = card(s, v, 1);
-  assert.doesNotMatch(front, /<p>/);
-  assert.ok(!front.includes(s.card.story));
-  assert.equal((front.match(/card__skill-name/g) || []).length, s.card.skills.length);
-  assert.ok(back(v, s).includes(s.card.story));
-});
-
 test("아이 카드는 손에 쥘 만한 실물 유물 12장이고, 그림·설명판·재료 묶음은 카드가 없다", () => {
   assert.equal(withCard.length, 12);
   for (const name of ["득중정어사도", "북새선은도", "삼국시대의 활", "각궁 재료"]) {
@@ -55,47 +28,69 @@ test("아이 카드는 손에 쥘 만한 실물 유물 12장이고, 그림·설�
   }
 });
 
-test("그림 카드: 모든 카드에 그림이 있고, 후보는 A·B·C 세 장, 고른 것은 한 장, 그림 파일은 쓰는 것만 있다", async () => {
-  const { existsSync, readdirSync } = await import("node:fs");
+test("카드는 5-1 설계도 틀 + AI 그림 한 장씩으로 고정, 그림 파일은 쓰는 것만 있다", () => {
   const used = [];
   for (const s of withCard) {
-    const art = s.card.art || [];
-    assert.ok(art.length === 1 || art.length === 3, s.id);
-    for (const a of art) {
-      used.push(a.file);
-      assert.ok(existsSync(new URL(`../../public/assets/img/art/${a.file}`, import.meta.url)), a.file);
-      const b = a.bubble;
-      assert.ok(b && b.text && ["left", "right", "down"].includes(b.tail), a.file);
-      assert.ok(b.x >= 0 && b.x <= 100 && b.y >= 0 && b.y <= 100, a.file);
-      assert.ok(!(b.x > 75 && b.y < 26), a.file);   // 오른쪽 위 전투력 눈금 자리는 비운다
-    }
+    assert.equal((s.card.art || []).length, 1, s.id);
+    const a = s.card.art[0];
+    used.push(a.file);
+    assert.ok(existsSync(new URL(`../../public/assets/img/art/${a.file}`, import.meta.url)), a.file);
+    const b = a.bubble;
+    assert.ok(b && b.text && ["left", "right", "down"].includes(b.tail), a.file);
+    assert.ok(!(b.x > 75 && b.y < 26), a.file);   // 오른쪽 위 전투력 눈금 자리는 비운다
+    const front = card(s, 1);
+    assert.match(front, /class="card card--plan"/);
+    assert.ok(front.includes(`/assets/img/art/${a.file}`), s.id);
   }
-  const files = readdirSync(new URL("../../public/assets/img/art/", import.meta.url));
-  assert.deepEqual(files.sort(), used.sort());   // 안 쓰는 그림은 지움
+  assert.deepEqual(readdirSync(new URL("../../public/assets/img/art/", import.meta.url)).sort(), used.sort());
+  assert.doesNotMatch(css, /card--catalog|vsec|\.pick/);   // 예비 시안·시안 페이지 꾸밈은 지움
+});
 
-  const html = page(all);
-  const section = (id) => html.slice(html.indexOf(`id="${id}"`), html.indexOf("</section>", html.indexOf(`id="${id}"`)));
-  const cands = withCard.filter((s) => s.card.art.length === 3), picked = withCard.filter((s) => s.card.art.length === 1);
-  const pick = cands.length ? section("v-pick") : "";
-  if (cands.length) assert.match(pick, new RegExp(`고를 후보 ${cands.length}장`));
-  else assert.ok(!html.includes('id="v-pick"'));   // 다 고르면 후보 칸은 사라진다
-  for (const s of cands) {
-    const row = pick.slice(pick.indexOf(`id="pick-${s.id}"`)).split('<div class="pick"')[0];
-    assert.equal((row.match(/class="card card--plan card--plan-back" data-cat/g) || []).length, 3, s.id);
-    assert.equal((row.match(/card--back/g) || []).length, 1, s.id);
-    assert.match(row, /<figcaption>A<\/figcaption>.*<figcaption>B<\/figcaption>.*<figcaption>C<\/figcaption>/s, s.id);
+test("앞면에는 설명글이 없고 이야기는 뒷면에만 있다", () => {
+  const s = withCard[0];
+  const front = card(s, 1);
+  assert.doesNotMatch(front, /<p>/);
+  assert.ok(!front.includes(s.card.story));
+  assert.equal((front.match(/card__skill-name/g) || []).length, s.card.skills.length);
+  assert.ok(back(s).includes(s.card.story));
+  assert.match(back(s), /card--back"><div class="card__backin"><div class="card__story">/);   // 무늬·이름판 없는 깨끗한 뒷면
+});
+
+test("카드 번호는 12장 안에서 전투력 순 No.01~No.12", () => {
+  const list = kidCards(all);
+  assert.deepEqual(list.map((s) => s.card.power), [...list.map((s) => s.card.power)].sort((a, b) => b - a));
+  const html = sheets(all);
+  const nos = [...html.matchAll(/No\.(\d\d)/g)].map((m) => +m[1]);
+  assert.deepEqual(nos, Array.from({ length: 12 }, (_, i) => i + 1));
+});
+
+test("인쇄 쪽: 앞면 쪽 다음에 뒷면 쪽, 뒷면은 줄마다 좌우를 뒤집는다(양면 긴 쪽 넘김)", () => {
+  const html = sheets(all);
+  const pages = html.split(/(?=<section class="sheet )/);
+  assert.equal(pages.length, 4);   // 9장 + 3장 → 앞·뒤·앞·뒤
+  assert.deepEqual(pages.map((p) => p.match(/sheet--(front|back)/)[1]), ["front", "back", "front", "back"]);
+  const list = kidCards(all);
+  const names = (p) => [...p.matchAll(/<article class="card card--plan( card--back)?"[^]*?<(?:h3 class="card__name"|h4)>([^<]+)</g)].map((m) => m[2]);
+  const nm = (s) => s.card.name || s.name;
+  assert.deepEqual(names(pages[0]), list.slice(0, 9).map(nm));
+  const firstRowBack = names(pages[1]).slice(0, 3);
+  assert.deepEqual(firstRowBack, list.slice(0, 3).map(nm).reverse());
+  // 3장만 있는 쪽: 앞면은 왼쪽부터, 뒷면은 오른쪽부터(빈칸 자리 유지)
+  assert.equal((pages[2].match(/sheet__empty/g) || []).length, 0);
+  assert.deepEqual(names(pages[3]), list.slice(9, 12).map(nm).reverse());
+  assert.match(css, /@page \{ size: A4; margin: 0; \}/);
+  assert.match(css, /\.sheet \.card \{ --w: 63mm;/);   // 실제 카드 크기
+});
+
+test("앱에는 시안·검수 문구와 임시 띠가 없다 (최종본)", () => {
+  const files = ["../../public/index.html", "../../public/assets/js/app.js", "../../public/assets/css/app.css"];
+  for (const f of files) {
+    const t = readFileSync(new URL(f, import.meta.url), "utf8");
+    assert.doesNotMatch(t, /시안|검수|devstrip|cards\.html/, f);
   }
-  const art = section("v-art");
-  assert.equal((art.match(/card--back/g) || []).length, picked.length);
-  assert.doesNotMatch(pick + art, /card__motif|card__plate/);
+  assert.ok(!existsSync(new URL("../../public/cards.html", import.meta.url)));
 });
 
 test("5-1 스킬 칸에는 점선 네모가 없다", () => {
-  assert.doesNotMatch(css, /\.card--plan \.card__skill \{[^}]*dashed/);
   assert.doesNotMatch(css, /\.card__skill \{[^}]*dashed/);
-});
-
-test("앱 맨 위 띠에 카드 시안으로 가는 임시 링크가 있다", () => {
-  const html = readFileSync(new URL("../../public/index.html", import.meta.url), "utf8");
-  assert.match(html, /<div class="devstrip">.*<a href="\/cards\.html">카드 시안<\/a>/);
 });

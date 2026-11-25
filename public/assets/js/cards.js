@@ -1,60 +1,57 @@
-// 아이에게 주는 유물 카드. 카드 내용은 stops.json의 card 칸(종류, 전투력, 스킬 이름, 뒷면 이야기).
-// 전투력은 고증이 아니라 아이 눈에 세 보이는 정도. 앞면에는 설명글을 두지 않는다(사진·이름·전투력·스킬 이름만).
-// 11/16 결정: 5-1(설계도, 뒷면은 무늬·이름판 없이 깨끗하게). 2-1(한지 도록 + 금색 포인트)은 예비(뒷면 역시 무늬 없음). 나머지 시안은 삭제(git 기록에 남음).
+// 아이에게 주는 유물 카드(코팅한 실물 카드로 인쇄). 카드 내용은 stops.json의 card 칸(종류, 전투력, 스킬 이름, 뒷면 이야기, 그림).
+// 전투력은 고증이 아니라 아이 눈에 세 보이는 정도. 앞면에는 설명글을 두지 않는다(그림·이름·전투력·스킬 이름만).
+// 최종: 5-1 설계도 틀 + AI 그림 12장. 인쇄는 tools/print_cards.mjs(A4 PDF, 실제 크기 63×88mm).
 import { esc } from "./core.js";
 
-// logo: 카드 바탕이 어두우면 흰 로고(dark), 밝으면 원색 로고(light)
-export const VARIANTS = [
-  { id: "plan-back", base: "plan", label: "5-1", tag: "결정", name: "설계도 · 깨끗한 뒷면", logo: "dark", back: { layout: "plain" },
-    desc: "남색 모눈 설계도, 전투력만큼 차오르는 동그란 눈금. 뒷면은 모눈 위에 이름·이야기·로고만." },
-  { id: "catalog-gold", base: "catalog", label: "2-1", tag: "예비", name: "한지 도록 · 금색 포인트", logo: "light", back: { layout: "plain" },
-    desc: "한지색 바탕, 금색 이중 테두리, 빨간 낙관 도장 전투력. 뒷면은 한지 바탕 위에 이름·이야기·로고만." },
-];
-
 const CAT = { 총통: "cannon", 신기전: "rocket", 활: "bow", 화살: "arrow" };
-const cls = (v) => `card--${v.base} card--${v.id}`;
+const CLS = "card card--plan";
 // 카드 제목: 격자 이름과 다르게 쓸 때만 card.name (예: 격자 "각궁 (김장환 제작)" → 카드 "각궁")
 const cname = (s) => s.card.name || s.name;
+// 남색 바탕이라 흰 로고
+const logo = `<img src="/assets/img/brand/bow-logo-dark.png" alt="부천활박물관" width="168" height="28">`;
 
-const logo = (v) => `<img src="/assets/img/brand/bow-logo-${v.logo}.png" alt="부천활박물관" width="168" height="28">`;
-
-// 만화식 말풍선: 그림 위에 HTML로 얹는다(생성 그림에 한글을 쓰게 하면 글자가 깨져서). x·y는 사진 칸 기준 %, tail은 꼬리 방향.
+// 만화식 말풍선: 그림 위에 HTML로 얹는다(생성 그림에 한글을 쓰게 하면 글자가 깨져서). x·y는 그림 칸 기준 %, tail은 꼬리 방향.
 const TAILS = ["left", "right", "down"];   // 꼬리 방향: 왼쪽·오른쪽(가운데 높이), 아래(왼쪽에서 1/3 지점)
 const bubble = (b) => (b ? `<div class="bubble bubble--${TAILS.includes(b.tail) ? b.tail : "left"}" style="left:${+b.x}%;top:${+b.y}%">${esc(b.text).replace(/\n/g, "<br>")}</div>` : "");
 
-// art: 사진 대신 쓸 생성 그림 { file, bubble? } (/assets/img/art/). 없으면 실제 사진.
-export function card(s, v, no, art) {
-  const c = s.card;
+// 아이 카드 12장: 카드 내용이 있는 유물, 전투력 높은 순. 카드 번호 No.01~ 도 이 순서.
+export const kidCards = (all) => all.filter((s) => s.card).sort((a, b) => b.card.power - a.card.power);
+
+// 앞면: 그림(card.art[0]) + 말풍선, 전투력 눈금, 종류·이름, 스킬 이름, 로고·번호
+export function card(s, no) {
+  const c = s.card, art = (c.art || [])[0];
   const src = art ? `/assets/img/art/${art.file}` : `/assets/img/photo/${s.photo}.jpg`;
-  return `<article class="card ${cls(v)}" data-cat="${CAT[c.cat] || "etc"}" style="--p:${c.power / 1000}">
-    <div class="card__photo${art ? " card__photo--art" : ""}"><img src="${src}" alt="${esc(cname(s))}" loading="lazy">${art ? bubble(art.bubble) : ""}</div>
+  return `<article class="${CLS}" data-cat="${CAT[c.cat] || "etc"}" style="--p:${c.power / 1000}">
+    <div class="card__photo${art ? " card__photo--art" : ""}"><img src="${src}" alt="${esc(cname(s))}">${art ? bubble(art.bubble) : ""}</div>
     <div class="card__power"><span>전투력</span><b>${c.power}</b></div>
     <div class="card__head"><span class="card__cat">${esc(c.cat)}</span><h3 class="card__name">${esc(cname(s))}</h3></div>
     <div class="card__skill">${c.skills.map((k) => `<b class="card__skill-name">${esc(k)}</b>`).join("")}</div>
-    <div class="card__foot">${logo(v)}<span class="card__no">No.${String(no).padStart(2, "0")}</span></div>
+    <div class="card__foot">${logo}<span class="card__no">No.${String(no).padStart(2, "0")}</span></div>
   </article>`;
 }
 
 // 뒷면: 유물 이름과 이야기 + 로고 (무늬·이름판 없이 카드 바탕 위에 그대로)
-export function back(v, s) {
-  return `<article class="card ${cls(v)} card--back" data-cat="cannon"><div class="card__backin"><div class="card__story"><h4>${esc(cname(s))}</h4><p>${esc(s.card.story)}</p></div>${logo(v)}</div></article>`;
+export function back(s) {
+  return `<article class="${CLS} card--back"><div class="card__backin"><div class="card__story"><h4>${esc(cname(s))}</h4><p>${esc(s.card.story)}</p></div>${logo}</div></article>`;
 }
 
-// all: 격자에 나오는 유물 전체(카드 번호 = 가나다순 자리). 카드 내용이 있는 유물만 전투력 높은 순으로 그린다.
-// 아이 카드는 12장: 손에 쥘 만한 실물 유물만(그림·설명판·재료 묶음은 부모 앱에만).
-export function page(all) {
-  const order = [...all].sort((a, b) => a.name.localeCompare(b.name, "ko")).map((s) => s.id);
-  const no = (s) => order.indexOf(s.id) + 1;
-  const cards = all.filter((s) => s.card).sort((a, b) => b.card.power - a.card.power);
-  // 그림 카드: 유명 만화 장면의 자세를 빌린 우리 캐릭터, 유물은 실제 사진을 참조해 생성.
-  // 그림이 여러 장이면 기획자가 고를 후보(A 꼬마 · B 소년 · C 원작 느낌의 새 캐릭터 + 뒷면), 한 장이면 고른 것(앞뒤 짝).
-  const v0 = VARIANTS[0], arts = (s) => (s.card.art || []).length;
-  const cands = cards.filter((s) => arts(s) > 1), picked = cards.filter((s) => arts(s) === 1);
-  const pickSec = cands.length ? `<section class="vsec" id="v-pick"><h2><span>그림 카드 · 고를 후보 ${cands.length}장</span>5-1 틀</h2><p>유물마다 A(꼬마)·B(소년)·C(원작 느낌을 더 살린 새 캐릭터) 세 장과 뒷면. 마음에 드는 그림을 골라 주세요.</p>
-    ${cands.map((s) => `<div class="pick" id="pick-${s.id}"><h3>${esc(s.name)}${s.card.scene ? `<small>${esc(s.card.scene)}</small>` : ""}</h3>
-    <div class="row">${s.card.art.map((a, i) => `<figure class="pick__opt">${card(s, v0, no(s), a)}<figcaption>${"ABCDEF"[i]}</figcaption></figure>`).join("")}${back(v0, s)}</div></div>`).join("")}</section>` : "";
-  const artSec = picked.length ? `<section class="vsec" id="v-art"><h2><span>그림 카드 · 고른 ${picked.length}장</span>5-1 틀</h2><p>앞면과 뒷면을 짝지어 놓았습니다.</p>
-    <div class="row">${picked.map((s) => card(s, v0, no(s), s.card.art[0]) + back(v0, s)).join("")}</div></section>` : "";
-  return pickSec + artSec + VARIANTS.map((v) => `<section class="vsec" id="v-${v.id}"><h2><span>시안 ${v.label} · ${v.tag}</span>${esc(v.name)}</h2><p>${esc(v.desc)}</p>
-    <div class="row">${cards.map((s) => card(s, v, no(s))).join("")}${back(v, cards[0])}</div></section>`).join("");
+// 인쇄 쪽: A4 한 쪽에 3×3장. 앞면 쪽 다음에 같은 카드의 뒷면 쪽이 오고, 뒷면은 줄마다 좌우를 뒤집어
+// 양면 인쇄(긴 쪽 넘김)에서 앞뒤가 맞는다. 빈칸은 자리만 차지해 뒤집힌 위치가 어긋나지 않게 한다.
+export function sheets(all, per = 9, cols = 3) {
+  const list = kidCards(all), out = [];
+  const empty = '<div class="sheet__empty"></div>';
+  for (let i = 0; i < list.length; i += per) {
+    const page = list.slice(i, i + per);
+    const fronts = page.map((s, k) => card(s, i + k + 1));
+    while (fronts.length % cols) fronts.push(empty);
+    const backs = [];
+    for (let r = 0; r < fronts.length / cols; r++) {
+      const row = page.slice(r * cols, r * cols + cols).map(back);
+      while (row.length < cols) row.push(empty);
+      backs.push(...row.reverse());
+    }
+    out.push(`<section class="sheet sheet--front"><div class="sheet__grid">${fronts.join("")}</div></section>`);
+    out.push(`<section class="sheet sheet--back"><div class="sheet__grid">${backs.join("")}</div></section>`);
+  }
+  return out.join("\n");
 }

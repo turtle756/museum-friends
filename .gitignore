@@ -9,3 +9,4 @@ qr/
 .env.*
 node_modules/
 .playwright-mcp/
+tools/out/
